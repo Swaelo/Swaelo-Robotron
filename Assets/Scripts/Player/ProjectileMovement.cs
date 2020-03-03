@@ -32,5 +32,13 @@ public class ProjectileMovement : MonoBehaviour
             GameObject.Destroy(this.gameObject);
             return;
         }
+
+        //Delete projectile and enemy when hitting a Grunt enemy
+        if(collision.transform.CompareTag("Grunt"))
+        {
+            GameObject.Destroy(collision.gameObject);
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
     }
 }
