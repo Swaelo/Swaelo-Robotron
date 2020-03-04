@@ -40,5 +40,13 @@ public class ProjectileMovement : MonoBehaviour
             GameObject.Destroy(this.gameObject);
             return;
         }
+
+        //Delete projectile and enemy when hitting an Electrode enemy
+        if(collision.transform.CompareTag("Electrode"))
+        {
+            GameObject.Destroy(collision.gameObject);
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
     }
 }

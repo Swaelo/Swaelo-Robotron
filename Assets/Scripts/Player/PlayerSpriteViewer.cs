@@ -40,6 +40,7 @@ public class PlayerSpriteViewer : MonoBehaviour
         FrontViewAnimator.SetBool("IsMoving", IsMoving);
         SideViewAnimator.SetBool("IsMoving", IsMoving);
 
+        //Transition between different spriters being ddispalyed when the Player is moving around
         if(IsMoving)
         {
             //Update what sprites are being displayed if movement has occured
