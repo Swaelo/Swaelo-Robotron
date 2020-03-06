@@ -13,6 +13,19 @@ public class ElectrodeAI : MonoBehaviour
     public float DecayLength = 0f;    //How long this type of electrode takes to play out its decay animation
     private float DecayRemaining = 0f;  //Time remaining until the decay animation is complete
 
+    private void Update()
+    {
+        //Countdown the decay timer once its been started
+        if (!IsActive)
+        {
+            DecayRemaining -= Time.deltaTime;
+
+            //Destroy the Electrode once the decay animation has finished playing out
+            if (DecayRemaining <= 0.0f)
+                GameObject.Destroy(this.gameObject);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Ignore all collisions once the decay process has begun
@@ -23,23 +36,29 @@ public class ElectrodeAI : MonoBehaviour
         if(collision.transform.CompareTag("PlayerProjectile"))
         {
             //Destroy the players projectile and start the decay process
-            GameObject.Destroy(collision.gameObject);
+            Destroy(collision.gameObject);
             IsActive = false;
             AnimationController.SetTrigger("Decay");
             DecayRemaining = DecayLength;
+            return;
         }
-    }
 
-    private void Update()
-    {
-        //Countdown the decay timer once its been started
-        if(!IsActive)
+        //Kill the player immediately if we come into contact with them
+        if(collision.transform.CompareTag("Player"))
         {
-            DecayRemaining -= Time.deltaTime;
+            Debug.Log("Player killed by Electrode");
+            GameObject.Destroy(this.gameObject);
+            return;
+        }
 
-            //Destroy the Electrode once the decay animation has finished playing out
-            if (DecayRemaining <= 0.0f)
-                GameObject.Destroy(this.gameObject);
+        //Begin the decay process if the Electrode is touched by any Grunt enemies
+        if(collision.transform.CompareTag("Grunt"))
+        {
+            IsActive = false;
+            Destroy(GetComponent<BoxCollider2D>());
+            AnimationController.SetTrigger("Decay");
+            DecayRemaining = DecayLength;
+            return;
         }
     }
 }

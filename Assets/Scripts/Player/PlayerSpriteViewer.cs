@@ -6,8 +6,20 @@
 
 using UnityEngine;
 
+public enum PlayerEyeColor
+{
+    Red = 0,
+    Green = 1,
+    Blue = 2
+}
+
 public class PlayerSpriteViewer : MonoBehaviour
 {
+    //Current eye color and timer for cycling through
+    private PlayerEyeColor CurrentEyeColor = PlayerEyeColor.Red;
+    private float EyeColorChangeRate = 0.5f;
+    private float NextEyeColorChange = 0.5f;
+
     //Sprites for the front and side views of the player
     public GameObject FrontSprites;
     public GameObject SideSprites;
@@ -15,6 +27,10 @@ public class PlayerSpriteViewer : MonoBehaviour
     //Animators controlling the walking animations
     public Animator FrontViewAnimator;
     public Animator SideViewAnimator;
+
+    //Animators controlling the eye colors
+    public Animator FrontEyesAnimator;
+    public Animator SideEyesAnimator;
 
     //Renderers for Side Body components, so they can be flipped when moving left/right
     public SpriteRenderer SideBodyRenderer;
@@ -31,6 +47,8 @@ public class PlayerSpriteViewer : MonoBehaviour
 
     private void Update()
     {
+        CycleEyeColor();
+
         //Find distance travelled in each direction this frame
         float VerticalMovement = Mathf.Abs(transform.position.x - PreviousPosition.x);
         float HorizontalMovement = Mathf.Abs(transform.position.y - PreviousPosition.y);
@@ -40,7 +58,7 @@ public class PlayerSpriteViewer : MonoBehaviour
         FrontViewAnimator.SetBool("IsMoving", IsMoving);
         SideViewAnimator.SetBool("IsMoving", IsMoving);
 
-        //Transition between different spriters being ddispalyed when the Player is moving around
+        //Transition between different spriters being displayed when the Player is moving around
         if(IsMoving)
         {
             //Update what sprites are being displayed if movement has occured
@@ -56,5 +74,37 @@ public class PlayerSpriteViewer : MonoBehaviour
 
         //Store current position for next frames comparison
         PreviousPosition = transform.position;
+    }
+
+    private void CycleEyeColor()
+    {
+        //Update the eye color timer and move to the next eye color when it runs out
+        NextEyeColorChange -= Time.deltaTime;
+
+        if(NextEyeColorChange <= 0.0f)
+        {
+            //Reset the eye color
+            NextEyeColorChange = EyeColorChangeRate;
+
+            //Move to the next eye color
+            switch(CurrentEyeColor)
+            {
+                case (PlayerEyeColor.Red):
+                    CurrentEyeColor = PlayerEyeColor.Green;
+                    FrontEyesAnimator.SetTrigger("Green");
+                    SideEyesAnimator.SetTrigger("Green");
+                    break;
+                case (PlayerEyeColor.Green):
+                    CurrentEyeColor = PlayerEyeColor.Blue;
+                    FrontEyesAnimator.SetTrigger("Blue");
+                    SideEyesAnimator.SetTrigger("Blue");
+                    break;
+                case (PlayerEyeColor.Blue):
+                    CurrentEyeColor = PlayerEyeColor.Red;
+                    FrontEyesAnimator.SetTrigger("Red");
+                    SideEyesAnimator.SetTrigger("Red");
+                    break;
+            }
+        }
     }
 }
