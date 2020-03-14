@@ -25,6 +25,12 @@ public class ProjectileMovement : MonoBehaviour
         MovementDirection = Movement;
     }
 
+    //Returns the direction vector which the projectile is moving in
+    public Vector3 GetDirectionVector()
+    {
+        return MovementDirection;
+    }
+
     private void Update()
     {
         if(DirectionSet)

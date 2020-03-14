@@ -8,6 +8,9 @@ TagManager:
   - Grunt
   - Electrode
   - PlayerProjectile
+  - Hulk
+  - Human
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
