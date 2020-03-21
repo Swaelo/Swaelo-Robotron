@@ -19,32 +19,12 @@ public class ProjectileMovement : MonoBehaviour
         AnimationController = GetComponent<Animator>();
     }
 
-    public void SetMovement(Vector3 Movement)
+    //Provides the projectile with all the information it needs to travel after the player has fired it
+    public void InitializeProjectile(Vector3 Direction, ProjectileColor Color)
     {
         DirectionSet = true;
-        MovementDirection = Movement;
-    }
-
-    //Returns the direction vector which the projectile is moving in
-    public Vector3 GetDirectionVector()
-    {
-        return MovementDirection;
-    }
-
-    private void Update()
-    {
-        if(DirectionSet)
-        {
-            Vector3 NewPosition = transform.position + MovementDirection * MoveSpeed * Time.deltaTime;
-            NewPosition.z = 0f;
-            transform.position = NewPosition;
-        }
-    }
-
-    //Called from the player when the projectile is first spawned in
-    public void SetColor(ProjectileColor Color)
-    {
-        switch(Color)
+        MovementDirection = Direction;
+        switch (Color)
         {
             case (ProjectileColor.Blue):
                 AnimationController.SetTrigger("Blue");
@@ -64,10 +44,32 @@ public class ProjectileMovement : MonoBehaviour
         }
     }
 
+    //Returns the direction vector which the projectile is moving in
+    public Vector3 GetDirectionVector()
+    {
+        return MovementDirection;
+    }
+
+    private void Update()
+    {
+        if(DirectionSet)
+        {
+            Vector3 NewPosition = transform.position + MovementDirection * MoveSpeed * Time.deltaTime;
+            NewPosition.z = 0f;
+            transform.position = NewPosition;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //The projectile is destroyed if it hits the boundaries of the screen
         if (collision.transform.CompareTag("Wall"))
             Destroy(this.gameObject);
+    }
+
+    //Removes the projectile from the players tracking list then destroys it
+    public void OnDestroy()
+    {
+        GameState.Instance.Player.GetComponent<PlayerShooting>().ActiveProjectiles.Remove(this.gameObject);
     }
 }

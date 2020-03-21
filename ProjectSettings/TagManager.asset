@@ -11,6 +11,11 @@ TagManager:
   - Hulk
   - Human
   - EnemyProjectile
+  - Enforcer
+  - Brain
+  - Spheroid
+  - Quark
+  - Tank
   layers:
   - Default
   - TransparentFX
@@ -21,10 +26,10 @@ TagManager:
   - 
   - 
   - Backdrop
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - PlayerProjectile
+  - Spheroid
+  - Human
   - 
   - 
   - 

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3027906035353579523}
   m_Layer: 0
   m_Name: Electrode A
-  m_TagString: Untagged
+  m_TagString: Electrode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3027906035353579527}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.039, y: 0.006, z: 0}
-  m_LocalScale: {x: 0.54079306, y: 0.54079306, z: 0.54079306}
+  m_LocalScale: {x: 0.5348587, y: 0.5348587, z: 0.5348587}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -142,5 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a47c58a02aba854f82580b25e353700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 1
   AnimationController: {fileID: 3027906035353579526}
   DecayLength: 0.667

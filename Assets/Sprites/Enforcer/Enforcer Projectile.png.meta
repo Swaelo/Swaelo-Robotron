@@ -1,40 +1,55 @@
 fileFormatVersion: 2
-guid: 871059dfcf9e285478f5341bbe7a19bc
+guid: 9a3d4cb24bbf5b64d81319f64b1b7bdb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5340778253993435298
-    second: Enforcer Projectile 1-11 11x5_0
+      213: -517218346729341720
+    second: Enforcer Projectile_0
   - first:
-      213: 849265606670352085
-    second: Enforcer Projectile 1-11 11x5_1
+      213: -5094735859560417222
+    second: Enforcer Projectile_1
   - first:
-      213: 3087967507293963857
-    second: Enforcer Projectile 1-11 11x5_2
+      213: 9193233960570098831
+    second: Enforcer Projectile_2
   - first:
-      213: -4683877532126181903
-    second: Enforcer Projectile 1-11 11x5_3
+      213: 5583864638719449481
+    second: Enforcer Projectile_3
   - first:
-      213: -8548723576574610254
-    second: Enforcer Projectile 1-11 11x5_4
+      213: -3425855282047242205
+    second: Enforcer Projectile_4
   - first:
-      213: -422090832710017200
-    second: Enforcer Projectile 1-11 11x5_5
+      213: -2996878409375965672
+    second: Enforcer Projectile_5
   - first:
-      213: -3492437148669103132
-    second: Enforcer Projectile 1-11 11x5_6
+      213: -8900550481170158088
+    second: Enforcer Projectile_6
   - first:
-      213: -130199454914363547
-    second: Enforcer Projectile 1-11 11x5_7
+      213: -2756100566596865730
+    second: Enforcer Projectile_7
   - first:
-      213: -2251394516496158782
-    second: Enforcer Projectile 1-11 11x5_8
+      213: -3988421738933428145
+    second: Enforcer Projectile_8
   - first:
-      213: 6127393843781029336
-    second: Enforcer Projectile 1-11 11x5_9
+      213: -5841103639349466138
+    second: Enforcer Projectile_9
   - first:
-      213: 1227202256214187046
-    second: Enforcer Projectile 1-11 11x5_10
+      213: -4745120355325351188
+    second: Enforcer Projectile_10
+  - first:
+      213: -5539139246505387727
+    second: Enforcer Projectile_11
+  - first:
+      213: 5552343396069440157
+    second: Enforcer Projectile_12
+  - first:
+      213: -6680568350604176389
+    second: Enforcer Projectile_13
+  - first:
+      213: 5420825665771648614
+    second: Enforcer Projectile_14
+  - first:
+      213: 5546926060428090100
+    second: Enforcer Projectile_15
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -131,232 +146,337 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_0
+      name: Enforcer Projectile_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2a0e86d76814e1a40800000000000000
-      internalID: 5340778253993435298
+      spriteID: 8ecf1eb67a872d8f0800000000000000
+      internalID: -517218346729341720
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_1
+      name: Enforcer Projectile_1
       rect:
         serializedVersion: 2
         x: 5
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5defa85d19239cb00800000000000000
-      internalID: 849265606670352085
+      spriteID: a38f4729abcdb49b0800000000000000
+      internalID: -5094735859560417222
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_2
+      name: Enforcer Projectile_2
       rect:
         serializedVersion: 2
         x: 10
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 156843e461aaada20800000000000000
-      internalID: 3087967507293963857
+      spriteID: f8496dc449de49f70800000000000000
+      internalID: 9193233960570098831
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_3
+      name: Enforcer Projectile_3
       rect:
         serializedVersion: 2
         x: 15
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1f58f2663368ffeb0800000000000000
-      internalID: -4683877532126181903
+      spriteID: 989dcb8ed4fdd7d40800000000000000
+      internalID: 5583864638719449481
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_4
+      name: Enforcer Projectile_4
       rect:
         serializedVersion: 2
         x: 20
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b4734f3335dc5980800000000000000
-      internalID: -8548723576574610254
+      spriteID: 320bdad95cae470d0800000000000000
+      internalID: -3425855282047242205
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_5
+      name: Enforcer Projectile_5
       rect:
         serializedVersion: 2
         x: 25
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05fde5dbf9e642af0800000000000000
-      internalID: -422090832710017200
+      spriteID: 81e9b1ef6f2f866d0800000000000000
+      internalID: -2996878409375965672
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_6
+      name: Enforcer Projectile_6
       rect:
         serializedVersion: 2
         x: 30
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e33331caee588fc0800000000000000
-      internalID: -3492437148669103132
+      spriteID: 8fdab689e74ea7480800000000000000
+      internalID: -8900550481170158088
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_7
+      name: Enforcer Projectile_7
       rect:
         serializedVersion: 2
         x: 35
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 56f31eb1940713ef0800000000000000
-      internalID: -130199454914363547
+      spriteID: e31bdba132d50c9d0800000000000000
+      internalID: -2756100566596865730
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_8
+      name: Enforcer Projectile_8
       rect:
         serializedVersion: 2
         x: 40
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2cfebfa9d9071c0e0800000000000000
-      internalID: -2251394516496158782
+      spriteID: f406d6c5f8746a8c0800000000000000
+      internalID: -3988421738933428145
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_9
+      name: Enforcer Projectile_9
       rect:
         serializedVersion: 2
         x: 45
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8ddcb719c30e80550800000000000000
-      internalID: 6127393843781029336
+      spriteID: 6eb6550003b30fea0800000000000000
+      internalID: -5841103639349466138
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Projectile 1-11 11x5_10
+      name: Enforcer Projectile_10
       rect:
         serializedVersion: 2
         x: 50
         y: 0
         width: 5
         height: 5
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62c543533f5e70110800000000000000
-      internalID: 1227202256214187046
+      spriteID: cea6b547d22f52eb0800000000000000
+      internalID: -4745120355325351188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Projectile_11
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1391f92f3360123b0800000000000000
+      internalID: -5539139246505387727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Projectile_12
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9a74b1b6e2ed0d40800000000000000
+      internalID: 5552343396069440157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Projectile_13
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf35584fa7ad943a0800000000000000
+      internalID: -6680568350604176389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Projectile_14
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 666b3a5e834aa3b40800000000000000
+      internalID: 5420825665771648614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Projectile_15
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fa5c23fcd3aafc40800000000000000
+      internalID: 5546926060428090100
       vertices: []
       indices: 
       edges: []

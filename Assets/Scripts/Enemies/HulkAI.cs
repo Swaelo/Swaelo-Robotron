@@ -17,7 +17,7 @@ public enum CardinalDirection
     West = 3,
 }
 
-public class HulkAI : MonoBehaviour
+public class HulkAI : HostileEntity
 {
     private float MoveSpeed = 1.25f;     //How fast the Hulk is able to move
     private GameObject PlayerTarget;    //The Hulks target
@@ -50,6 +50,10 @@ public class HulkAI : MonoBehaviour
 
     private void Update()
     {
+        //All Enemy AI is disabled during the round warmup period
+        if (WaveManager.Instance.RoundWarmingUp)
+            return;
+
         //Hulk cannot move or do anything while they are turning around
         if (ChangingDirection)
         {
@@ -264,16 +268,17 @@ public class HulkAI : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Kill the player on contact
-        if (collision.transform.CompareTag("Player"))
-            Debug.Log("Player killed by Hulk!");
-
-        //Kill any humans on contact
-        if (collision.transform.CompareTag("Human"))
-            Debug.Log(collision.transform.name + " killed by Hulk!");
-
-        //Push the Hulk back when hit by player projectiles
-        if (collision.transform.CompareTag("PlayerProjectile"))
+        //Kill the player character on contact
+        if(collision.transform.CompareTag("Player"))
+            GameState.Instance.KillPlayer();
+        //Kill any human survivors on contact
+        else if(collision.transform.CompareTag("Human"))
+        {
+            WaveManager.Instance.RemoveHumanSurvivor(collision.transform.GetComponent<BaseEntity>());
+            Destroy(collision.gameObject);
+        }
+        //Have the Hulk get pushed back if its hit by any of the players projectiles
+        else if(collision.transform.CompareTag("PlayerProjectile"))
         {
             //Fetch the direction the projectile was moving when it hit us, the Hulk will be pushed in that direction
             Vector3 ShotDirection = collision.transform.GetComponent<ProjectileMovement>().GetDirectionVector();
@@ -286,13 +291,15 @@ public class HulkAI : MonoBehaviour
             //Destroy the projectile
             Destroy(collision.transform.gameObject);
         }
-
-        //Block any enemy projectiles which hit the Hulk
-        if (collision.transform.CompareTag("EnemyProjectile"))
+        //Simply destroy any enemy projectiles which hit the Hulk
+        else if(collision.transform.CompareTag("EnemyProjectile"))
+        {
             Destroy(collision.transform.gameObject);
-
-        //If Hulks run into each other they should swap to seeking on the other axis
-        if (collision.transform.CompareTag("Hulk"))
+        }
+        //Cause Hulks to start moving on the opposite axis if they run into each other to avoid getting stuck together
+        else if(collision.transform.CompareTag("Hulk"))
+        {
             AvoidAlly();
+        }
     }
 }

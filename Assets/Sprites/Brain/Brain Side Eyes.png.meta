@@ -1,25 +1,25 @@
 fileFormatVersion: 2
-guid: 8890a2354ca08854e94face46720fe19
+guid: c56bb1d68dba4eb418391dec72fba9c0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1430616249405620200
-    second: Brain Side Eyes 13x6_0
+      213: -8790470890068383410
+    second: Brain Side Eyes_0
   - first:
-      213: 8581638473986473723
-    second: Brain Side Eyes 13x6_1
+      213: 2522154462803742882
+    second: Brain Side Eyes_1
   - first:
-      213: 6469450668618637034
-    second: Brain Side Eyes 13x6_2
+      213: 3175666135431039784
+    second: Brain Side Eyes_2
   - first:
-      213: -4640148103352701636
-    second: Brain Side Eyes 13x6_3
+      213: 4261807663539630123
+    second: Brain Side Eyes_3
   - first:
-      213: 2427348083973992963
-    second: Brain Side Eyes 13x6_4
+      213: 5273215546924126152
+    second: Brain Side Eyes_4
   - first:
-      213: -8969057599394072589
-    second: Brain Side Eyes 13x6_5
+      213: 2013380867691649877
+    second: Brain Side Eyes_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -116,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_0
+      name: Brain Side Eyes_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,20 +124,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 810c644d91e652ce0800000000000000
-      internalID: -1430616249405620200
+      spriteID: e49ef05ac49f10680800000000000000
+      internalID: -8790470890068383410
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_1
+      name: Brain Side Eyes_1
       rect:
         serializedVersion: 2
         x: 13
@@ -145,20 +145,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bfef9c089ba181770800000000000000
-      internalID: 8581638473986473723
+      spriteID: 2a05518fe1e700320800000000000000
+      internalID: 2522154462803742882
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_2
+      name: Brain Side Eyes_2
       rect:
         serializedVersion: 2
         x: 26
@@ -166,20 +166,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aee5de24b1b18c950800000000000000
-      internalID: 6469450668618637034
+      spriteID: 82bca97568b321c20800000000000000
+      internalID: 3175666135431039784
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_3
+      name: Brain Side Eyes_3
       rect:
         serializedVersion: 2
         x: 39
@@ -187,20 +187,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c3da57272e1ea9fb0800000000000000
-      internalID: -4640148103352701636
+      spriteID: b20315e6d7bf42b30800000000000000
+      internalID: 4261807663539630123
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_4
+      name: Brain Side Eyes_4
       rect:
         serializedVersion: 2
         x: 52
@@ -208,20 +208,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 302be73c83cafa120800000000000000
-      internalID: 2427348083973992963
+      spriteID: 8cfca7ae9993e2940800000000000000
+      internalID: 5273215546924126152
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Eyes 13x6_5
+      name: Brain Side Eyes_5
       rect:
         serializedVersion: 2
         x: 65
@@ -229,14 +229,14 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f7391a22a1878380800000000000000
-      internalID: -8969057599394072589
+      spriteID: 55b14585b37f0fb10800000000000000
+      internalID: 2013380867691649877
       vertices: []
       indices: 
       edges: []

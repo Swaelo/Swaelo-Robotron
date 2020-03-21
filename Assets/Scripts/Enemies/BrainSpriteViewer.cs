@@ -8,65 +8,76 @@ using UnityEngine;
 
 public class BrainSpriteViewer : MonoBehaviour
 {
-    //Sprites for the front/back and side view of the Brain enemy
+    //Sprites for the front/back and side views of the Brain enemy
     public GameObject FrontSprites;
     public GameObject BackSprites;
     public GameObject SideSprites;
 
-    //Animators controlling the walking animations
-    public Animator FrontAnimator;
-    public Animator BackAnimator;
-    public Animator SideAnimator;
+    //Animation controllers for all main body parts of the Brain
+    public Animator FrontBodyAnimator;
+    public Animator BackBodyAnimator;
+    public Animator SideBodyAnimator;
 
-    //Renderers for side components so they can be flipped when moving in the opposite direction
+    //Animation controllers for all subcomponents parts of the Brain
+    public Animator FrontBrainAnimator;
+    public Animator FrontEyesAnimator;
+    public Animator BackBrainAnimator;
+    public Animator SideBrainAnimator;
+    public Animator SideEyesAnimator;
+
+    //Renderers for the side body and its subcompnents
     public SpriteRenderer SideBodyRenderer;
     public SpriteRenderer SideBrainRenderer;
-    public SpriteRenderer SideEyeRenderer;
+    public SpriteRenderer SideEyesRenderer;
 
     //Change in position over time is measured to determine what sprites should be rendered
     private Vector3 PreviousPosition;
 
     private void Awake()
     {
+        //Store initial position and enable only the front sprites
         PreviousPosition = transform.position;
+        FrontSprites.SetActive(true);
         BackSprites.SetActive(false);
         SideSprites.SetActive(false);
     }
 
     private void Update()
     {
-        //Measure distance travelled in each direction
-        float VerticalMovement = Mathf.Abs(transform.position.x - PreviousPosition.x);
-        float HorizontalMovement = Mathf.Abs(transform.position.y - PreviousPosition.y);
-
-        //Tell the animation controllers if the brain is moving
+        //Inform the main animation controllers if the brain is currently moving or not
         bool IsMoving = transform.position != PreviousPosition;
-        FrontAnimator.SetBool("IsMoving", IsMoving);
-        BackAnimator.SetBool("IsMoving", IsMoving);
-        SideAnimator.SetBool("IsMoving", IsMoving);
+        FrontBodyAnimator.SetBool("IsMoving", IsMoving);
+        BackBodyAnimator.SetBool("IsMoving", IsMoving);
+        SideBodyAnimator.SetBool("IsMoving", IsMoving);
 
-        //Transition between different sprites being displayed when the Brain is moving around
+        //Transition between different sprites while the Brain is moving around
         if(IsMoving)
         {
-            //Hide/Show different sprites if movement has occured
-            bool MovingVertical = VerticalMovement < HorizontalMovement;
-            if(MovingVertical)
+            //Measure distance travelled in each direction this frame
+            float VerticalMovement = Mathf.Abs(transform.position.x - PreviousPosition.x);
+            float HorizontalMovement = Mathf.Abs(transform.position.y - PreviousPosition.y);
+
+            //First check for movement on the Y axis
+            if(VerticalMovement < HorizontalMovement)
             {
+                //Toggle view of sprites based on which direction on the Y axis the Brain is moving
                 bool MovingUp = transform.position.y > PreviousPosition.y;
-                SideSprites.SetActive(false);
                 FrontSprites.SetActive(!MovingUp);
                 BackSprites.SetActive(MovingUp);
+                SideSprites.SetActive(false);
             }
+            //Otherwise we know the Brain is moving on the X axis
             else
             {
-                //Flip the side sprites based on left/right movement
-                bool MovingLeft = transform.position.x > PreviousPosition.x;
+                //Enable only the side sprites
                 FrontSprites.SetActive(false);
                 BackSprites.SetActive(false);
                 SideSprites.SetActive(true);
-                SideBodyRenderer.flipX = !MovingLeft;
-                SideBrainRenderer.flipX = !MovingLeft;
-                SideEyeRenderer.flipX = !MovingLeft;
+                //Flip the sprites based on which direction on the X axis the Brain is moving
+                bool MovingRight = transform.position.x < PreviousPosition.x;
+                SideBodyRenderer.flipX = MovingRight;
+                SideBrainRenderer.flipX = MovingRight;
+                SideEyesRenderer.flipX = MovingRight;
             }
         }
 

@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public class ElectrodeAI : MonoBehaviour
+public class ElectrodeAI : HostileEntity
 {
     public Animator AnimationController;    //Used to trigger the decay animation when the electrode has been shot by the player
     private bool IsActive = true;   //Flagged once the decay process begins so we dont start it over again
@@ -15,6 +15,10 @@ public class ElectrodeAI : MonoBehaviour
 
     private void Update()
     {
+        //All Enemy AI is disabled during the round warmup period
+        if (WaveManager.Instance.RoundWarmingUp)
+            return;
+
         //Countdown the decay timer once its been started
         if (!IsActive)
         {
@@ -22,43 +26,37 @@ public class ElectrodeAI : MonoBehaviour
 
             //Destroy the Electrode once the decay animation has finished playing out
             if (DecayRemaining <= 0.0f)
+            {
+                WaveManager.Instance.OptionalEnemyDead(this);
                 GameObject.Destroy(this.gameObject);
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Ignore all collisions once the decay process has begun
-        if (!IsActive)
-            return;
-
-        //Begin the decay process if the electrode is hit by one of the players projectiles
-        if(collision.transform.CompareTag("PlayerProjectile"))
+        //Player projectiles which hit the Electrode are destroyed, also killing the Electrode in the process
+        if (collision.transform.CompareTag("PlayerProjectile"))
         {
-            //Destroy the players projectile and start the decay process
             Destroy(collision.gameObject);
-            IsActive = false;
-            AnimationController.SetTrigger("Decay");
-            DecayRemaining = DecayLength;
-            return;
+            Die();
         }
+        //Grunts which hit the Electrode are killed, also destroying the Electrode in the process
+        else if (collision.transform.CompareTag("Grunt"))
+            Die();
+        //Kill both the Player character and the Electrode if they come into contact with one another
+        else if (collision.transform.CompareTag("Player"))
+            GameState.Instance.KillPlayer();
+    }
 
-        //Kill the player immediately if we come into contact with them
-        if(collision.transform.CompareTag("Player"))
-        {
-            Debug.Log("Player killed by Electrode");
-            GameObject.Destroy(this.gameObject);
-            return;
-        }
-
-        //Begin the decay process if the Electrode is touched by any Grunt enemies
-        if(collision.transform.CompareTag("Grunt"))
-        {
-            IsActive = false;
-            Destroy(GetComponent<BoxCollider2D>());
-            AnimationController.SetTrigger("Decay");
-            DecayRemaining = DecayLength;
-            return;
-        }
+    //Triggers the electrodes death animation and tells the wave manager this entity has been destroyed
+    private void Die()
+    {
+        //Start the death animation
+        IsActive = false;
+        AnimationController.SetTrigger("Decay");
+        DecayRemaining = DecayLength;
+        //Destroy the collider component so no unwanted collisions occur during the death animation
+        Destroy(GetComponent<BoxCollider2D>());
     }
 }

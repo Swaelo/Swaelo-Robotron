@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6260544339239123343}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Side Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 8153907359523673896}
   - component: {fileID: 8153907359187570883}
   - component: {fileID: 8153907359187570885}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -82,7 +82,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e07ce0fa46e8c4783d16c2dbb223dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
+  MoveSpeed: 2
+  MovementVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6260544339887091745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +198,7 @@ GameObject:
   - component: {fileID: 6260544339989885931}
   - component: {fileID: 6260544339989885930}
   - component: {fileID: 6260544339989885929}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player Side Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -298,7 +299,7 @@ GameObject:
   - component: {fileID: 6260544340244775037}
   - component: {fileID: 6260544340244775036}
   - component: {fileID: 6260544340244775035}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player Front Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6260544340809362341}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Front Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,7 +432,7 @@ GameObject:
   - component: {fileID: 8153907358321955360}
   - component: {fileID: 8153907358321955361}
   - component: {fileID: 8153907358321955363}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player Side Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -533,7 +534,7 @@ GameObject:
   - component: {fileID: 8153907360163516947}
   - component: {fileID: 8153907360163516944}
   - component: {fileID: 8153907360163516945}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player Front Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

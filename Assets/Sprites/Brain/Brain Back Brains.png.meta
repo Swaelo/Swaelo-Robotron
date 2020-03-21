@@ -1,46 +1,40 @@
 fileFormatVersion: 2
-guid: c9e500f82b2081f408572d25774b5c8d
+guid: f2ce437205eb5a64981a5e22f1c6c6ea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3989960940132731924
-    second: Brain Back Brains 13x6_0
+      213: 6551753342903270285
+    second: Brain Back Brains_0
   - first:
-      213: -6042128270391629733
-    second: Brain Back Brains 13x6_1
+      213: 6227089092600035980
+    second: Brain Back Brains_1
   - first:
-      213: 1574823312050390094
-    second: Brain Back Brains 13x6_2
+      213: -5711564484855516797
+    second: Brain Back Brains_2
   - first:
-      213: -7179079042317461003
-    second: Brain Back Brains 13x6_3
+      213: 8209014476974008310
+    second: Brain Back Brains_3
   - first:
-      213: 4042388377817321542
-    second: Brain Back Brains 13x6_4
+      213: -4574075379608953008
+    second: Brain Back Brains_4
   - first:
-      213: 3009230179145431416
-    second: Brain Back Brains 13x6_5
+      213: -3960543734781581987
+    second: Brain Back Brains_5
   - first:
-      213: -4359132874148349657
-    second: Brain Back Brains 13x6_6
+      213: 2426690720773894410
+    second: Brain Back Brains_6
   - first:
-      213: 726387978014384497
-    second: Brain Back Brains 13x6_7
+      213: -188426961506760979
+    second: Brain Back Brains_7
   - first:
-      213: 5394422059107036200
-    second: Brain Back Brains 13x6_8
+      213: -5992788086311081141
+    second: Brain Back Brains_8
   - first:
-      213: 5301948686329789759
-    second: Brain Back Brains 13x6_9
+      213: -6515068011036279458
+    second: Brain Back Brains_9
   - first:
-      213: 7492715909415566389
-    second: Brain Back Brains 13x6_10
-  - first:
-      213: -6999161936325332114
-    second: Brain Back Brains 13x6_11
-  - first:
-      213: -7514715421144357045
-    second: Brain Back Brains 13x6_12
+      213: -381289423345762542
+    second: Brain Back Brains_10
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -137,7 +131,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_0
+      name: Brain Back Brains_0
       rect:
         serializedVersion: 2
         x: 0
@@ -145,20 +139,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ce374b72aafc0a8c0800000000000000
-      internalID: -3989960940132731924
+      spriteID: d8b3ab3e3f08cea50800000000000000
+      internalID: 6551753342903270285
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_1
+      name: Brain Back Brains_1
       rect:
         serializedVersion: 2
         x: 13
@@ -166,20 +160,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5826f3c95c062ca0800000000000000
-      internalID: -6042128270391629733
+      spriteID: c8a722589801b6650800000000000000
+      internalID: 6227089092600035980
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_2
+      name: Brain Back Brains_2
       rect:
         serializedVersion: 2
         x: 26
@@ -187,20 +181,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4484c26575ead510800000000000000
-      internalID: 1574823312050390094
+      spriteID: 3813378bc527cb0b0800000000000000
+      internalID: -5711564484855516797
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_3
+      name: Brain Back Brains_3
       rect:
         serializedVersion: 2
         x: 39
@@ -208,20 +202,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5f9573cb5a9ce5c90800000000000000
-      internalID: -7179079042317461003
+      spriteID: 6f723107c274ce170800000000000000
+      internalID: 8209014476974008310
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_4
+      name: Brain Back Brains_4
       rect:
         serializedVersion: 2
         x: 52
@@ -229,20 +223,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 64018f7efc2791830800000000000000
-      internalID: 4042388377817321542
+      spriteID: 05f5c8e3dae9580c0800000000000000
+      internalID: -4574075379608953008
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Back Brains 13x6_5
+      name: Brain Back Brains_5
       rect:
         serializedVersion: 2
         x: 65
@@ -250,14 +244,119 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 879395387eee2c920800000000000000
-      internalID: 3009230179145431416
+      spriteID: d55e1f205725909c0800000000000000
+      internalID: -3960543734781581987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Brains_6
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a01f6777a565da120800000000000000
+      internalID: 2426690720773894410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Brains_7
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de688454da2926df0800000000000000
+      internalID: -188426961506760979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Brains_8
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4b2c359cf655dca0800000000000000
+      internalID: -5992788086311081141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Brains_9
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5dfbaa8924d595a0800000000000000
+      internalID: -6515068011036279458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Brains_10
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21fbcd42a4365baf0800000000000000
+      internalID: -381289423345762542
       vertices: []
       indices: 
       edges: []

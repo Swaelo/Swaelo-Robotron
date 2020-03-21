@@ -1,25 +1,25 @@
 fileFormatVersion: 2
-guid: e8226df936961054f82ceb88623a0610
+guid: 77a309301ff56594a8d92314a622e97c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4623949944184597677
-    second: Brain Front Eyes 13x6_0
+      213: 3412729801677248980
+    second: Brain Front Eyes_0
   - first:
-      213: 1674716833168792869
-    second: Brain Front Eyes 13x6_1
+      213: -5580413543874881992
+    second: Brain Front Eyes_1
   - first:
-      213: -4211885234995804803
-    second: Brain Front Eyes 13x6_2
+      213: 1944203807804314969
+    second: Brain Front Eyes_2
   - first:
-      213: -6439704604749451137
-    second: Brain Front Eyes 13x6_3
+      213: -7415261461227757554
+    second: Brain Front Eyes_3
   - first:
-      213: 5383736515911329780
-    second: Brain Front Eyes 13x6_4
+      213: -2447831956318561251
+    second: Brain Front Eyes_4
   - first:
-      213: -5476185987380206653
-    second: Brain Front Eyes 13x6_5
+      213: -712479087493707049
+    second: Brain Front Eyes_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -116,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_0
+      name: Brain Front Eyes_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,20 +124,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dac6f4ab9f19b2040800000000000000
-      internalID: 4623949944184597677
+      spriteID: 4d99c575ca37c5f20800000000000000
+      internalID: 3412729801677248980
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_1
+      name: Brain Front Eyes_1
       rect:
         serializedVersion: 2
         x: 13
@@ -145,20 +145,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 52d9464361acd3710800000000000000
-      internalID: 1674716833168792869
+      spriteID: 8361f89b2736e82b0800000000000000
+      internalID: -5580413543874881992
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_2
+      name: Brain Front Eyes_2
       rect:
         serializedVersion: 2
         x: 26
@@ -166,20 +166,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d75cc5db1b06c85c0800000000000000
-      internalID: -4211885234995804803
+      spriteID: 9555327ff033bfa10800000000000000
+      internalID: 1944203807804314969
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_3
+      name: Brain Front Eyes_3
       rect:
         serializedVersion: 2
         x: 39
@@ -187,20 +187,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f70367fe7c291a6a0800000000000000
-      internalID: -6439704604749451137
+      spriteID: e0020ee1df2b71990800000000000000
+      internalID: -7415261461227757554
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_4
+      name: Brain Front Eyes_4
       rect:
         serializedVersion: 2
         x: 52
@@ -208,20 +208,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4f7a13346dfd6ba40800000000000000
-      internalID: 5383736515911329780
+      spriteID: d1c58cd0ecd870ed0800000000000000
+      internalID: -2447831956318561251
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Eyes 13x6_5
+      name: Brain Front Eyes_5
       rect:
         serializedVersion: 2
         x: 65
@@ -229,14 +229,14 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c32b3acbdda004b0800000000000000
-      internalID: -5476185987380206653
+      spriteID: 7da0b087b04cc16f0800000000000000
+      internalID: -712479087493707049
       vertices: []
       indices: 
       edges: []

@@ -1,25 +1,40 @@
 fileFormatVersion: 2
-guid: 92037c8d14c55084f820c659b39d4b78
+guid: ac35bc4de193f7d4c856feb8fee7f484
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2963332109650118841
-    second: Brain Side Brains 13x6_0
+      213: -8171772023651367484
+    second: Brain Side Brains_0
   - first:
-      213: -4642261262630873106
-    second: Brain Side Brains 13x6_1
+      213: 7165769958874712299
+    second: Brain Side Brains_1
   - first:
-      213: 98735621362082387
-    second: Brain Side Brains 13x6_2
+      213: -2526115555090569802
+    second: Brain Side Brains_2
   - first:
-      213: 2875623194737258529
-    second: Brain Side Brains 13x6_3
+      213: -6984478132311160883
+    second: Brain Side Brains_3
   - first:
-      213: 6327016547848000322
-    second: Brain Side Brains 13x6_4
+      213: -7878552294502332512
+    second: Brain Side Brains_4
   - first:
-      213: -3075995747747463055
-    second: Brain Side Brains 13x6_5
+      213: -2418660330171543648
+    second: Brain Side Brains_5
+  - first:
+      213: -5124695828676713952
+    second: Brain Side Brains_6
+  - first:
+      213: -7950762907100926555
+    second: Brain Side Brains_7
+  - first:
+      213: -3113333683857022827
+    second: Brain Side Brains_8
+  - first:
+      213: -1918326470662797328
+    second: Brain Side Brains_9
+  - first:
+      213: -971501731824041797
+    second: Brain Side Brains_10
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -116,7 +131,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_0
+      name: Brain Side Brains_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,20 +139,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 747bbcc852120e6d0800000000000000
-      internalID: -2963332109650118841
+      spriteID: 4c509c0f3a8089e80800000000000000
+      internalID: -8171772023651367484
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_1
+      name: Brain Side Brains_1
       rect:
         serializedVersion: 2
         x: 13
@@ -145,20 +160,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ee794563aff539fb0800000000000000
-      internalID: -4642261262630873106
+      spriteID: be884eccfcde17360800000000000000
+      internalID: 7165769958874712299
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_2
+      name: Brain Side Brains_2
       rect:
         serializedVersion: 2
         x: 26
@@ -166,20 +181,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 352e6f54687ce5100800000000000000
-      internalID: 98735621362082387
+      spriteID: 6b5ec3d594f61fcd0800000000000000
+      internalID: -2526115555090569802
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_3
+      name: Brain Side Brains_3
       rect:
         serializedVersion: 2
         x: 39
@@ -187,20 +202,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12030365f0448e720800000000000000
-      internalID: 2875623194737258529
+      spriteID: dc70c1ed426221f90800000000000000
+      internalID: -6984478132311160883
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_4
+      name: Brain Side Brains_4
       rect:
         serializedVersion: 2
         x: 52
@@ -208,20 +223,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2439f7e37041ec750800000000000000
-      internalID: 6327016547848000322
+      spriteID: 0a789d53e62c9a290800000000000000
+      internalID: -7878552294502332512
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Side Brains 13x6_5
+      name: Brain Side Brains_5
       rect:
         serializedVersion: 2
         x: 65
@@ -229,14 +244,119 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17086ec2a2edf45d0800000000000000
-      internalID: -3075995747747463055
+      spriteID: 0afcbcb8e313f6ed0800000000000000
+      internalID: -2418660330171543648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Side Brains_6
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0226ccdab4c61e8b0800000000000000
+      internalID: -5124695828676713952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Side Brains_7
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ada5ecc24739a190800000000000000
+      internalID: -7950762907100926555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Side Brains_8
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 590a17a72873bc4d0800000000000000
+      internalID: -3113333683857022827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Side Brains_9
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f74ae81d3cb065e0800000000000000
+      internalID: -1918326470662797328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Side Brains_10
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb083f772588482f0800000000000000
+      internalID: -971501731824041797
       vertices: []
       indices: 
       edges: []

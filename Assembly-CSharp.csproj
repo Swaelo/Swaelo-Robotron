@@ -63,11 +63,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Enemies\BrainAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\BrainSpriteViewer.cs" />
     <Compile Include="Assets\Scripts\Enemies\ElectrodeAI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnforcerAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\GruntAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\HulkAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\HulkSpriteViewer.cs" />
+    <Compile Include="Assets\Scripts\Enemies\QuarkAI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\SparkShotAI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\SpheroidAI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\TankAI.cs" />
+    <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\FriendlyEntity.cs" />
+    <Compile Include="Assets\Scripts\Entities\HostileEntity.cs" />
+    <Compile Include="Assets\Scripts\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\Game\PlayButton.cs" />
+    <Compile Include="Assets\Scripts\Game\PointValues.cs" />
+    <Compile Include="Assets\Scripts\Game\PrefabSpawner.cs" />
+    <Compile Include="Assets\Scripts\Game\WaveData.cs" />
+    <Compile Include="Assets\Scripts\Game\WaveManager.cs" />
+    <Compile Include="Assets\Scripts\Humans\HumanSpriteViewer.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteViewer.cs" />

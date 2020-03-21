@@ -1,25 +1,37 @@
 fileFormatVersion: 2
-guid: 68c8e968cc7f4354cb8e2caf1f489762
+guid: b8230a5b64de8ef4db0e4692b1c5e37d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1129836812907682587
-    second: Enforcer Cover GOPTWY 6x9_0
+      213: -460414506774407781
+    second: Enforcer Cover_0
   - first:
-      213: 8458007242836854740
-    second: Enforcer Cover GOPTWY 6x9_1
+      213: -980393630672563220
+    second: Enforcer Cover_1
   - first:
-      213: 8540948113249799136
-    second: Enforcer Cover GOPTWY 6x9_2
+      213: -812358875980038700
+    second: Enforcer Cover_2
   - first:
-      213: -366537047978222531
-    second: Enforcer Cover GOPTWY 6x9_3
+      213: -1033256290787553687
+    second: Enforcer Cover_3
   - first:
-      213: -8088790401773753919
-    second: Enforcer Cover GOPTWY 6x9_4
+      213: -7015943079888502367
+    second: Enforcer Cover_4
   - first:
-      213: -3582652450730728772
-    second: Enforcer Cover GOPTWY 6x9_5
+      213: 731613750326788133
+    second: Enforcer Cover_5
+  - first:
+      213: 4972611219370046256
+    second: Enforcer Cover_6
+  - first:
+      213: -8803226196438993080
+    second: Enforcer Cover_7
+  - first:
+      213: -7456253377436609745
+    second: Enforcer Cover_8
+  - first:
+      213: -1740588697299625265
+    second: Enforcer Cover_9
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -116,7 +128,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_0
+      name: Enforcer Cover_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,20 +136,20 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e46a70a7630250f0800000000000000
-      internalID: -1129836812907682587
+      spriteID: b95564a02774c99f0800000000000000
+      internalID: -460414506774407781
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_1
+      name: Enforcer Cover_1
       rect:
         serializedVersion: 2
         x: 9
@@ -145,20 +157,20 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4d7c8f066c0e06570800000000000000
-      internalID: 8458007242836854740
+      spriteID: ce3d4bfef21f462f0800000000000000
+      internalID: -980393630672563220
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_2
+      name: Enforcer Cover_2
       rect:
         serializedVersion: 2
         x: 18
@@ -166,20 +178,20 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0eb0c4f9e0b878670800000000000000
-      internalID: 8540948113249799136
+      spriteID: 4ddf21708ebe9b4f0800000000000000
+      internalID: -812358875980038700
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_3
+      name: Enforcer Cover_3
       rect:
         serializedVersion: 2
         x: 27
@@ -187,20 +199,20 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d3cdc323f7cc9eaf0800000000000000
-      internalID: -366537047978222531
+      spriteID: 96e8ba1c0e229a1f0800000000000000
+      internalID: -1033256290787553687
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_4
+      name: Enforcer Cover_4
       rect:
         serializedVersion: 2
         x: 36
@@ -208,20 +220,20 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c9afaf5cf7debf80800000000000000
-      internalID: -8088790401773753919
+      spriteID: 1a1c2eed0fc52ae90800000000000000
+      internalID: -7015943079888502367
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enforcer Cover GOPTWY 6x9_5
+      name: Enforcer Cover_5
       rect:
         serializedVersion: 2
         x: 45
@@ -229,14 +241,98 @@ TextureImporter:
         width: 9
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb22388e39cd74ec0800000000000000
-      internalID: -3582652450730728772
+      spriteID: 520050564d6372a00800000000000000
+      internalID: 731613750326788133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Cover_6
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 0
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0337ca8de83420540800000000000000
+      internalID: 4972611219370046256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Cover_7
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 0
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84737d37a68a4d580800000000000000
+      internalID: -8803226196438993080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Cover_8
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 0
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f239592ee01168890800000000000000
+      internalID: -7456253377436609745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enforcer Cover_9
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 0
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fca55654dcf28d7e0800000000000000
+      internalID: -1740588697299625265
       vertices: []
       indices: 
       edges: []

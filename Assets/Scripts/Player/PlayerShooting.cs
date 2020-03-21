@@ -5,6 +5,7 @@
 // ================================================================================================================================
 
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum ProjectileColor
 {
@@ -22,19 +23,40 @@ public class PlayerShooting : MonoBehaviour
     private ProjectileColor CurrentColor = ProjectileColor.Blue;    //Current color of bullets being fired
     private float ColorChangeRate = 1f;  //How often the projectile color changes
     private float NextColorChange = 1f;  //How long until the projectile color changes again
+    private float ShotCooldownDuration = 0.1f;  //How much time passes between firing projectiles
+    private float ShotCooldownRemaining = 0.1f; //How long until the player can shoot another projectile
+    public List<GameObject> ActiveProjectiles = new List<GameObject>();    //Keep a list of the players active projectiles so they can be cleaned up on demand
     
     private void Update()
     {
-        //Shoot a projectile whenever the player clicks the left mouse button
-        if (Input.GetMouseButtonDown(0))
-            FireProjectile();
+        //Player shooting is disabled during the round warmup period
+        if (WaveManager.Instance.RoundWarmingUp)
+            return;
+
+        //Decrement the shot cooldown
+        ShotCooldownRemaining -= Time.deltaTime;
+
+        //Allow the firing of projectiles whenever its not on cooldown
+        if(ShotCooldownRemaining <= 0.0f)
+        {
+            //Aim projectiles toward the mouse cursor whenever the right mouse button is being held down
+            if (Input.GetMouseButton(0))
+                FireProjectileMouseCursor();
+            //Aim projectiles with the right joystick whenever any input from it is being detected
+            else if (Input.GetAxis("ControllerHorizontalFiring") != 0f || Input.GetAxis("ControllerVerticalFiring") != 0f)
+                FireProjectileRightJoystick();
+        }
 
         //Cycle through firing of different colored projectiles
         CycleProjectileColors();
     }
 
-    private void FireProjectile()
+    //Fires a projectile aimed with the mouse cursor
+    private void FireProjectileMouseCursor()
     {
+        //Reset the shot cooldown timer
+        ShotCooldownRemaining = ShotCooldownDuration;
+
         //Shoot a ray through the camera to see where the players mouse cursor is positioned
         Ray CursorRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit RayHit;
@@ -42,21 +64,48 @@ public class PlayerShooting : MonoBehaviour
         {
             //Find the direction from the player to where the mouse cursor is
             Vector3 MouseDirection = Vector3.Normalize(RayHit.point - transform.position);
+            MouseDirection.Normalize();
 
-            //Get the angle of this vector so that same angle can be applied to the projectile when we spawn it in
-            float ShotAngle = Vector3.Angle(MouseDirection, transform.right);
-
-            //Create a quaternion to apply to the projectile
-            bool ShotAbove = RayHit.point.y >= transform.position.y;
-            Quaternion ShotRotation = Quaternion.Euler(0f, 0f, ShotAbove ? ShotAngle : -ShotAngle);
-
-            //Spawn the projectile and give it some velocity
-            GameObject Projectile = Instantiate(PlayerProjectilePrefab, transform.position + (MouseDirection * .25f), ShotRotation);
-            Projectile.GetComponent<ProjectileMovement>().SetMovement(MouseDirection);
-
-            //Tell the projectile its color
-            Projectile.GetComponent<ProjectileMovement>().SetColor(CurrentColor);
+            //Fire a projectile in this direction
+            FireProjectile(MouseDirection);
         }
+    }
+
+    //Cleans up any active projectiles then resets the list which stores them all
+    public void CleanProjectiles()
+    {
+        foreach (GameObject Projectile in ActiveProjectiles)
+            if(Projectile != null)
+                Destroy(Projectile);
+        ActiveProjectiles.Clear();
+    }
+
+    //Fires a projectile aimed with the right joystick
+    private void FireProjectileRightJoystick()
+    {
+        //Reset the shot cooldown timer
+        ShotCooldownRemaining = ShotCooldownDuration;
+
+        //Create a direction vector based on the right joystick input
+        Vector3 JoystickDirection = new Vector3(Input.GetAxis("ControllerHorizontalFiring"), Input.GetAxis("ControllerVerticalFiring"));
+        JoystickDirection.Normalize();
+
+        //Fire a projectile in this direction
+        FireProjectile(JoystickDirection);
+    }
+
+    //Fires a projectile in the given direction
+    private void FireProjectile(Vector3 Direction)
+    {
+        //Create a quaternion from the angle of this direction vector, and find a suitable location to spawn it
+        float Angle = Vector3.Angle(Direction, transform.right);
+        Quaternion Rotation = Quaternion.Euler(0f, 0f, Direction.y > 0f ? Angle : -Angle);
+        Vector3 Position = transform.position + (Direction * .25f);
+        //Spawn a projectile with these values and set its movement direction and render color
+        GameObject Projectile = Instantiate(PlayerProjectilePrefab, Position, Rotation);
+        Projectile.GetComponent<ProjectileMovement>().InitializeProjectile(Direction, CurrentColor);
+        //Store the projectile in the list with the other
+        ActiveProjectiles.Add(Projectile);
     }
 
     private void CycleProjectileColors()

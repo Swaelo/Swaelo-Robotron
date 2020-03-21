@@ -1,25 +1,40 @@
 fileFormatVersion: 2
-guid: 8eb24dcd2e69e0143b1a5d8f8e811393
+guid: b3e06cc1ab68a424fbd95c2d5eb4f37a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4506264870568109002
-    second: Brain Front Brains 13x6_0
+      213: -2222154458864722695
+    second: Brain Front Brains_0
   - first:
-      213: 1266521062268320311
-    second: Brain Front Brains 13x6_1
+      213: 4989397949648329684
+    second: Brain Front Brains_1
   - first:
-      213: -3541802906185301136
-    second: Brain Front Brains 13x6_2
+      213: 7343660533471828938
+    second: Brain Front Brains_2
   - first:
-      213: 8130295663941603890
-    second: Brain Front Brains 13x6_3
+      213: 5565203642996551056
+    second: Brain Front Brains_3
   - first:
-      213: -2752591580627194247
-    second: Brain Front Brains 13x6_4
+      213: 167927338149259740
+    second: Brain Front Brains_4
   - first:
-      213: -6714050623152333430
-    second: Brain Front Brains 13x6_5
+      213: 8990997461529505313
+    second: Brain Front Brains_5
+  - first:
+      213: 417305744740061193
+    second: Brain Front Brains_6
+  - first:
+      213: -2834400505789533408
+    second: Brain Front Brains_7
+  - first:
+      213: -4207906446898839943
+    second: Brain Front Brains_8
+  - first:
+      213: -3268310040469824352
+    second: Brain Front Brains_9
+  - first:
+      213: -1303302890027505029
+    second: Brain Front Brains_10
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -116,7 +131,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_0
+      name: Brain Front Brains_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,20 +139,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ac3a80a4608798e30800000000000000
-      internalID: 4506264870568109002
+      spriteID: 9fc515b0b425921e0800000000000000
+      internalID: -2222154458864722695
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_1
+      name: Brain Front Brains_1
       rect:
         serializedVersion: 2
         x: 13
@@ -145,20 +160,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73abd012236939110800000000000000
-      internalID: 1266521062268320311
+      spriteID: 4dbd9df0007ed3540800000000000000
+      internalID: 4989397949648329684
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_2
+      name: Brain Front Brains_2
       rect:
         serializedVersion: 2
         x: 26
@@ -166,20 +181,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0730168a50df8dec0800000000000000
-      internalID: -3541802906185301136
+      spriteID: acbd4a8c85ce9e560800000000000000
+      internalID: 7343660533471828938
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_3
+      name: Brain Front Brains_3
       rect:
         serializedVersion: 2
         x: 39
@@ -187,20 +202,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 232532884dc94d070800000000000000
-      internalID: 8130295663941603890
+      spriteID: 09de4834a339b3d40800000000000000
+      internalID: 5565203642996551056
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_4
+      name: Brain Front Brains_4
       rect:
         serializedVersion: 2
         x: 52
@@ -208,20 +223,20 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 97e2cf09a84dcc9d0800000000000000
-      internalID: -2752591580627194247
+      spriteID: cd9a67a3609945200800000000000000
+      internalID: 167927338149259740
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Brain Front Brains 13x6_5
+      name: Brain Front Brains_5
       rect:
         serializedVersion: 2
         x: 65
@@ -229,14 +244,119 @@ TextureImporter:
         width: 13
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8dd303e786e2d2a0800000000000000
-      internalID: -6714050623152333430
+      spriteID: 12ea7ee0e8076cc70800000000000000
+      internalID: 8990997461529505313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Front Brains_6
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90016f52d519ac500800000000000000
+      internalID: 417305744740061193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Front Brains_7
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0233a3dd1cf2aa8d0800000000000000
+      internalID: -2834400505789533408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Front Brains_8
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97eb48881638a95c0800000000000000
+      internalID: -4207906446898839943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Front Brains_9
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ac14fd9551a4a2d0800000000000000
+      internalID: -3268310040469824352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Front Brains_10
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7aab2d3decb9ede0800000000000000
+      internalID: -1303302890027505029
       vertices: []
       indices: 
       edges: []
