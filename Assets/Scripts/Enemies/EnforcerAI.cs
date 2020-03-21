@@ -58,7 +58,7 @@ public class EnforcerAI : HostileEntity
             //Move towards our current target location
             SeekTarget();
             //Fire projectiles at the player
-            FireProjectile();
+            FireProjectiles();
         }
         //Wait for death animation to complete while dead
         else
@@ -110,15 +110,13 @@ public class EnforcerAI : HostileEntity
     }
 
     //Fires a projectile toward the player
-    private void FireProjectile()
+    private void FireProjectiles()
     {
-        //Decrement the current shot cooldown timer
+        //Wait for the shot cooldown to expire
         ShotCooldown -= Time.deltaTime;
-        
-        //Only allow a new projectile to be fired when off cooldown
         if(ShotCooldown <= 0.0f)
         {
-            //Start the shooting cooldown timer
+            //Reset the cooldown timer
             ShotCooldown = ShotCooldownLength;
 
             //Grab a location nearby the player to shoot at and create a direction vector pointing from the Enforcer to this location
@@ -135,6 +133,12 @@ public class EnforcerAI : HostileEntity
             //Spawn a new spark shot and fire it in the target direction
             Vector3 ShotSpawn = transform.position + ShotDirection * 0.5f;
             GameObject SparkShot = Instantiate(SparkShotPrefab, ShotSpawn, Quaternion.identity);
+
+            //15% of Enforce shots will be aimed at the players predicted location, adding the players movement velocity onto its movement direction
+            if (Random.Range(1, 100) <= 15)
+                ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
+
+            //Pass the shots speed and movement direction along to it
             SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection);
         }
     }
