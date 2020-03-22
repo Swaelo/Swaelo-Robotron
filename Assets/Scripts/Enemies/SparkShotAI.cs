@@ -10,6 +10,8 @@ using UnityEngine;
 
 public class SparkShotAI : MonoBehaviour
 {
+    private EnforcerAI ParentEnforcer = null;   //Keep reference to the Enforcer which fired this projectile so it can be updated when this projected is destroyed
+
     //Movement
     private bool MovementSet = false;   //The shot wont move until its been given a direction and speed by the Enforcer who fired it
     private float Speed = 0f;   //The projectiles speed of travel
@@ -41,19 +43,23 @@ public class SparkShotAI : MonoBehaviour
             DeathAnimationRemaining -= Time.deltaTime;
             if (DeathAnimationRemaining <= 0.0f)
             {
+                //Award points for destroying the projectile, then alert the parent Enforcer before destroying this object itself
                 GameState.Instance.IncreaseScore((int)PointValue.SparkShot);
+                if (ParentEnforcer != null)
+                    ParentEnforcer.SparkShotDestroyed(gameObject);
                 Destroy(this.gameObject);
             }
         }
     }
 
     //Enforcer calls this function to provide the projectile with its required values upon firing
-    public void InitializeProjectile(float Speed, Vector3 Direction)
+    public void InitializeProjectile(float Speed, Vector3 Direction, EnforcerAI Parent)
     {
         //Store all the values that were provided
         MovementSet = true;
         this.Speed = Speed;
         this.Direction = Direction;
+        ParentEnforcer = Parent;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

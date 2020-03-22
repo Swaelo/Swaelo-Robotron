@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e07ce0fa46e8c4783d16c2dbb223dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
+  MoveSpeed: 2.5
   MovementVelocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6260544339887091745
 MonoBehaviour:
@@ -140,6 +140,7 @@ MonoBehaviour:
   BackdropLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  ActiveProjectiles: []
 --- !u!50 &8153907359187570883
 Rigidbody2D:
   serializedVersion: 4

@@ -15,11 +15,11 @@
 // ================================================================================================================================
 
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnforcerAI : HostileEntity
 {
     //Targetting/Movement 
-    private GameObject Player;  //The player character gameobject
     private Vector3 Target; //Current location the Enforcer is seeking toward
     private Vector2 TargetOffsetRange = new Vector2(0.25f, 1.15f);    //Value range allowed when finding a new target location near the player to seek to
     private Vector2 PlayerDistanceRange = new Vector2(0.5f, 18f);   //Distance between the Enforcer and Player will always fall in this range somewhere
@@ -31,6 +31,7 @@ public class EnforcerAI : HostileEntity
     private float ShotCooldown = 0.5f;  //Seconds remaining on the current shot cooldown
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.25f); //Value range allowed when finding a new target location near the player to shoot at
     private Vector2 ShotSpeedRange = new Vector2(2.5f, 5f);  //Range of speed values in which the projectiles may be fired at
+    private List<GameObject> ActiveSparkShots = new List<GameObject>(); //Keep a list of active spark shots which have been fired by the Enforcer
 
     //Status/Animation
     private bool IsAlive = true;    //Set to false while waiting for death animation to play
@@ -39,9 +40,6 @@ public class EnforcerAI : HostileEntity
 
     private void Awake()
     {
-        //Find the player
-        Player = GameObject.FindGameObjectWithTag("Player");
-
         //Find a new position near the player to move toward
         Target = GetPlayerPositionOffset(TargetOffsetRange);
     }
@@ -84,7 +82,7 @@ public class EnforcerAI : HostileEntity
         bool PositiveYOffset = Random.value >= 0.5f;
 
         //Create a new vector by applying these offset values to the players current location
-        Vector3 PositionOffset = Player.transform.position;
+        Vector3 PositionOffset = GameState.Instance.Player.transform.position;
         PositionOffset.x += PositiveXOffset ? XOffset : -XOffset;
         PositionOffset.y += PositiveYOffset ? YOffset : -YOffset;
         return PositionOffset;
@@ -94,7 +92,7 @@ public class EnforcerAI : HostileEntity
     private void SeekTarget()
     {
         //Movement speed is inversely proportional to the players distance
-        float PlayerDistance = Vector3.Distance(transform.position, Player.transform.position);
+        float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
         //Find the ratio of this value when mapped onto the PlayerDistanceRange values
         float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
         //Map this onto the SpeedRange values to get a scaled speed value based on the players distance
@@ -124,7 +122,7 @@ public class EnforcerAI : HostileEntity
             Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
 
             //Projectiles speed is directly proportional to the players distance
-            float PlayerDistance = Vector3.Distance(transform.position, Player.transform.position);
+            float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
             //Find the ratio of this value when mapped onto the PlayerDistanceRange values
             float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
             //Map this onto the ShotSpeedRange valuers to get a scavled speed value based on the players distance
@@ -134,12 +132,15 @@ public class EnforcerAI : HostileEntity
             Vector3 ShotSpawn = transform.position + ShotDirection * 0.5f;
             GameObject SparkShot = Instantiate(SparkShotPrefab, ShotSpawn, Quaternion.identity);
 
+            //Store the new projectile in the list with all the other active ones
+            ActiveSparkShots.Add(SparkShot);
+
             //15% of Enforce shots will be aimed at the players predicted location, adding the players movement velocity onto its movement direction
             if (Random.Range(1, 100) <= 15)
                 ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
 
             //Pass the shots speed and movement direction along to it
-            SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection);
+            SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection, this);
         }
     }
 
@@ -168,5 +169,22 @@ public class EnforcerAI : HostileEntity
         IsAlive = false;
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
+    }
+
+    //Spark Shot projectiles fired by this Enforcer will alert it when they are going to be destroyed so they can be removed from the tracking list
+    public void SparkShotDestroyed(GameObject DestroyedSparkShot)
+    {
+        //Remove the shot from the tracking list if its listed there
+        if(ActiveSparkShots.Contains(DestroyedSparkShot))
+            ActiveSparkShots.Remove(DestroyedSparkShot);
+    }
+
+    //Cleans up any active spark shot projectiles which have been fired by this enforcer
+    public void CleanProjectiles()
+    {
+        foreach (GameObject SparkShot in ActiveSparkShots)
+            if (SparkShot != null)
+                Destroy(SparkShot);
+        ActiveSparkShots.Clear();
     }
 }

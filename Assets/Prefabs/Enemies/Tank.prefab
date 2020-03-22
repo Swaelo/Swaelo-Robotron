@@ -198,6 +198,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 6
+  TankShellPrefab: {fileID: 1708445887445972823, guid: b73c89754cab68c4a9e60fa34c27e892,
+    type: 3}
 --- !u!1 &2913181040492321496
 GameObject:
   m_ObjectHideFlags: 0

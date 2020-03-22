@@ -71,6 +71,8 @@ public class WaveManager : MonoBehaviour
                     break;
                 //Enforcers are ignored, as the Spheroids are going to have their spawn counters reset when the round restarts
                 case (EntityType.Enforcer):
+                    //They need to be told to clean up any left over projectiles they have fired though
+                    Entity.GetComponent<EnforcerAI>().CleanProjectiles();
                     break;
                 case (EntityType.Grunt):
                     EntityCount.Grunts++;
@@ -92,6 +94,8 @@ public class WaveManager : MonoBehaviour
                     break;
                 //Tanks are ignored, as the Quarks are going to have their spawn counters reset when the round restarts
                 case (EntityType.Tank):
+                    //They need to be told to clean up any left over projectiles they have fired though
+                    Entity.GetComponent<TankAI>().CleanProjectiles();
                     break;
             }
         }

@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Enemies\SparkShotAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpheroidAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\TankAI.cs" />
+    <Compile Include="Assets\Scripts\Enemies\TankShellAI.cs" />
     <Compile Include="Assets\Scripts\Entities\BaseEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\FriendlyEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\HostileEntity.cs" />
