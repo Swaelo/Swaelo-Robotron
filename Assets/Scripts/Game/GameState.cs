@@ -17,6 +17,9 @@ public class GameState : MonoBehaviour
     public GameObject Player;   //Player character object
     private int Score;   //The players current score value
     private int ExtraLives;   //How many extra lives the player has remaining
+    private int MaxExtraLives = 5;  //Maximum amount of extra lives the player is able to hold at once
+    private int NextFreeLife = 25000;   //Current score milestone the player needs to reach to recieve their next free life
+    private int FreeLifeInterval = 25000;   //Added onto the NextFreeLife milestone once it has been reached to set the next free life milestone
     public int CurrentWave;    //What wave the player is currently on
     public bool DisableWaveProgression = false; //Waves will not begin or progress while this is enabled (for debugging purposes)
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
@@ -43,6 +46,20 @@ public class GameState : MonoBehaviour
         Score += Amount;
         //Update the UI score display
         UIScoreDisplay.text = Score.ToString();
+
+        //Check if the player has reached the current free life milestone
+        if(Score >= NextFreeLife)
+        {
+            //Award an extra life to the player if they arent already at the maximum amount
+            if(ExtraLives < MaxExtraLives)
+            {
+                ExtraLives++;
+                LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
+            }
+
+            //Update the milestone for the next free life the player will be able to recieve
+            NextFreeLife += FreeLifeInterval;
+        }
     }
 
     //Adds points to the score counter for rescuing a human survivor
