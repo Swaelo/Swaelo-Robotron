@@ -5,6 +5,7 @@
 // ================================================================================================================================
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class WaveManager : MonoBehaviour
@@ -21,6 +22,7 @@ public class WaveManager : MonoBehaviour
     private float PreGameWarmUp = 1.25f;    //How long the game is paused for at the start of a new round
     private float WarmUpRemaining = 1.25f;  //Time left in the pregame warmup until the round begins
     public bool RoundWarmingUp = false;    //Flagged when a new round has begun then disabled once the countdown has expired
+    public Text UIRoundDisplay; //UI Text component used to display the current round number
 
     //Spawns in all the enemies for the given wave number
     public void StartWave(int WaveNumber)
@@ -28,6 +30,9 @@ public class WaveManager : MonoBehaviour
         //Start the pregame warmup period
         RoundWarmingUp = true;
         WarmUpRemaining = PreGameWarmUp;
+
+        //Update the UI round display
+        UIRoundDisplay.text = "Round    " + WaveNumber.ToString();
 
         //Reset the human rescue score multiplier
         GameState.Instance.RescueMultiplier = 1;

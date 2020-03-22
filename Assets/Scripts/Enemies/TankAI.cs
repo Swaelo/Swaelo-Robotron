@@ -127,6 +127,7 @@ public class TankAI : HostileEntity
         if (collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
+            CleanProjectiles();
             WaveManager.Instance.TargetEnemyDead(this);
             Destroy(gameObject);
         }

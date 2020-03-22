@@ -5,6 +5,7 @@
 // ================================================================================================================================
 
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
@@ -15,16 +16,18 @@ public class GameState : MonoBehaviour
 
     public GameObject Player;   //Player character object
     private int Score;   //The players current score value
-    private int Lives;   //How many extra lives the player has remaining
+    private int ExtraLives;   //How many extra lives the player has remaining
     public int CurrentWave;    //What wave the player is currently on
     public bool DisableWaveProgression = false; //Waves will not begin or progress while this is enabled (for debugging purposes)
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
+    public Text UIScoreDisplay; //UI Text component used to display the players current score counter
 
     private void Start()
     {
         //Begin the player on the first wave
         Score = 0;
-        Lives = 2;
+        ExtraLives = 2;
+        LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
         CurrentWave = 1;
         Player = PrefabSpawner.Instance.SpawnPrefab("Player", Vector3.zero, Quaternion.identity);
 
@@ -36,7 +39,10 @@ public class GameState : MonoBehaviour
     //Adds points to the total score counter
     public void IncreaseScore(int Amount)
     {
+        //Increase the score count
         Score += Amount;
+        //Update the UI score display
+        UIScoreDisplay.text = Score.ToString();
     }
 
     //Adds points to the score counter for rescuing a human survivor
@@ -49,16 +55,18 @@ public class GameState : MonoBehaviour
     //Restarts the round if the player has lived remaining, otherwise proceeds to the gameover screen
     public void KillPlayer()
     {
-        Lives--;
-
         //Go to gameover if the player has no lives left
-        if (Lives == 0)
+        if (ExtraLives == 0)
         {
             SceneManager.LoadScene(2);
             return;
         }
+        
+        //Remove one of the players extra lives in order to allow them to restart the current round
+        ExtraLives--;
+        LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
 
-        //Otherwise we restart the current wave
+        //Restart the current wave
         WaveManager.Instance.RestartWave();
     }
 }

@@ -27,7 +27,7 @@ public class GruntAI : HostileEntity
     private Animator AnimationController;   //Used to control what animations are being played for the enemy
     private GameObject PlayerTarget;    //The Grunts target
     private bool IsAlive = true;        //Set to false once killed by the player while the Grunts death animation is played out
-    private float DeathAnimationRemaining = 1f;   //Time left until the death animation is finished playing out
+    private float DeathAnimationRemaining = .5f;   //Time left until the death animation is finished playing out
     private Vector3 PreviousPosition;   //Grunts position over time is measured and sent to the animator to transition between idle/walk animation
 
     private void Awake()

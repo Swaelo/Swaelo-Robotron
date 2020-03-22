@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\Entities\FriendlyEntity.cs" />
     <Compile Include="Assets\Scripts\Entities\HostileEntity.cs" />
     <Compile Include="Assets\Scripts\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\Game\LivesDisplay.cs" />
     <Compile Include="Assets\Scripts\Game\PlayButton.cs" />
     <Compile Include="Assets\Scripts\Game\PointValues.cs" />
     <Compile Include="Assets\Scripts\Game\PrefabSpawner.cs" />

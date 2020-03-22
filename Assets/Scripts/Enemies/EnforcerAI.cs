@@ -151,6 +151,7 @@ public class EnforcerAI : HostileEntity
         if(collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
+            CleanProjectiles();
             TriggerDeath();
         }
         //Kill the player character on contact
