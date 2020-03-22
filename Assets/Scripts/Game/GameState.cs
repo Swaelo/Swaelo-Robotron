@@ -58,6 +58,13 @@ public class GameState : MonoBehaviour
         //Go to gameover if the player has no lives left
         if (ExtraLives == 0)
         {
+            //Spawn in the ScoreCarry object, store the players score and final round number in it, and make sure it stays while we change over to the game over scene
+            GameObject ScoreCarrier = PrefabSpawner.Instance.SpawnPrefab("ScoreCarry", Vector3.zero, Quaternion.identity);
+            ScoreCarrier.GetComponent<ScoreCarry>().FinalScore = Score;
+            ScoreCarrier.GetComponent<ScoreCarry>().FinalRound = CurrentWave;
+            DontDestroyOnLoad(ScoreCarrier);
+
+            //Now load into the game over scene
             SceneManager.LoadScene(2);
             return;
         }
