@@ -178,11 +178,5 @@ public class SpheroidAI : HostileEntity
             GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
             Destroy(this.gameObject);
         }
-        //Kill any human survivors the Spheroid comes into contact with
-        else if (collision.transform.CompareTag("Human"))
-        {
-            WaveManager.Instance.RemoveHumanSurvivor(collision.transform.GetComponent<BaseEntity>());
-            Destroy(collision.gameObject);
-        }
     }
 }

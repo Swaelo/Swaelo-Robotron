@@ -65,7 +65,14 @@ public class GameState : MonoBehaviour
     //Adds points to the score counter for rescuing a human survivor
     public void ScoreRescueSurvivor()
     {
+        //Award points for the rescue
         Score += 1000 * RescueMultiplier;
+
+        //Spawn in the score display object for the amount of points that were awarded to the player
+        string PrefabName = RescueMultiplier.ToString() + "000Points";
+        PrefabSpawner.Instance.SpawnPrefab(PrefabName, Player.transform.position, Quaternion.identity);
+
+        //Increase the multiplier
         RescueMultiplier++;
     }
 

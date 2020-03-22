@@ -260,8 +260,13 @@ public class WaveManager : MonoBehaviour
     }
 
     //Removes a human survivor from the active entity list
-    public void RemoveHumanSurvivor(BaseEntity Human)
+    public void RemoveHumanSurvivor(BaseEntity Human, bool KilledByEnemy = false)
     {
+        //If the entity is being removes as a result of it being killed by one of the enemies, spawn in the skull and crossbones near them
+        if (KilledByEnemy)
+            PrefabSpawner.Instance.SpawnPrefab("Skull", Human.transform.position, Quaternion.identity);
+
+        //Remove the entity from the tracking list
         ActiveEntities.Remove(Human);
     }
 }

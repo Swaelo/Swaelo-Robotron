@@ -126,12 +126,6 @@ public class GruntAI : HostileEntity
         //Kill the Grunt if it comes into contact with any Electrodes
         else if (collision.transform.CompareTag("Electrode"))
             Die();
-        //Kill any humans the Grunt comes into contact with
-        else if (collision.transform.CompareTag("Human"))
-        {
-            WaveManager.Instance.RemoveHumanSurvivor(collision.transform.GetComponent<BaseEntity>());
-            Destroy(collision.gameObject);
-        }
     }
 
     //Triggers the death animation to be played before destroying the Grunt
