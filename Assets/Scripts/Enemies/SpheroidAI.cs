@@ -37,9 +37,14 @@ public class SpheroidAI : HostileEntity
     private Vector2 XSpawnRange = new Vector2(-7.173f, 7.172f); //Range along the X axis where enforcers can be spawned in
     private Vector2 YSpawnRange = new Vector2(-4.126f, 4.125f); //Range along the Y axis where enforcers can be spawned in
     private Vector2 SpawnRangeOffset = new Vector2(0.5f, 1.25f);    //How far in each direction an Enforcers spawn location will be offset from the Spheroids location
+    private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Spheroid when its spawned in
+    private int HitPoints; //Hits left before the Spheroid dies
 
     private void Awake()
     {
+        //Assign a random number of health points to the spheroid
+        HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
+
         //Randomly set the number of Enforcers that this Spheroid will be allowed to spawn before it self-destructs
         SpawnsLeft = Random.Range(1, MaxSpawnCount);
 
@@ -165,18 +170,30 @@ public class SpheroidAI : HostileEntity
         CurrentTarget = FurthestCorner;
     }
 
+    //Removes one of the Spheroids remaining hit points, kills it once its hitpoints have run out
+    private void TakeDamage()
+    {
+        //Take away 1 from the Spheroids hitpoints and check if its still alive
+        HitPoints--;
+        if(HitPoints <= 0)
+        {
+            //Kill the Spheroid once its hitpoints reach zero
+            WaveManager.Instance.TargetEnemyDead(this);
+            GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
+            Destroy(gameObject);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //Kill the player if we collide with them
         if (collision.transform.CompareTag("Player"))
             GameState.Instance.KillPlayer();
-        //Destroy and player projectiles which hit the Spheroid, killing the Spheroid in the process
+        //Destroy any player projectiles which hit the Spheroid, and deal 1 point of damage to the Spheroid
         else if (collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
-            WaveManager.Instance.TargetEnemyDead(this);
-            GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
-            Destroy(this.gameObject);
+            TakeDamage();
         }
     }
 }

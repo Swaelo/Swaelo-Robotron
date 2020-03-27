@@ -128,6 +128,7 @@ public class TankAI : HostileEntity
         {
             Destroy(collision.gameObject);
             CleanProjectiles();
+            GameState.Instance.IncreaseScore((int)PointValue.Tank);
             WaveManager.Instance.TargetEnemyDead(this);
             Destroy(gameObject);
         }

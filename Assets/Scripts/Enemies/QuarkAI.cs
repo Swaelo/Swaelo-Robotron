@@ -21,9 +21,14 @@ public class QuarkAI : HostileEntity
     private Vector2 XSpawnRange = new Vector2(-7.087f, 7.084f); //Range along the X axis where Tanks can be spawned in
     private Vector2 YSpawnRange = new Vector2(-4f, 4f); //Range along the Y axis where Tank can be spawned in
     private Vector2 SpawnRangeOffset = new Vector2(0.75f, 1.65f);   //How far in each direction a Tanks spawn location may be offset from the Quarks location
+    private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Quark when its spawned in
+    private int HitPoints;  //Hits that can be taken before the Quark dies
 
     private void Awake()
     {
+        //Assign a random number of health points to the spheroid
+        HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
+
         //Randomly set the number of Tanks this Quark will be allowed to spawn before it self-destructs
         SpawnsLeft = Random.Range(1, MaxSpawnCount);
 
@@ -123,6 +128,20 @@ public class QuarkAI : HostileEntity
 
         //Return the new location
         return SpawnLocation;
+    }
+
+    //Removes one of the Quarks hit points, kills it when they run out
+    private void TakeDamage()
+    {
+        //Take away 1 of the Quarks hitpoints and check if its still alive
+        HitPoints--;
+        if(HitPoints <= 0)
+        {
+            //Kill the Quark once its hitpoints reach zero
+            WaveManager.Instance.TargetEnemyDead(this);
+            GameState.Instance.IncreaseScore((int)PointValue.Quark);
+            Destroy(gameObject);
+        }
     }
 
     //Handle collisions with certain other objects and entities that we come into contact with
