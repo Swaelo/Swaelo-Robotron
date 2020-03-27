@@ -23,7 +23,7 @@ public class GruntAI : HostileEntity
     public float InitialMoveSpeed = 0.65f; //Grunts move speed at the start of a new round
     public float CurrentMoveSpeed = 0.65f; //Grunts current move speed, increases over the course of the current round
     public float MaxMoveSpeed = 2.5f;   //Maximum speed a Grunt can reach if left alive long enough
-    private float MoveSpeedIncreaseRate = 0.015f;   //How fast the Grunts movement speed increases over the course of the wave
+    private float MoveSpeedIncreaseRate = 0.123333f;   //How much the Grunts movement speed is increased per second, 15 seconds after the round begins they will reach maximum speed
     private Animator AnimationController;   //Used to control what animations are being played for the enemy
     private GameObject PlayerTarget;    //The Grunts target
     private bool IsAlive = true;        //Set to false once killed by the player while the Grunts death animation is played out
