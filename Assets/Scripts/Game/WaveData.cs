@@ -19,6 +19,8 @@ public struct WaveEntities
     public int Brains;
     public int Spheroids;
     public int Quarks;
+    public int Enforcer;
+    public int Tank;
 }
 
 public class WaveData : MonoBehaviour
