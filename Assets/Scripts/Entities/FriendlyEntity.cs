@@ -8,72 +8,69 @@ using UnityEngine;
 
 public class FriendlyEntity : BaseEntity
 {
-    private float MoveSpeed = 0.65f;    //How fast the friendly entities wander around the level
-    private Vector3 CurrentTarget;  //Current target for the entity to wander towards
-    private float WanderDistance = 3.5f;    //How far in each direction a new target may be selected from for the entity to wander to
-    private Vector2 XBounds = new Vector2(-7f, 7f); //Value range that friendlies can wander to along the X axis
-    private Vector2 YBounds = new Vector2(-4f, 4f); //Value range that friendlies can wander to along the Y axis
+    private float MoveSpeed = 0.65f;    //How fast the human survivors wander around the level
+    private Vector3 CurrentDirection;   //Current direction the entity is wandering in
+    private Vector2 WanderRange = new Vector2(0.15f, 3f);   //Range of seconds that a survive may wander in its current direction before deciding on a new direction
+    private float WanderRemaining;  //Time left to wander in the current direction before finding a new direction to move in
     
-
     private void Awake()
     {
-        //Get an initial target location for the entity to wander towards
-        CurrentTarget = NewTarget();
+        //Get an initial direction for the entity to wander in
+        NewWanderDirection();
     }
 
-    //Selects a new target position for the entity to move towards
-    private Vector3 NewTarget()
+    //Selects a new random direction for the entity to walk in
+    private void NewWanderDirection()
     {
-        //Start with the entities current position
-        Vector3 NewTargetPos = transform.position;
+        //First randomly decide how long we will wander in the new direction for
+        WanderRemaining = Random.Range(WanderRange.x, WanderRange.y);
 
-        //Offset this position on each axis
-        NewTargetPos.x += Random.Range(-WanderDistance, WanderDistance);
-        NewTargetPos.y += Random.Range(-WanderDistance, WanderDistance);
-
-        //Make sure the new location remains inside the level boundaries
-        NewTargetPos.x = Mathf.Clamp(NewTargetPos.x, XBounds.x, XBounds.y);
-        NewTargetPos.y = Mathf.Clamp(NewTargetPos.y, YBounds.x, YBounds.y);
-
-        //Return the new target location
-        return NewTargetPos;
+        //Get a new random direction to wander set it
+        Vector3 NewDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0f);
+        CurrentDirection = NewDirection.normalized;
     }
 
     private void Update()
     {
-        //All Human AI is disabled during the round warmup period
+        //All AI disabled during round warmup period
         if (WaveManager.Instance.RoundWarmingUp)
             return;
 
-        //Check the distance from the current target position
-        float TargetDistance = Vector3.Distance(transform.position, CurrentTarget);
-
-        //Grab a new wander target once we are close enough to the current target
-        if (TargetDistance <= 1f)
-            CurrentTarget = NewTarget();
-
-        //Seek towards the current target location
-        SeekTarget();
+        //Keep wandering around
+        WanderAround();
     }
 
-    //Seeks towards the current wander target location
-    private void SeekTarget()
+    //Wanders around randomly
+    private void WanderAround()
     {
-        //Get the direction to the current target location
-        Vector3 TargetDirection = Vector3.Normalize(CurrentTarget - transform.position);
+        //Get a new wander direction when we've wandered in the current direction for long enough
+        WanderRemaining -= Time.deltaTime;
+        if (WanderRemaining <= 0.0f)
+            NewWanderDirection();
 
-        //Move in that direction
-        transform.position += TargetDirection * MoveSpeed * Time.deltaTime;
+        //Wander in the current direction
+        transform.position += CurrentDirection * MoveSpeed * Time.deltaTime;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Friendly entities are rescued if they come into contact with the player character
+        //The entity is rescued if it comes into contact with the player character
         if(collision.transform.CompareTag("Player"))
         {
             WaveManager.Instance.RemoveHumanSurvivor(this);
             GameState.Instance.ScoreRescueSurvivor();
             Destroy(this.gameObject);
+        }
+        //Reflect the entitys current movement direction if they walk into one of the walls
+        else if(collision.transform.CompareTag("Wall"))
+        {
+            Vector3 SurfaceNormal = collision.contacts[0].normal;
+            CurrentDirection = Vector3.Reflect(CurrentDirection, SurfaceNormal);
+        }
+        //Turn and go back in the opposite direction if they walk into an electrode
+        else if(collision.transform.CompareTag("Electrode"))
+        {
+            CurrentDirection = -CurrentDirection;
         }
     }
 }

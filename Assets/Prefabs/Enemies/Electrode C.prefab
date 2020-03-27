@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2624359419681296913}
   - component: {fileID: 2624359419681296917}
   - component: {fileID: 2624359419681296916}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Electrode C
   m_TagString: Electrode
   m_Icon: {fileID: 0}
