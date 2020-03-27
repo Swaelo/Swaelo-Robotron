@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7289872639969417604}
   - component: {fileID: 963970498090769907}
   - component: {fileID: 4293345415052362599}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: Tank Shell
   m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}

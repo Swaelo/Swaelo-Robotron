@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2921877422181740716}
   - component: {fileID: 2850000495718752109}
   - component: {fileID: 1801529037957674881}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Spheroid
   m_TagString: Spheroid
   m_Icon: {fileID: 0}

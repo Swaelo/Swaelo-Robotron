@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2915393430759229545}
   - component: {fileID: 3995483822435061341}
   - component: {fileID: 1335670173232134346}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Quark
   m_TagString: Quark
   m_Icon: {fileID: 0}

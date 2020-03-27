@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1814220202598560342}
   - component: {fileID: 1814220202598560343}
   - component: {fileID: 1814220202598560341}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Side Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 1814220202817888124}
   - component: {fileID: 1814220202817888125}
   - component: {fileID: 1814220202817888126}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Back Brains
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 1814220202943910810}
   - component: {fileID: 1814220202943910808}
   - component: {fileID: 1814220202943910809}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Front Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 1814220203233737374}
   - component: {fileID: 1814220203233737372}
   - component: {fileID: 1814220203233737373}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Back Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 1814220203519775884}
   - component: {fileID: 1814220203519775885}
   - component: {fileID: 9110186147019770254}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain
   m_TagString: Brain
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 1814220203857976750}
   - component: {fileID: 1814220203857976751}
   - component: {fileID: 1814220203857976744}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Front Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 1814220204418114374}
   - component: {fileID: 1814220204418114373}
   - component: {fileID: 1814220204418114372}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Front Brains
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,7 +758,7 @@ GameObject:
   - component: {fileID: 1814220204594457299}
   - component: {fileID: 1814220204594457298}
   - component: {fileID: 1814220204594457297}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Side Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +862,7 @@ GameObject:
   - component: {fileID: 1814220204655438734}
   - component: {fileID: 1814220204655438733}
   - component: {fileID: 1814220204655438732}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Brain Side Brains
   m_TagString: Untagged
   m_Icon: {fileID: 0}

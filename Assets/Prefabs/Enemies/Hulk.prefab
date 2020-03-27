@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7549597911645053551}
   - component: {fileID: 7549597911645053549}
   - component: {fileID: 7549597911645053548}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Front Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 7549597911995118035}
   - component: {fileID: 7549597911995118034}
   - component: {fileID: 7549597911995118045}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Side Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 7549597912646852882}
   - component: {fileID: 7549597912646852893}
   - component: {fileID: 7549597912646852892}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Side Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 7549597912838802239}
   - component: {fileID: 7549597912838802238}
   - component: {fileID: 7549597912838802233}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Hulk
   m_TagString: Hulk
   m_Icon: {fileID: 0}
@@ -432,7 +432,7 @@ GameObject:
   - component: {fileID: 7549597913313799066}
   - component: {fileID: 7549597913313799077}
   - component: {fileID: 7549597913313799076}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Front Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}

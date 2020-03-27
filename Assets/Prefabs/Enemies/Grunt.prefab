@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2851933873087437171}
   - component: {fileID: 2851933873087437168}
   - component: {fileID: 2851933873087437169}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Grunt
   m_TagString: Grunt
   m_Icon: {fileID: 0}

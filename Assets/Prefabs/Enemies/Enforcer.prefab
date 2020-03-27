@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6104471510978998541}
   - component: {fileID: 6104471510978998530}
   - component: {fileID: 6104471510978998531}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Enforcer
   m_TagString: Enforcer
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 6104471511095413057}
   - component: {fileID: 6104471511095413059}
   - component: {fileID: 6104471511095413056}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Enforcer Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 6104471511877177616}
   - component: {fileID: 6104471511877177618}
   - component: {fileID: 6104471511877177619}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Enforcer Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 6104471512179755042}
   - component: {fileID: 6104471512179755052}
   - component: {fileID: 6104471512179755053}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: Enforcer Cover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
