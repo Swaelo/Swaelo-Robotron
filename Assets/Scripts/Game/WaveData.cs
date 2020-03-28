@@ -21,6 +21,9 @@ public struct WaveEntities
     public int Quarks;
     public int Enforcer;
     public int Tank;
+    public int DaddyProg;
+    public int MummyProg;
+    public int MikeyProg;
 }
 
 public class WaveData : MonoBehaviour

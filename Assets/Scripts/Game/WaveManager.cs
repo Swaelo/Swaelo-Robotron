@@ -93,6 +93,7 @@ public class WaveManager : MonoBehaviour
             HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Enforcer"));
         for (int i = 0; i < Entities.Tank; i++)
             HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Tank"));
+        
     }
 
     //Restarts the current wave with the same amount of enemies and everything thats left
@@ -143,6 +144,15 @@ public class WaveManager : MonoBehaviour
                     Entity.GetComponent<TankAI>().CleanProjectiles();
                     EntityCount.Tank++;
                     break;
+                case (EntityType.DaddyProg):
+                    EntityCount.DaddyProg++;
+                    break;
+                case (EntityType.MummyProg):
+                    EntityCount.MummyProg++;
+                    break;
+                case (EntityType.MikeyProg):
+                    EntityCount.MikeyProg++;
+                    break;
             }
         }
 
@@ -161,7 +171,7 @@ public class WaveManager : MonoBehaviour
 
         //Count the total number of hostile and friendly entities that will need to be spawned back in to restart this round properly
         FriendlySpawnsRemaining = EntityCount.Mommies + EntityCount.Daddies + EntityCount.Mikeys;
-        HostileSpawnsRemaining = EntityCount.Grunts + EntityCount.Electrodes + EntityCount.Hulks + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.Enforcer + EntityCount.Tank;
+        HostileSpawnsRemaining = EntityCount.Grunts + EntityCount.Electrodes + EntityCount.Hulks + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.Enforcer + EntityCount.Tank + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
 
         //Set the timers for how often each entity type should be spawned in during their periods
         FriendlySpawnInterval = SpawnPeriodDuration / FriendlySpawnsRemaining;
@@ -199,6 +209,12 @@ public class WaveManager : MonoBehaviour
             HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Enforcer"));
         for (int i = 0; i < EntityCount.Tank; i++)
             HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Tank"));
+        for (int i = 0; i < EntityCount.DaddyProg; i++)
+            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("DaddyProg"));
+        for (int i = 0; i < EntityCount.MummyProg; i++)
+            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("MummyProg"));
+        for (int i = 0; i < EntityCount.MikeyProg; i++)
+            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("MikeyProg"));
     }
 
     private void Update()
@@ -290,7 +306,7 @@ public class WaveManager : MonoBehaviour
         EntityType EnemyType = Enemy.GetComponent<HostileEntity>().Type;
 
         //Grunts, Brains, Spheroids, Quarks, Enforcers and Tanks are required enemy types
-        if (EnemyType == EntityType.Grunt || EnemyType == EntityType.Brain || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Quark || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Tank)
+        if (EnemyType == EntityType.Grunt || EnemyType == EntityType.Brain || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Quark || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Tank || EnemyType == EntityType.DaddyProg || EnemyType == EntityType.MummyProg || EnemyType == EntityType.MikeyProg )
             return true;
 
         //All the others (electrodes and hulks) are not required to be killed to complete the round
@@ -352,6 +368,11 @@ public class WaveManager : MonoBehaviour
     }
     public void TargetEnemyDead(HostileEntity TargetEnemy)
     {
+        //Ignore this is wave progression has been disabled
+        if (GameState.Instance.DisableWaveProgression)
+            return;
+
+        //Remove the entity from both of the tracking lists
         ActiveEntities.Remove(TargetEnemy);
         TargetEntities.Remove(TargetEnemy);
 

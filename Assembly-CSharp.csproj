@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\Enemies\GruntAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\HulkAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\HulkSpriteViewer.cs" />
+    <Compile Include="Assets\Scripts\Enemies\ProgAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\QuarkAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\SparkShotAI.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpheroidAI.cs" />
@@ -89,6 +90,8 @@
     <Compile Include="Assets\Scripts\Game\WaveData.cs" />
     <Compile Include="Assets\Scripts\Game\WaveManager.cs" />
     <Compile Include="Assets\Scripts\Humans\HumanSpriteViewer.cs" />
+    <Compile Include="Assets\Scripts\Humans\ProgSpriteTrailFollower.cs" />
+    <Compile Include="Assets\Scripts\Humans\ProgSpriteViewer.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSpriteViewer.cs" />

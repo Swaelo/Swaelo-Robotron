@@ -18,7 +18,10 @@ public enum EntityType
     Quark = 8,
     Mummy = 9,
     Daddy = 10,
-    Mikey = 11
+    Mikey = 11,
+    DaddyProg = 12,
+    MummyProg = 13,
+    MikeyProg = 14
 }
 
 public abstract class BaseEntity : MonoBehaviour

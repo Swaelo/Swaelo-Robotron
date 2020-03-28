@@ -16,6 +16,7 @@ TagManager:
   - Spheroid
   - Quark
   - Tank
+  - Prog
   layers:
   - Default
   - TransparentFX
@@ -39,7 +40,7 @@ TagManager:
   - Quark
   - Tank
   - TankShell
-  - 
+  - Prog
   - 
   - 
   - 
