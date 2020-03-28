@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: 0d1d0d16fda6b904da936951dfb4c317
+guid: fcae8cb12b8b8ad4daaa7ff7de72f0ea
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -4244916896942103973
-    second: Mummy Side_0
+    second: Mummy Side
   - first:
       213: 1854686768181214944
     second: Mummy Side_1
   - first:
       213: 3562449233068075317
     second: Mummy Side_2
+  - first:
+      213: -6718779085774998645
+    second: Mummy Side_3
+  - first:
+      213: -2955658972120442432
+    second: Mummy Side_4
+  - first:
+      213: -5655929237543337917
+    second: Mummy Side_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mummy Side_0
+      name: Mummy Side
       rect:
         serializedVersion: 2
         x: 0
@@ -165,6 +174,69 @@ TextureImporter:
       bones: []
       spriteID: 539a26be3bc507130800000000000000
       internalID: 3562449233068075317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Side_3
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 0
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b83be04e40a12c2a0800000000000000
+      internalID: -6718779085774998645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Side_4
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 0
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c9909913d36bf6d0800000000000000
+      internalID: -2955658972120442432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Side_5
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 0
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 340cb79235a1281b0800000000000000
+      internalID: -5655929237543337917
       vertices: []
       indices: 
       edges: []

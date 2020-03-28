@@ -108,6 +108,7 @@ public class WaveManager : MonoBehaviour
             switch(Entity.Type)
             {
                 case (EntityType.Brain):
+                    Entity.GetComponent<BrainAI>().CleanMissiles();
                     EntityCount.Brains++;
                     break;
                 case (EntityType.Daddy):
@@ -145,6 +146,7 @@ public class WaveManager : MonoBehaviour
                     EntityCount.Tank++;
                     break;
                 case (EntityType.DaddyProg):
+                    Entity.GetComponent<ProgSpriteViewer>().DestroyTrailSprites();
                     EntityCount.DaddyProg++;
                     break;
                 case (EntityType.MummyProg):

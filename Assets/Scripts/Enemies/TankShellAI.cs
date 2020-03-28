@@ -16,7 +16,7 @@ public class TankShellAI : MonoBehaviour
     private float CurrentSpeed = 3f; //How fast the projectile moves 
     private float BounceSpeedIncrease = 0.25f;   //How much the speed increases each time the shell bounces off a wall
     private float MaxSpeed = 5f;  //Maximum speed the projectile can reach
-    private float ProjectileLifetime = 5.0f;    //Maximum lifespan of the projectile
+    private float ProjectileLifetime = 8.0f;    //Maximum lifespan of the projectile
 
     private void Update()
     {

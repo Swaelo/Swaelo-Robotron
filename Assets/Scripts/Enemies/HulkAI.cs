@@ -38,7 +38,7 @@ public class HulkAI : HostileEntity
     private float DirectionChangeRemaining = 2.5f;  //How long until the current direction change completes
     private float ProjectilePushback = 0.75f;   //How far Hulks are pushed back when hit by the players projectiles
 
-    private void Awake()
+    private void Start()
     {
         //Find and store reference to the Player character, and any components of the Hulk which we will need to access later
         PlayerTarget = GameObject.FindGameObjectWithTag("Player").gameObject;

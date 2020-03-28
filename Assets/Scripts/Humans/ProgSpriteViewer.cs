@@ -86,4 +86,13 @@ public class ProgSpriteViewer : MonoBehaviour
         foreach (SpriteRenderer TrailRenderer in FrontTrailSprites)
             TrailRenderer.forceRenderingOff = !IsVisible;
     }
+
+    //Destroys the Progs trail sprites in preparation for the current wave to be restarted
+    public void DestroyTrailSprites()
+    {
+        foreach (SpriteRenderer TrailRenderer in FrontTrailSprites)
+            Destroy(TrailRenderer.gameObject);
+        foreach (SpriteRenderer TrailRenderer in SideTrailSprites)
+            Destroy(TrailRenderer.gameObject);
+    }
 }

@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: 97e20cf42f4221744a65b5ee048eaa91
+guid: ce951adfc2a4f47499e28f437f603f52
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2142467703279867738
-    second: Father Side 3x8_0
+      213: -7888921297172807496
+    second: Daddy Side_0
   - first:
-      213: 1349202004449132698
-    second: Father Side 3x8_1
+      213: -535078372501863597
+    second: Daddy Side_1
   - first:
-      213: 7498334196289244398
-    second: Father Side 3x8_2
+      213: -2509364613188133216
+    second: Daddy Side_2
+  - first:
+      213: 1006287399266763197
+    second: Daddy Side_3
+  - first:
+      213: 5772152309279297698
+    second: Daddy Side_4
+  - first:
+      213: -4576498271766344434
+    second: Daddy Side_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Father Side 3x8_0
+      name: Daddy Side_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,20 +124,20 @@ TextureImporter:
         width: 8
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a575ebc56039bbd10800000000000000
-      internalID: 2142467703279867738
+      spriteID: 8b04005a0ebe48290800000000000000
+      internalID: -7888921297172807496
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Father Side 3x8_1
+      name: Daddy Side_1
       rect:
         serializedVersion: 2
         x: 8
@@ -136,20 +145,20 @@ TextureImporter:
         width: 8
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a908f6d131459b210800000000000000
-      internalID: 1349202004449132698
+      spriteID: 35348002e050398f0800000000000000
+      internalID: -535078372501863597
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Father Side 3x8_2
+      name: Daddy Side_2
       rect:
         serializedVersion: 2
         x: 16
@@ -157,14 +166,77 @@ TextureImporter:
         width: 8
         height: 11
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eec0cf0493f6f0860800000000000000
-      internalID: 7498334196289244398
+      spriteID: 0ae5cf2fd22fc2dd0800000000000000
+      internalID: -2509364613188133216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Side_3
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 0
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db14f3fde0d07fd00800000000000000
+      internalID: 1006287399266763197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Side_4
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a01b0071fdca1050800000000000000
+      internalID: 5772152309279297698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Side_5
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 0
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0d8d24b1130d70c0800000000000000
+      internalID: -4576498271766344434
       vertices: []
       indices: 
       edges: []

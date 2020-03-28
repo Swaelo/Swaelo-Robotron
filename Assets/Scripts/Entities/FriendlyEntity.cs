@@ -8,13 +8,32 @@ using UnityEngine;
 
 public class FriendlyEntity : BaseEntity
 {
+    //Movement/Wandering
     private float MoveSpeed = 0.65f;    //How fast the human survivors wander around the level
     private Vector3 CurrentDirection;   //Current direction the entity is wandering in
     private Vector2 WanderRange = new Vector2(0.15f, 3f);   //Range of seconds that a survive may wander in its current direction before deciding on a new direction
     private float WanderRemaining;  //Time left to wander in the current direction before finding a new direction to move in
+
+    //Rendering/Animation
+    public bool FlipSideSprites = false;    //Some sprites may need to be flipped on the X axis as the image files are drawn facing a the opposite direction
+    public SpriteRenderer FrontBodyRenderer;    //Renderer for the front view sprite
+    public SpriteRenderer SideBodyRenderer; //Renderer for the side view sprite
+    public SpriteRenderer BackBodyRenderer; //Renderer for the back view sprite
+    public Animator[] AnimationControllers; //Animators for each sprite of the entity
+
+    public bool TargettedByBrain = false;   //Flagged true when a Brain decides this will be their target, to make sure no other Brain tries to capture the same one
+    public bool BeingReprogrammed = false; //Flagged to true once the human has been captured by a Brain
+
+    private Vector3 PreviousPos;    //For measuring when and in which direction the entity is moving
     
-    private void Awake()
+    private void Start()
     {
+        //Store initial position into previous
+        PreviousPos = transform.position;
+        //Set only the front view sprite to be viewed
+        FrontBodyRenderer.forceRenderingOff = false;
+        SideBodyRenderer.forceRenderingOff = true;
+        BackBodyRenderer.forceRenderingOff = true;
         //Get an initial direction for the entity to wander in
         NewWanderDirection();
     }
@@ -32,12 +51,15 @@ public class FriendlyEntity : BaseEntity
 
     private void Update()
     {
-        //All AI disabled during round warmup period
-        if (WaveManager.Instance.RoundWarmingUp)
+        //All AI disabled during round warmup period, or while the entity is being reprogrammed by a Brain
+        if (WaveManager.Instance.RoundWarmingUp || BeingReprogrammed)
             return;
 
         //Keep wandering around
         WanderAround();
+
+        //Make sure the correct sprites are being rendered, and their animations are playing correctly
+        ManageSpriteRendering();
     }
 
     //Wanders around randomly
@@ -50,6 +72,57 @@ public class FriendlyEntity : BaseEntity
 
         //Wander in the current direction
         transform.position += CurrentDirection * MoveSpeed * Time.deltaTime;
+    }
+
+    //Toggles which sprites are being viewed, and manages their animation playback
+    private void ManageSpriteRendering()
+    {
+        //Keep all the animation controllers aware of when the entity is moving so they can transition between the Idle/Walking animations
+        bool IsMoving = transform.position != PreviousPos;
+        foreach (Animator AnimationController in AnimationControllers)
+            AnimationController.SetBool("IsMoving", IsMoving);
+
+        //Measure distance travelled in each direction to figure out which way the entity is moving
+        float VerticalMovement = Mathf.Abs(transform.position.y - PreviousPos.y);
+        float HorizontalMovement = Mathf.Abs(transform.position.x - PreviousPos.x);
+        bool MovingVertical = VerticalMovement > HorizontalMovement;
+
+        //Manage rendering of Front/Back sprites during vertical movement
+        if(MovingVertical)
+        {
+            //Side sprites should always be hidden during vertical movement
+            SideBodyRenderer.forceRenderingOff = true;
+            //View either the Front/Back sprite based on the direction of vertical movement
+            bool MovingUp = transform.position.y > PreviousPos.y;
+            FrontBodyRenderer.forceRenderingOff = MovingUp;
+            BackBodyRenderer.forceRenderingOff = !MovingUp;
+        }
+        //Manage renderering of the Side sprite during horizontal movement
+        else
+        {
+            //Set only the side sprite to be rendered during horizontal movement
+            FrontBodyRenderer.forceRenderingOff = true;
+            BackBodyRenderer.forceRenderingOff = true;
+            SideBodyRenderer.forceRenderingOff = false;
+            //Set the side sprite to get flipped on the X axis based on the direction of horizontal movement
+            bool MovingRight = transform.position.x > PreviousPos.x;
+            bool ShouldFlip = FlipSideSprites ? !MovingRight : MovingRight;
+            SideBodyRenderer.flipX = ShouldFlip;
+        }
+
+        //Store current position for next frames movement calculations
+        PreviousPos = transform.position;
+    }
+
+    //Called by a Brain enemy when it has captured the Human
+    public void CapturedForReprogramming()
+    {
+        //Start playing the reprogramming animation and make sure the entities AI is disabled and it doesnt trigger any more collisions
+        BeingReprogrammed = true;
+        foreach (Animator AnimationController in AnimationControllers)
+            AnimationController.SetTrigger("Reprogram");
+        Destroy(GetComponent<BoxCollider2D>());
+        Destroy(GetComponent<Rigidbody2D>());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

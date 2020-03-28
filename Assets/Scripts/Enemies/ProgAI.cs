@@ -24,7 +24,7 @@ public class ProgAI : HostileEntity
     private float DeathAnimationLeft = 0.417f;  //Seconds remaining until the death animation finishes playing
     public Animator[] AnimationControllers;    //All the animation controllers that need to have their death animations called when the Prog dies
 
-    private void Awake()
+    private void Start()
     {
         //Store reference to the player character
         PlayerTarget = GameObject.FindGameObjectWithTag("Player");

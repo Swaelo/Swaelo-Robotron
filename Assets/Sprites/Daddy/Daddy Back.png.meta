@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: ed11442e4d7089d44b5b0859871b667c
+guid: 2dde70be27aea3546aebba24f30505ea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1654055430617726066
-    second: Father Back 3x9_0
+      213: 62096332284079499
+    second: Daddy Back_0
   - first:
-      213: -1923652972114724224
-    second: Father Back 3x9_1
+      213: 7278990112897774874
+    second: Daddy Back_1
   - first:
-      213: 7706960180552495980
-    second: Father Back 3x9_2
+      213: -3985289553762910940
+    second: Daddy Back_2
+  - first:
+      213: -8708811704589699262
+    second: Daddy Back_3
+  - first:
+      213: 8333067358216275274
+    second: Daddy Back_4
+  - first:
+      213: 7017880230033590752
+    second: Daddy Back_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Father Back 3x9_0
+      name: Daddy Back_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,20 +124,20 @@ TextureImporter:
         width: 9
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e838933795d9b09e0800000000000000
-      internalID: -1654055430617726066
+      spriteID: b8da5a3094c9cd000800000000000000
+      internalID: 62096332284079499
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Father Back 3x9_1
+      name: Daddy Back_1
       rect:
         serializedVersion: 2
         x: 9
@@ -136,20 +145,20 @@ TextureImporter:
         width: 9
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 08a3af550dfcd45e0800000000000000
-      internalID: -1923652972114724224
+      spriteID: a153ad221fa240560800000000000000
+      internalID: 7278990112897774874
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Father Back 3x9_2
+      name: Daddy Back_2
       rect:
         serializedVersion: 2
         x: 18
@@ -157,14 +166,77 @@ TextureImporter:
         width: 9
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6379e3737f94fa60800000000000000
-      internalID: 7706960180552495980
+      spriteID: 42df2ec044861b8c0800000000000000
+      internalID: -3985289553762910940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Back_3
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 0
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 247ba2c55e5142780800000000000000
+      internalID: -8708811704589699262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Back_4
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 0
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4542ef9c9005a370800000000000000
+      internalID: 8333067358216275274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Daddy Back_5
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 0
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e9836b03e4846160800000000000000
+      internalID: 7017880230033590752
       vertices: []
       indices: 
       edges: []

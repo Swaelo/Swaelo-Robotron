@@ -24,7 +24,7 @@ public class QuarkAI : HostileEntity
     private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Quark when its spawned in
     private int HitPoints;  //Hits that can be taken before the Quark dies
 
-    private void Awake()
+    private void Start()
     {
         //Assign a random number of health points to the spheroid
         HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);

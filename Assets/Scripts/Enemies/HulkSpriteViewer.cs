@@ -32,7 +32,7 @@ public class HulkSpriteViewer : MonoBehaviour
     private float NextTurnSwap = 0.25f; //How long until the next flash between sprites
     private bool ShowingCurrentSprite = true;   //Tracks which sprite is currently being shown when flashing between them
 
-    private void Awake()
+    private void Start()
     {
         PreviousPosition = transform.position;
         SideSprites.SetActive(false);

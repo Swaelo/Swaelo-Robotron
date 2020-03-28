@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: 9ff7f349629161c4590429cd5a3633c9
+guid: 4093778dea29a7f43a2a7f1549e40302
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 5508381017843321398
-    second: Mummy Front_0
+    second: Mummy Front
   - first:
       213: -8992729967934482716
     second: Mummy Front_1
   - first:
       213: -5030279506137741638
     second: Mummy Front_2
+  - first:
+      213: 409851063140421260
+    second: Mummy Front_3
+  - first:
+      213: 6266884834996286870
+    second: Mummy Front_4
+  - first:
+      213: -5786695991354536848
+    second: Mummy Front_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mummy Front_0
+      name: Mummy Front
       rect:
         serializedVersion: 2
         x: 0
@@ -165,6 +174,69 @@ TextureImporter:
       bones: []
       spriteID: ab68bb3d07bd03ab0800000000000000
       internalID: -5030279506137741638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Front_3
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8e0d45de5510b500800000000000000
+      internalID: 409851063140421260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Front_4
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6957c36dd8278f650800000000000000
+      internalID: 6266884834996286870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Front_5
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07cc224b7a681bfa0800000000000000
+      internalID: -5786695991354536848
       vertices: []
       indices: 
       edges: []

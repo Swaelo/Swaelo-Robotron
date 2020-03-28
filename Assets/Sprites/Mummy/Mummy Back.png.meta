@@ -1,16 +1,25 @@
 fileFormatVersion: 2
-guid: ae73f9d0f9c3cba4fba8863b53c269e7
+guid: fd4727234717a7949928cc43fd1d3858
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -5177971714528458407
-    second: Mummy Back_0
+    second: Mummy Back
   - first:
       213: 1824261845598050779
     second: Mummy Back_1
   - first:
       213: -6703659616482508881
     second: Mummy Back_2
+  - first:
+      213: -4442342102363550315
+    second: Mummy Back_3
+  - first:
+      213: 3761504456012890486
+    second: Mummy Back_4
+  - first:
+      213: 926727786069283220
+    second: Mummy Back_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mummy Back_0
+      name: Mummy Back
       rect:
         serializedVersion: 2
         x: 0
@@ -165,6 +174,69 @@ TextureImporter:
       bones: []
       spriteID: fafbd68a811d7f2a0800000000000000
       internalID: -6703659616482508881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Back_3
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59dcbd9f461a952c0800000000000000
+      internalID: -4442342102363550315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Back_4
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67182b99f5c833430800000000000000
+      internalID: 3761504456012890486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mummy Back_5
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 0
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 491d42ce2066cdc00800000000000000
+      internalID: 926727786069283220
       vertices: []
       indices: 
       edges: []

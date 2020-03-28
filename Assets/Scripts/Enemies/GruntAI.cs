@@ -30,7 +30,7 @@ public class GruntAI : HostileEntity
     private float DeathAnimationRemaining = .5f;   //Time left until the death animation is finished playing out
     private Vector3 PreviousPosition;   //Grunts position over time is measured and sent to the animator to transition between idle/walk animation
 
-    private void Awake()
+    private void Start()
     {
         //Find and store reference to the player character
         PlayerTarget = GameObject.FindGameObjectWithTag("Player").gameObject;

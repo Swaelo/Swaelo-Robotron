@@ -40,7 +40,7 @@ public class SpheroidAI : HostileEntity
     private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Spheroid when its spawned in
     private int HitPoints; //Hits left before the Spheroid dies
 
-    private void Awake()
+    private void Start()
     {
         //Assign a random number of health points to the spheroid
         HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
