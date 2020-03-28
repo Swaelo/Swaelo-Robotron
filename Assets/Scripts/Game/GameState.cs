@@ -32,7 +32,7 @@ public class GameState : MonoBehaviour
         ExtraLives = 2;
         LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
         CurrentWave = 1;
-        Player = PrefabSpawner.Instance.SpawnPrefab("Player", Vector3.zero, Quaternion.identity);
+        //Player = PrefabSpawner.Instance.SpawnPrefab("Player", Vector3.zero, Quaternion.identity);
 
         //Spawn in everything for this wave, if wave progression is enabled
         if(!DisableWaveProgression)

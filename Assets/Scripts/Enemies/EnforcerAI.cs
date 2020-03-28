@@ -22,13 +22,19 @@ public class EnforcerAI : HostileEntity
     //Targetting/Movement 
     private Vector3 Target; //Current location the Enforcer is seeking toward
     private Vector2 TargetOffsetRange = new Vector2(0.25f, 1.15f);    //Value range allowed when finding a new target location near the player to seek to
+    private bool TargetAcquired = false;    //Tracks if the Enforcer has access to the player character
     private Vector2 PlayerDistanceRange = new Vector2(0.5f, 18f);   //Distance between the Enforcer and Player will always fall in this range somewhere
     private Vector2 SpeedRange = new Vector2(0.55f, 1.75f);  //Value range of speed values at which the enforcer can travel at
 
     //Shooting
     public GameObject SparkShotPrefab;  //Projectile which is fired at the player
-    private float ShotCooldownLength = 1.5f;  //How often projectiles can be fired
-    private float ShotCooldown = 0.5f;  //Seconds remaining on the current shot cooldown
+    private float VolleyCooldown = 3.0f;    //How long the Enforcer must wait after firing a volley of shots before it can fire again
+    private float VolleyCooldownLeft = 3.0f;   //Seconds remaining before the Enforcer can fire another volley of projectiles
+    private float ShotCooldown = 0.25f; //Time between shots fired in a volley
+    private float ShotCooldownLeft; //Seconds left before the next projectile in the current volley is fired
+    private Vector2 VolleyShotRange = new Vector2(1, 5);    //Range of the amount of shots that can be fired in a volley
+    private int VolleyShotsLeft;    //Number of shots left to be fired in the current volley
+    private bool FiringVolley = false;  //Tracks if the Enforcer is currently in the middle of viring a volley of shots at the player
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.25f); //Value range allowed when finding a new target location near the player to shoot at
     private Vector2 ShotSpeedRange = new Vector2(2.5f, 5f);  //Range of speed values in which the projectiles may be fired at
     private List<GameObject> ActiveSparkShots = new List<GameObject>(); //Keep a list of active spark shots which have been fired by the Enforcer
@@ -37,12 +43,6 @@ public class EnforcerAI : HostileEntity
     private bool IsAlive = true;    //Set to false while waiting for death animation to play
     private float DeathAnimationRemaining = 0.47f;  //Time left until the death animation finishes playing
     public Animator[] AnimationControllers; //Animation controllers used to trigger the death animation when the Enforcer is killed
-
-    private void Awake()
-    {
-        //Find a new position near the player to move toward
-        Target = GetPlayerPositionOffset(TargetOffsetRange);
-    }
 
     private void Update()
     {
@@ -91,6 +91,10 @@ public class EnforcerAI : HostileEntity
     //Move toward the current target location
     private void SeekTarget()
     {
+        //Grab a new target location to move to if we dont currently have one
+        if (!TargetAcquired)
+            Target = GetPlayerPositionOffset(TargetOffsetRange);
+
         //Movement speed is inversely proportional to the players distance
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
         //Find the ratio of this value when mapped onto the PlayerDistanceRange values
@@ -110,38 +114,85 @@ public class EnforcerAI : HostileEntity
     //Fires a projectile toward the player
     private void FireProjectiles()
     {
-        //Wait for the shot cooldown to expire
-        ShotCooldown -= Time.deltaTime;
-        if(ShotCooldown <= 0.0f)
+        //Wait for the volley cooldown to expire before another volley of shots can be fired
+        if(!FiringVolley)
         {
-            //Reset the cooldown timer
-            ShotCooldown = ShotCooldownLength;
-
-            //Grab a location nearby the player to shoot at and create a direction vector pointing from the Enforcer to this location
-            Vector3 ShotTarget = GetPlayerPositionOffset(AimOffsetRange);
-            Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
-
-            //Projectiles speed is directly proportional to the players distance
-            float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-            //Find the ratio of this value when mapped onto the PlayerDistanceRange values
-            float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
-            //Map this onto the ShotSpeedRange valuers to get a scavled speed value based on the players distance
-            float ScaledSpeed = DistanceRatio * (ShotSpeedRange.y - ShotSpeedRange.x) + ShotSpeedRange.x;
-
-            //Spawn a new spark shot and fire it in the target direction
-            Vector3 ShotSpawn = transform.position + ShotDirection * 0.5f;
-            GameObject SparkShot = Instantiate(SparkShotPrefab, ShotSpawn, Quaternion.identity);
-
-            //Store the new projectile in the list with all the other active ones
-            ActiveSparkShots.Add(SparkShot);
-
-            //15% of Enforce shots will be aimed at the players predicted location, adding the players movement velocity onto its movement direction
-            if (Random.Range(1, 100) <= 15)
-                ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
-
-            //Pass the shots speed and movement direction along to it
-            SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection, this);
+            VolleyCooldownLeft -= Time.deltaTime;
+            if(VolleyCooldownLeft <= 0.0f)
+            {
+                //Start firing a new volley of projectiles
+                FiringVolley = true;
+                VolleyShotsLeft = (int)Random.Range(VolleyShotRange.x, VolleyShotRange.y);
+                ShotCooldownLeft = 0.0f;
+            }
         }
+        //Keep firing projectiles until the current volley is complete
+        else
+        {
+            //Wait until the current shot cooldown expires
+            ShotCooldownLeft -= Time.deltaTime;
+            if(ShotCooldownLeft <= 0.0f)
+            {
+                //Reset the timer
+                ShotCooldownLeft = ShotCooldown;
+                //Grab a location near the player where the projectile will be aimed, and get the direction to that location
+                Vector3 ShotTarget = GetPlayerPositionOffset(AimOffsetRange);
+                Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
+                //15% of projectiles will be aimed at the players predicated location
+                if (Random.Range(1, 100) <= 15)
+                    ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
+                //Scale the projectiles speed directly propertional to the players distance
+                float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
+                float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
+                float ShotSpeed = DistanceRatio * (ShotSpeedRange.y - ShotSpeedRange.x) + ShotSpeedRange.x;
+                //Spawn a new projectile and store it in the list with any others fired by this enemy
+                GameObject SparkShot = Instantiate(SparkShotPrefab, transform.position, Quaternion.identity);
+                ActiveSparkShots.Add(SparkShot);
+                //Give the new projectile its travel direction and movement speed
+                SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ShotSpeed, ShotDirection, this);
+                //Reduce the number of projectiles left to be fired in this volley, and check if they have all run out yet
+                VolleyShotsLeft--;
+                if(VolleyShotsLeft <= 0)
+                {
+                    //End the volley and begin the volley cooldown once all the shots have been fired
+                    FiringVolley = false;
+                    VolleyCooldownLeft = VolleyCooldown;
+                }
+            }
+        }
+
+        ////Wait for the shot cooldown to expire
+        //ShotCooldown -= Time.deltaTime;
+        //if(ShotCooldown <= 0.0f)
+        //{
+        //    //Reset the cooldown timer
+        //    ShotCooldown = ShotCooldownLength;
+
+        //    //Grab a location nearby the player to shoot at and create a direction vector pointing from the Enforcer to this location
+        //    Vector3 ShotTarget = GetPlayerPositionOffset(AimOffsetRange);
+        //    Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
+
+        //    //Projectiles speed is directly proportional to the players distance
+        //    float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
+        //    //Find the ratio of this value when mapped onto the PlayerDistanceRange values
+        //    float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
+        //    //Map this onto the ShotSpeedRange valuers to get a scavled speed value based on the players distance
+        //    float ScaledSpeed = DistanceRatio * (ShotSpeedRange.y - ShotSpeedRange.x) + ShotSpeedRange.x;
+
+        //    //Spawn a new spark shot and fire it in the target direction
+        //    Vector3 ShotSpawn = transform.position + ShotDirection * 0.5f;
+        //    GameObject SparkShot = Instantiate(SparkShotPrefab, ShotSpawn, Quaternion.identity);
+
+        //    //Store the new projectile in the list with all the other active ones
+        //    ActiveSparkShots.Add(SparkShot);
+
+        //    //15% of Enforce shots will be aimed at the players predicted location, adding the players movement velocity onto its movement direction
+        //    if (Random.Range(1, 100) <= 15)
+        //        ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
+
+        //    //Pass the shots speed and movement direction along to it
+        //    SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection, this);
+        //}
     }
 
     //Handle collisions with certain other objects and entities that we come into contact with
