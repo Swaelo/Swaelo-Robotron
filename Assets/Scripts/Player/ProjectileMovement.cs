@@ -70,10 +70,4 @@ public class ProjectileMovement : MonoBehaviour
         if (collision.transform.CompareTag("Wall"))
             Destroy(this.gameObject);
     }
-
-    //Removes the projectile from the players tracking list then destroys it
-    public void OnDestroy()
-    {
-        GameState.Instance.Player.GetComponent<PlayerShooting>().ActiveProjectiles.Remove(this.gameObject);
-    }
 }

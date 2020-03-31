@@ -671,10 +671,20 @@ MonoBehaviour:
   - {fileID: 1534644669183382827}
   - {fileID: 1534644669957404460}
   FlipSideSprites: 0
-  FrontSprite: {fileID: 0}
-  SideSprite: {fileID: 0}
-  FrontTrailSprites: []
-  SideTrailSprites: []
+  FrontSprite: {fileID: 1534644668785883014}
+  SideSprite: {fileID: 1534644669234940005}
+  FrontTrailSprites:
+  - {fileID: 1534644670349493446}
+  - {fileID: 1534644668806818258}
+  - {fileID: 1534644670825318408}
+  - {fileID: 1534644670464121623}
+  - {fileID: 1534644668752214953}
+  SideTrailSprites:
+  - {fileID: 1534644670054784863}
+  - {fileID: 1534644670713633242}
+  - {fileID: 1534644670110244170}
+  - {fileID: 1534644669183382829}
+  - {fileID: 1534644669957404458}
 --- !u!1 &1534644669957404459
 GameObject:
   m_ObjectHideFlags: 0
