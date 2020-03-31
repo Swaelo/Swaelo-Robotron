@@ -20,6 +20,10 @@ public class TankShellAI : MonoBehaviour
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         //Keep travelling forward is movement values have been set
         if (MovementSet)
             transform.position += CurrentDirection * CurrentSpeed * Time.deltaTime;
@@ -63,5 +67,10 @@ public class TankShellAI : MonoBehaviour
             GameState.Instance.KillPlayer();
             Destroy(this.gameObject);
         }
+    }
+
+    public void DestroyProjectile()
+    {
+        Destroy(gameObject);
     }
 }

@@ -41,6 +41,10 @@ public class TankAI : HostileEntity
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         SeekTarget();
         FireProjectiles();
     }

@@ -19300,7 +19300,7 @@ PrefabInstance:
     - target: {fileID: 5359822721058506921, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: DisableWaveProgression
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5359822721058506921, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19312,10 +19312,25 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 1023070802}
+    - target: {fileID: 5359822721058506921, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: CurrentWave
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: UIRoundDisplay
       value: 
       objectReference: {fileID: 1590569931}
+    - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: StartCustomWave
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: StartWaveNumber
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d74d42b07e179f64eb5fc8361b52d68b, type: 3}

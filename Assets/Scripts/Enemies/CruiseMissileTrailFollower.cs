@@ -33,7 +33,7 @@ public class CruiseMissileTrailFollower : MonoBehaviour
         if (collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
-            ParentSection.DestroyMissile();
+            ParentSection.DestroyProjectile();
         }
         //Player is also killed by colliding with tail section parts
         else if (collision.transform.CompareTag("Player"))

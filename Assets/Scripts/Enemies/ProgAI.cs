@@ -16,24 +16,39 @@ public class ProgAI : HostileEntity
         new Vector3(0,-1,0), //South
         new Vector3(-1,0,0) //West
     };
-    private float MoveSpeed = 2.35f;    //How fast Progs move toward the player character
-    private GameObject PlayerTarget;    //The Progs target
 
-    //Living/Dead status and death animation playback
+    //Movement/Targetting
+    private float MoveSpeed = 2.35f;    //How fast Progs move toward the player character
+
+    //Rendering/Animation
     private bool IsAlive = true;    //Set to false once the prog is killed, but waiting for the death animation to finish playing before it destroys itself
     private float DeathAnimationLeft = 0.417f;  //Seconds remaining until the death animation finishes playing
     public Animator[] AnimationControllers;    //All the animation controllers that need to have their death animations called when the Prog dies
+    public bool FlipSideSprites = false;    //Inverts the value passed on when setting the side sprites to be flipped or not
+    public SpriteRenderer FrontSprite;  //Sprite used to display the front view of the Progs body
+    public SpriteRenderer SideSprite;   //Sprite used to display the side view of the Progs body
+    public SpriteRenderer[] FrontTrailSprites;  //Sprites used to display front view trail effect
+    public SpriteRenderer[] SideTrailSprites;   //Sprites used to display side view trail effect
+    private Vector3 PreviousPos;    //Used to measure the Progs distance/direction travelled over time
 
     private void Start()
     {
-        //Store reference to the player character
-        PlayerTarget = GameObject.FindGameObjectWithTag("Player");
+        //Store initial position
+        PreviousPos = transform.position;
+        //Unparent all the trail effect sprites from the Prog
+        foreach (SpriteRenderer TrailRenderer in FrontTrailSprites)
+            TrailRenderer.transform.parent = null;
+        foreach (SpriteRenderer TrailRenderer in SideTrailSprites)
+            TrailRenderer.transform.parent = null;
+        //Set only the front view sprites to be active right now
+        ToggleFrontSprites(true);
+        ToggleSideSprites(false);
     }
 
     private void Update()
     {
-        //All Enemy AI is disabled during the round warmup
-        if (WaveManager.Instance.RoundWarmingUp)
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
         //Seek player while alive
@@ -42,6 +57,9 @@ public class ProgAI : HostileEntity
         //Play death animation otherwise
         else
             PlayDeath();
+
+        //Manage what sprites are displayed and their animation playback
+        RenderAndAnimate();
     }
 
     //Plays out the death animation then has the Prog destroy itself once its completed
@@ -66,12 +84,9 @@ public class ProgAI : HostileEntity
     //Seeks towards the player characters location
     private void SeekPlayer()
     {
-        //Grab the player if we dont have a reference to them for some reason
-        if (PlayerTarget == null)
-            PlayerTarget = GameObject.FindGameObjectWithTag("Player");
-
         //Get the direction to the player, then use whatever valid movement direction is closest to that and move in that direction
-        Vector3 PlayerDirection = Vector3.Normalize(PlayerTarget.transform.position - transform.position);
+        Vector3 PlayerPos = GameState.Instance.Player.transform.position;
+        Vector3 PlayerDirection = Vector3.Normalize(PlayerPos - transform.position);
         Vector3 MovementDirection = GetMovementDirection(PlayerDirection);
         transform.position += MovementDirection * MoveSpeed * Time.deltaTime;
     }
@@ -124,5 +139,68 @@ public class ProgAI : HostileEntity
             AnimationController.SetTrigger("Death");
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
+    }
+
+    //Toggles visibility of the front view sprites
+    private void ToggleFrontSprites(bool ShouldRender)
+    {
+        FrontSprite.forceRenderingOff = !ShouldRender;
+        foreach (SpriteRenderer TrailRenderer in FrontTrailSprites)
+            TrailRenderer.forceRenderingOff = !ShouldRender;
+    }
+
+    //Toggles visibility of the side view sprites
+    private void ToggleSideSprites(bool ShouldRender)
+    {
+        SideSprite.forceRenderingOff = !ShouldRender;
+        foreach (SpriteRenderer TrailRenderer in SideTrailSprites)
+            TrailRenderer.forceRenderingOff = !ShouldRender;
+    }
+
+    //Toggle X Axis flipping of the side view sprites
+    private void ToggleSideFlipping(bool ShouldFlip)
+    {
+        SideSprite.flipX = ShouldFlip;
+        foreach(SpriteRenderer TrailRenderer in SideTrailSprites)
+            TrailRenderer.flipX = ShouldFlip;
+    }
+
+    //Manages what sprites are displayed and their animation playback
+    private void RenderAndAnimate()
+    {
+        //Calculate distance travelled in each direction, then compare to find what direction the Prog is travelling
+        float XDistance = Mathf.Abs(transform.position.x - PreviousPos.x);
+        float YDistance = Mathf.Abs(transform.position.y - PreviousPos.y);
+
+        //Check for vertical movement
+        if(XDistance < YDistance)
+        {
+            //Set only the front sprites to be visible
+            ToggleFrontSprites(true);
+            ToggleSideSprites(false);
+        }
+        //Otherwise handle side view rendering
+        else
+        {
+            //Set only side sprites to be visible
+            ToggleFrontSprites(false);
+            ToggleSideSprites(true);
+
+            //Flipp all the sidfe sprites based on left/right movement
+            bool FlipSprites = FlipSideSprites ? (!(transform.position.x > PreviousPos.x)) : (transform.position.x > PreviousPos.x);
+            ToggleSideFlipping(FlipSprites);
+        }
+
+        //Store position for next frames distance checks
+        PreviousPos = transform.position;
+    }
+
+    //Destroys all the trail sprite objects before the Prog is cleaned up by the game
+    public void DestroyTrailSprites()
+    {
+        foreach (SpriteRenderer FrontTrail in FrontTrailSprites)
+            Destroy(FrontTrail.gameObject);
+        foreach (SpriteRenderer SideTrail in SideTrailSprites)
+            Destroy(SideTrail.gameObject);
     }
 }

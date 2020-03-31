@@ -20,8 +20,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //Player movement is disabled during the round warmup period
-        if (WaveManager.Instance.RoundWarmingUp)
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
         //Create a new movement vector based on input from the keyboard and controller

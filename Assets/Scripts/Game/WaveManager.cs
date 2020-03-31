@@ -40,10 +40,16 @@ public class WaveManager : MonoBehaviour
     private int HostileSpawnsRemaining; //How many hostile spawns remaining for the current hostile spawn period
     private float WarmUpPeriod = 0.5f;  //How long the game waits once everything has been spawned before the round begins
     private float WarmUpRemaining = 0.5f;   //Time left until the round begins
+    public bool StartCustomWave = false;    //When set to true the game will start from the specified wave number for debugging purposes
+    public int StartWaveNumber = 1; //Custom wave number to start on while debugging
 
     //Spawns in all the enemies for the given wave number
     public void StartWave(int WaveNumber)
     {
+        //Set to the custom wave number when set to
+        if (StartCustomWave)
+            WaveNumber = StartWaveNumber;
+
         //Update the UI round display
         UIRoundDisplay.text = "Round    " + WaveNumber.ToString();
 
@@ -120,7 +126,6 @@ public class WaveManager : MonoBehaviour
                 case (EntityType.Enforcer):
                     //Tell Enforcers to clean up any remaining projectiles they have fired before they get cleaned up
                     Entity.GetComponent<EnforcerAI>().CleanProjectiles();
-                    EntityCount.Enforcer++;
                     break;
                 case (EntityType.Grunt):
                     EntityCount.Grunts++;
@@ -146,13 +151,15 @@ public class WaveManager : MonoBehaviour
                     EntityCount.Tank++;
                     break;
                 case (EntityType.DaddyProg):
-                    Entity.GetComponent<ProgSpriteViewer>().DestroyTrailSprites();
+                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
                     EntityCount.DaddyProg++;
                     break;
                 case (EntityType.MummyProg):
+                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
                     EntityCount.MummyProg++;
                     break;
                 case (EntityType.MikeyProg):
+                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
                     EntityCount.MikeyProg++;
                     break;
             }
@@ -171,9 +178,22 @@ public class WaveManager : MonoBehaviour
         ActiveEntities.Clear();
         TargetEntities.Clear();
 
+        //Find and clean up any left over enemy projectiles which managed to survive this long
+        foreach (GameObject Projectile in GameObject.FindGameObjectsWithTag("EnemyProjectile"))
+            Projectile.SendMessage("DestroyProjectile");
+
         //Count the total number of hostile and friendly entities that will need to be spawned back in to restart this round properly
         FriendlySpawnsRemaining = EntityCount.Mommies + EntityCount.Daddies + EntityCount.Mikeys;
-        HostileSpawnsRemaining = EntityCount.Grunts + EntityCount.Electrodes + EntityCount.Hulks + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.Enforcer + EntityCount.Tank + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
+        HostileSpawnsRemaining = EntityCount.Grunts + EntityCount.Electrodes + EntityCount.Hulks + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.Tank + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
+
+        //Progress onto the next wave if there are no hostile spawns remaining (this happens when dying with only Enforcers or Tanks left alive)
+        int TargetSpawnsRemaining = EntityCount.Grunts + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
+        if(TargetSpawnsRemaining <= 0)
+        {
+            GameState.Instance.CurrentWave++;
+            StartWave(GameState.Instance.CurrentWave);
+            return;
+        }
 
         //Set the timers for how often each entity type should be spawned in during their periods
         FriendlySpawnInterval = SpawnPeriodDuration / FriendlySpawnsRemaining;

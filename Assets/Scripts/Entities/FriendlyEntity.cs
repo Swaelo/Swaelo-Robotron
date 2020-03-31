@@ -51,8 +51,8 @@ public class FriendlyEntity : BaseEntity
 
     private void Update()
     {
-        //All AI disabled during round warmup period, or while the entity is being reprogrammed by a Brain
-        if (WaveManager.Instance.RoundWarmingUp || BeingReprogrammed)
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
         //Keep wandering around

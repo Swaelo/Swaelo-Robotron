@@ -56,7 +56,7 @@ public class BrainAI : HostileEntity
     private void Update()
     {
         //All Enemy AI is disabled during the round warmup period
-        if (WaveManager.Instance.RoundWarmingUp)
+        if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
         if (!IsAlive)

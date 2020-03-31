@@ -27,6 +27,10 @@ public class CruiseMissileAI : MonoBehaviour
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         //Move in a zigzag pattern
         ZigZagDirection();
 
@@ -70,7 +74,7 @@ public class CruiseMissileAI : MonoBehaviour
         if (collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
-            DestroyMissile();
+            DestroyProjectile();
         }
         //Kill the player if the cruise missile hits them
         else if (collision.transform.CompareTag("Player"))
@@ -84,7 +88,7 @@ public class CruiseMissileAI : MonoBehaviour
     }
 
     //Destroys the cruise missle
-    public void DestroyMissile()
+    public void DestroyProjectile()
     {
         //First destroy all the tail section parts
         foreach (GameObject TailSection in TailSections)

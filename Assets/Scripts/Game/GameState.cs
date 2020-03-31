@@ -24,6 +24,7 @@ public class GameState : MonoBehaviour
     public bool DisableWaveProgression = false; //Waves will not begin or progress while this is enabled (for debugging purposes)
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
     public Text UIScoreDisplay; //UI Text component used to display the players current score counter
+    private bool GamePaused = false; //Everything is paused whenever this is true
 
     private void Start()
     {
@@ -37,6 +38,21 @@ public class GameState : MonoBehaviour
         //Spawn in everything for this wave, if wave progression is enabled
         if(!DisableWaveProgression)
             WaveManager.Instance.StartWave(CurrentWave);
+    }
+
+    private void Update()
+    {
+        //Toggle the games paused state
+        if (Input.GetKeyDown(KeyCode.P))
+            GamePaused = !GamePaused;
+    }
+
+    //Used from AI scripts and other stuff to check if the game should be running right now
+    public bool ShouldAdvanceGame()
+    {
+        if (GamePaused || WaveManager.Instance.RoundWarmingUp)
+            return false;
+        return true;
     }
 
     //Adds points to the total score counter

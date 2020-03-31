@@ -52,7 +52,11 @@ public class ProjectileMovement : MonoBehaviour
 
     private void Update()
     {
-        if(DirectionSet)
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
+        if (DirectionSet)
         {
             Vector3 NewPosition = transform.position + MovementDirection * MoveSpeed * Time.deltaTime;
             NewPosition.z = 0f;

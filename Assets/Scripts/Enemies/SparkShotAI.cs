@@ -25,8 +25,12 @@ public class SparkShotAI : MonoBehaviour
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         //Perform normal behaviours while alive
-        if(IsAlive)
+        if (IsAlive)
         {
             //Move by values set from the Enforcer who shot the projectile, if they have indeed been set
             if (MovementSet)
@@ -97,5 +101,10 @@ public class SparkShotAI : MonoBehaviour
         IsAlive = false;
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
+    }
+
+    public void DestroyProjectile()
+    {
+        Destroy(gameObject);
     }
 }

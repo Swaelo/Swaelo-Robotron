@@ -58,8 +58,8 @@ public class SpheroidAI : HostileEntity
 
     private void Update()
     {
-        //All Enemy AI is disabled during the round warmup period
-        if (WaveManager.Instance.RoundWarmingUp)
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
         //Seek the current corner target until the Spheroid reaches that location
