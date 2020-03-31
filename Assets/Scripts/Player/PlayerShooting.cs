@@ -106,6 +106,8 @@ public class PlayerShooting : MonoBehaviour
         Projectile.GetComponent<ProjectileMovement>().InitializeProjectile(Direction, CurrentColor);
         //Store the projectile in the list with the other
         ActiveProjectiles.Add(Projectile);
+        //Play the shooting sound effect
+        SoundEffectsPlayer.Instance.PlaySound("PlayerShoot");
     }
 
     private void CycleProjectileColors()

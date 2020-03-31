@@ -405,6 +405,8 @@ public class WaveManager : MonoBehaviour
             CleanWave();
             GameState.Instance.CurrentWave++;
             StartWave(GameState.Instance.CurrentWave);
+            //Play sound effect
+            SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
         }
     }
 

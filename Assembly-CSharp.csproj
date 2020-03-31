@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Game\PrefabSpawner.cs" />
     <Compile Include="Assets\Scripts\Game\RescueBonusDisplayKiller.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreCarry.cs" />
+    <Compile Include="Assets\Scripts\Game\SoundEffectsPlayer.cs" />
     <Compile Include="Assets\Scripts\Game\WaveData.cs" />
     <Compile Include="Assets\Scripts\Game\WaveManager.cs" />
     <Compile Include="Assets\Scripts\Humans\ProgSpriteTrailFollower.cs" />

@@ -130,9 +130,9 @@ public class BrainAI : HostileEntity
                 SideBodyRenderer.forceRenderingOff = false;
                 //Set the side sprites to be flipped on the X axis based on the direction of horizontal movement
                 bool MovingRight = transform.position.x > PreviousPos.x;
-                SideBodyRenderer.flipX = MovingRight;
-                SideBrainRenderer.flipX = MovingRight;
-                SideEyesRenderer.flipX = MovingRight;
+                SideBodyRenderer.flipX = !MovingRight;
+                SideBrainRenderer.flipX = !MovingRight;
+                SideEyesRenderer.flipX = !MovingRight;
             }
         }
 
@@ -170,6 +170,7 @@ public class BrainAI : HostileEntity
             //Start the reprogramming process
             Reprogramming = true;
             ReprogramLeft = ReprogramInterval;
+            SoundEffectsPlayer.Instance.PlaySound("BrainReprogram");
             //Alert the entity its been captured so it disables its AI and starts playing the reprogramming animation
             HumanTarget.GetComponent<FriendlyEntity>().CapturedForReprogramming();
             //Start playing the Brains reprogramming animations

@@ -52,6 +52,8 @@ public class ElectrodeAI : HostileEntity
     //Triggers the electrodes death animation and tells the wave manager this entity has been destroyed
     private void Die()
     {
+        //Play sound
+        SoundEffectsPlayer.Instance.PlaySound("ElectrodeDie");
         //Start the death animation
         IsActive = false;
         AnimationController.SetTrigger("Decay");

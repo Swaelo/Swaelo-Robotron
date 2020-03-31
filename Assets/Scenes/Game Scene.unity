@@ -291,7 +291,7 @@ Transform:
   m_LocalScale: {x: 25, y: 915, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &284109995
 SpriteRenderer:
@@ -514,7 +514,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &550582608
 GameObject:
@@ -546,7 +546,7 @@ Transform:
   m_LocalScale: {x: 1525, y: 25, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &550582610
 SpriteRenderer:
@@ -731,7 +731,7 @@ Transform:
   m_LocalScale: {x: 1525, y: 25, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &981573591
 SpriteRenderer:
@@ -928,7 +928,7 @@ Transform:
   m_LocalScale: {x: 25, y: 915, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1221007176
 SpriteRenderer:
@@ -1100,7 +1100,7 @@ RectTransform:
   - {fileID: 1590569933}
   - {fileID: 248332433}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1426,7 +1426,7 @@ Transform:
   m_LocalScale: {x: 1.6, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1874198963
 GameObject:
@@ -19270,7 +19270,7 @@ PrefabInstance:
     - target: {fileID: 317061470227577248, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 317061470227577248, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19325,7 +19325,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: StartCustomWave
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19334,3 +19334,177 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d74d42b07e179f64eb5fc8361b52d68b, type: 3}
+--- !u!1 &317061469471482039 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 317061470227577250, guid: d74d42b07e179f64eb5fc8361b52d68b,
+    type: 3}
+  m_PrefabInstance: {fileID: 317061469471482038}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &317061469471482040
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317061469471482039}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &317061469471482041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317061469471482039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7809e81d94f32004d89b638ccc863da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundPlayer: {fileID: 317061469471482040}
+  SoundEffects:
+  - Name: BrainReprogram
+    SoundClips:
+    - {fileID: 8300000, guid: 74ec14c261256404c881119758f97a95, type: 3}
+  - Name: ElectrodeDie
+    SoundClips:
+    - {fileID: 8300000, guid: e8d8836ce5a22f6458c31b1cf7cb05ad, type: 3}
+    - {fileID: 8300000, guid: bf85d84e64d1d804c9711d2f4035eb0c, type: 3}
+    - {fileID: 8300000, guid: 30802227738885043bf0d5403916ef02, type: 3}
+    - {fileID: 8300000, guid: e687c0ea32b9af04abf28c9c35c32e03, type: 3}
+    - {fileID: 8300000, guid: 10a85e43aed4eb747ae67a240ea78998, type: 3}
+  - Name: EnforcerShoot
+    SoundClips:
+    - {fileID: 8300000, guid: 56470d7dfcd2b084a9ef0b197fb894a3, type: 3}
+    - {fileID: 8300000, guid: 698f589958161484fad50a924b593d10, type: 3}
+    - {fileID: 8300000, guid: b312955f7bdfe8045a07a8562d0954ea, type: 3}
+    - {fileID: 8300000, guid: 5ffca736d9b408d4db8a99d741c6b153, type: 3}
+    - {fileID: 8300000, guid: 94fe1d4f8b7224347b81f9cce0a19f36, type: 3}
+  - Name: GruntDie
+    SoundClips:
+    - {fileID: 8300000, guid: 7ef249739bb3c8249a4942497bd80f51, type: 3}
+    - {fileID: 8300000, guid: 23fbfc6417070af4d9f919528c346a6f, type: 3}
+    - {fileID: 8300000, guid: b8a480dec449dc04fa951aca2a0c1d20, type: 3}
+    - {fileID: 8300000, guid: 4438e3a8f63bddc439c422c63d68fb9a, type: 3}
+    - {fileID: 8300000, guid: 53320d6bb517b7e4eab025b89ab7f1e5, type: 3}
+  - Name: GruntStep
+    SoundClips:
+    - {fileID: 8300000, guid: 075822d65f518a247a5228469c7f4175, type: 3}
+    - {fileID: 8300000, guid: 4b114e6767ae6bf44b8e4cb1bde2b44c, type: 3}
+    - {fileID: 8300000, guid: 1a741b7fec9f9c74883c07ed3265985a, type: 3}
+    - {fileID: 8300000, guid: c151ac1eef03673478b688f98e9651bf, type: 3}
+    - {fileID: 8300000, guid: 498feee90b6f24a448a9a6cfa615b16e, type: 3}
+  - Name: PlayerDie
+    SoundClips:
+    - {fileID: 8300000, guid: b873a93495ab44c41aa745a09bc2b196, type: 3}
+  - Name: PlayerShoot
+    SoundClips:
+    - {fileID: 8300000, guid: aa8b031ff9fd76f4b9834e10abcbf2fb, type: 3}
+    - {fileID: 8300000, guid: 4995f8b87dbcdde41a44b5b29975570d, type: 3}
+    - {fileID: 8300000, guid: 74e7f8bc19d12414fbaa60f745c2756e, type: 3}
+    - {fileID: 8300000, guid: 6f82d09ce05ccdd47bbee0338d734818, type: 3}
+    - {fileID: 8300000, guid: c8defdd43d4d72d46ad5049f997c8791, type: 3}
+  - Name: RescueHuman
+    SoundClips:
+    - {fileID: 8300000, guid: de19c318df9e82247933f489dc2282b5, type: 3}
+    - {fileID: 8300000, guid: aa1cbe54054c31443ad9a0fce52415b9, type: 3}
+    - {fileID: 8300000, guid: 111b4ac40ab9e474583b27e1c3784cff, type: 3}
+    - {fileID: 8300000, guid: 807c6b094dd43ba4a9b5b7c421d90e36, type: 3}
+    - {fileID: 8300000, guid: 9a047e5593d71ff48947086750ac863f, type: 3}
+  - Name: RoundComplete
+    SoundClips:
+    - {fileID: 8300000, guid: fede34bb4e8339041bd57571174c4363, type: 3}
+  - Name: SpawnEnforcer
+    SoundClips:
+    - {fileID: 8300000, guid: b8635ebcec5bb4d4392ddbbef03e696d, type: 3}
+    - {fileID: 8300000, guid: bd3288e4a6cd1df4f9396bc7d2080d12, type: 3}
+    - {fileID: 8300000, guid: 02d08228f58af9c43a377fee8c6a6fba, type: 3}
+    - {fileID: 8300000, guid: a5fe2a84eefe9504bb5511f2d536bd67, type: 3}
+    - {fileID: 8300000, guid: 5115feb4907454a43a6508f14d44188e, type: 3}

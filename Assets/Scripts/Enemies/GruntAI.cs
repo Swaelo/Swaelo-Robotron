@@ -29,6 +29,8 @@ public class GruntAI : HostileEntity
     private bool IsAlive = true;        //Set to false once killed by the player while the Grunts death animation is played out
     private float DeathAnimationRemaining = .5f;   //Time left until the death animation is finished playing out
     private Vector3 PreviousPosition;   //Grunts position over time is measured and sent to the animator to transition between idle/walk animation
+    private float StepSoundDistance = 1.5f; //How much distance must be travelled by the Grunt between it again playing its footstep sound effect
+    private float NextStepSound = 1.5f; //Distance left to travel until the foot step sound is played again
 
     private void Start()
     {
@@ -51,14 +53,25 @@ public class GruntAI : HostileEntity
         else
             PlayDeath();
 
-        //Tell the animator if the Grunt is currently moving, then store position for next frame
+        //Tell the animator if the Grunt is currently moving
         bool IsMoving = PreviousPosition != transform.position;
         AnimationController.SetBool("IsMoving", IsMoving);
-        PreviousPosition = transform.position;
 
         //Continuously increase the Grunts movement speed until it reaches the max
         if (CurrentMoveSpeed < MaxMoveSpeed)
             CurrentMoveSpeed += MoveSpeedIncreaseRate * Time.deltaTime;
+
+        //Remove distance travelled from next step sound, then play the sound when its been reached
+        float DistanceTravelled = Vector3.Distance(transform.position, PreviousPosition);
+        NextStepSound -= DistanceTravelled;
+        if(NextStepSound <= 0.0f)
+        {
+            NextStepSound = StepSoundDistance;
+            SoundEffectsPlayer.Instance.PlaySound("GruntStep");
+        }
+
+        //Store position for next frame
+        PreviousPosition = transform.position;
     }
 
     private void SeekPlayer()
@@ -138,5 +151,7 @@ public class GruntAI : HostileEntity
         //Destroy the rigidbody and the box collider component as they are no longer needed
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
+        //Play sound effect
+        SoundEffectsPlayer.Instance.PlaySound("GruntDie");
     }
 }

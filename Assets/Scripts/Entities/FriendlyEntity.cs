@@ -133,6 +133,8 @@ public class FriendlyEntity : BaseEntity
             WaveManager.Instance.RemoveHumanSurvivor(this);
             GameState.Instance.ScoreRescueSurvivor();
             Destroy(this.gameObject);
+            //Play sound effect
+            SoundEffectsPlayer.Instance.PlaySound("RescueHuman");
         }
         //Reflect the entitys current movement direction if they walk into one of the walls
         else if(collision.transform.CompareTag("Wall"))

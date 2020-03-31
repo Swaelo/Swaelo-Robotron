@@ -141,6 +141,8 @@ public class EnforcerAI : HostileEntity
                 //15% of projectiles will be aimed at the players predicated location
                 if (Random.Range(1, 100) <= 15)
                     ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
+                //Play sound effect
+                SoundEffectsPlayer.Instance.PlaySound("EnforcerShoot");
                 //Scale the projectiles speed directly propertional to the players distance
                 float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
                 float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);

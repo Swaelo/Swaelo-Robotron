@@ -122,6 +122,9 @@ public class GameState : MonoBehaviour
             SceneManager.LoadScene(2);
             return;
         }
+
+        //Play sound effect
+        SoundEffectsPlayer.Instance.PlaySound("PlayerDie");
         
         //Remove one of the players extra lives in order to allow them to restart the current round
         ExtraLives--;
