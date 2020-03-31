@@ -25,6 +25,9 @@ public class GameState : MonoBehaviour
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
     public Text UIScoreDisplay; //UI Text component used to display the players current score counter
     private bool GamePaused = false; //Everything is paused whenever this is true
+    private float PlayerDeathTimeout = 2.5f;    //How long the game is frozen for when the player dies before the round is restarted
+    private float DeathTimeoutLeft = 2.5f;  //Time remaining before the current death timeout expires
+    public bool InDeathTimeout = false;
 
     private void Start()
     {
@@ -45,12 +48,23 @@ public class GameState : MonoBehaviour
         //Toggle the games paused state
         if (Input.GetKeyDown(KeyCode.P))
             GamePaused = !GamePaused;
+
+        //Restart the current wave when the death timeout timer expires
+        if(InDeathTimeout)
+        {
+            DeathTimeoutLeft -= Time.deltaTime;
+            if (DeathTimeoutLeft <= 0.0f)
+            {
+                WaveManager.Instance.RestartWave();
+                InDeathTimeout = false;
+            }
+        }
     }
 
     //Used from AI scripts and other stuff to check if the game should be running right now
     public bool ShouldAdvanceGame()
     {
-        if (GamePaused || WaveManager.Instance.RoundWarmingUp)
+        if (GamePaused || WaveManager.Instance.RoundWarmingUp || InDeathTimeout)
             return false;
         return true;
     }
@@ -113,7 +127,8 @@ public class GameState : MonoBehaviour
         ExtraLives--;
         LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
 
-        //Restart the current wave
-        WaveManager.Instance.RestartWave();
+        //Start the death timeout process
+        DeathTimeoutLeft = PlayerDeathTimeout;
+        InDeathTimeout = true;
     }
 }
