@@ -140,8 +140,8 @@ public class FriendlyEntity : BaseEntity
             Vector3 SurfaceNormal = collision.contacts[0].normal;
             CurrentDirection = Vector3.Reflect(CurrentDirection, SurfaceNormal);
         }
-        //Turn and go back in the opposite direction if they walk into an electrode
-        else if(collision.transform.CompareTag("Electrode"))
+        //Turn and go back in the opposite direction if they walk into an electrode or a Grunt enemy
+        else if(collision.transform.CompareTag("Electrode") || collision.transform.CompareTag("Electrode"))
         {
             CurrentDirection = -CurrentDirection;
         }
