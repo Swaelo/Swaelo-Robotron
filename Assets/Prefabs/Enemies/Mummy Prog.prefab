@@ -244,7 +244,6 @@ GameObject:
   - component: {fileID: 7613034145068097139}
   - component: {fileID: 7613034145068097138}
   - component: {fileID: 7613034145068097141}
-  - component: {fileID: 7613034145068097140}
   m_Layer: 22
   m_Name: Mummy Prog
   m_TagString: Prog
@@ -302,7 +301,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.36, y: 0.62}
+  m_Size: {x: 0.27, y: 0.53}
   m_EdgeRadius: 0
 --- !u!50 &7613034145068097138
 Rigidbody2D:
@@ -351,33 +350,11 @@ MonoBehaviour:
   - {fileID: 7613034145546826723}
   - {fileID: 7613034145143077117}
   - {fileID: 7613034144984591612}
---- !u!114 &7613034145068097140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7613034145068097143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a5b6debf60aa8743a05c64a0a679cff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FlipSideSprites: 1
-  FrontBodySprite: {fileID: 7613034146424675129}
-  SideBodySprite: {fileID: 7613034145163354203}
-  FrontTrailSprites:
-  - {fileID: 7613034144564729279}
-  - {fileID: 7613034145396949454}
-  - {fileID: 7613034146155521172}
-  - {fileID: 7613034145872281103}
-  - {fileID: 7613034145289551926}
-  SideTrailSprites:
-  - {fileID: 7613034145314342748}
-  - {fileID: 7613034145929312257}
-  - {fileID: 7613034145546826721}
-  - {fileID: 7613034145143077115}
-  - {fileID: 7613034144984591614}
+  FlipSideSprites: 0
+  FrontSprite: {fileID: 0}
+  SideSprite: {fileID: 0}
+  FrontTrailSprites: []
+  SideTrailSprites: []
 --- !u!1 &7613034145143077119
 GameObject:
   m_ObjectHideFlags: 0

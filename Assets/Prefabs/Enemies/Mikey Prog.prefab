@@ -592,7 +592,6 @@ GameObject:
   - component: {fileID: 7700788030389007633}
   - component: {fileID: 7700788030389007632}
   - component: {fileID: 7700788030389007635}
-  - component: {fileID: 7700788030389007634}
   m_Layer: 22
   m_Name: Mikey Prog
   m_TagString: Prog
@@ -650,7 +649,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.44}
+  m_Size: {x: 0.19, y: 0.41}
   m_EdgeRadius: 0
 --- !u!50 &7700788030389007632
 Rigidbody2D:
@@ -699,33 +698,11 @@ MonoBehaviour:
   - {fileID: 7700788030589170212}
   - {fileID: 7700788029334397350}
   - {fileID: 7700788029811558259}
---- !u!114 &7700788030389007634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7700788030389007645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a5b6debf60aa8743a05c64a0a679cff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   FlipSideSprites: 0
-  FrontBodySprite: {fileID: 7700788030420984505}
-  SideBodySprite: {fileID: 7700788031400494718}
-  FrontTrailSprites:
-  - {fileID: 7700788030688364570}
-  - {fileID: 7700788029629175702}
-  - {fileID: 7700788029862665240}
-  - {fileID: 7700788030501523900}
-  - {fileID: 7700788031405961565}
-  SideTrailSprites:
-  - {fileID: 7700788030139571002}
-  - {fileID: 7700788031426963489}
-  - {fileID: 7700788030589170202}
-  - {fileID: 7700788029334397348}
-  - {fileID: 7700788029811558269}
+  FrontSprite: {fileID: 0}
+  SideSprite: {fileID: 0}
+  FrontTrailSprites: []
+  SideTrailSprites: []
 --- !u!1 &7700788030420984506
 GameObject:
   m_ObjectHideFlags: 0

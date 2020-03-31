@@ -160,39 +160,6 @@ public class EnforcerAI : HostileEntity
                 }
             }
         }
-
-        ////Wait for the shot cooldown to expire
-        //ShotCooldown -= Time.deltaTime;
-        //if(ShotCooldown <= 0.0f)
-        //{
-        //    //Reset the cooldown timer
-        //    ShotCooldown = ShotCooldownLength;
-
-        //    //Grab a location nearby the player to shoot at and create a direction vector pointing from the Enforcer to this location
-        //    Vector3 ShotTarget = GetPlayerPositionOffset(AimOffsetRange);
-        //    Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
-
-        //    //Projectiles speed is directly proportional to the players distance
-        //    float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        //    //Find the ratio of this value when mapped onto the PlayerDistanceRange values
-        //    float DistanceRatio = (PlayerDistance - PlayerDistanceRange.x) / (PlayerDistanceRange.y - PlayerDistanceRange.x);
-        //    //Map this onto the ShotSpeedRange valuers to get a scavled speed value based on the players distance
-        //    float ScaledSpeed = DistanceRatio * (ShotSpeedRange.y - ShotSpeedRange.x) + ShotSpeedRange.x;
-
-        //    //Spawn a new spark shot and fire it in the target direction
-        //    Vector3 ShotSpawn = transform.position + ShotDirection * 0.5f;
-        //    GameObject SparkShot = Instantiate(SparkShotPrefab, ShotSpawn, Quaternion.identity);
-
-        //    //Store the new projectile in the list with all the other active ones
-        //    ActiveSparkShots.Add(SparkShot);
-
-        //    //15% of Enforce shots will be aimed at the players predicted location, adding the players movement velocity onto its movement direction
-        //    if (Random.Range(1, 100) <= 15)
-        //        ShotDirection += GameState.Instance.Player.GetComponent<PlayerMovement>().MovementVelocity;
-
-        //    //Pass the shots speed and movement direction along to it
-        //    SparkShot.GetComponent<SparkShotAI>().InitializeProjectile(ScaledSpeed, ShotDirection, this);
-        //}
     }
 
     //Handle collisions with certain other objects and entities that we come into contact with
