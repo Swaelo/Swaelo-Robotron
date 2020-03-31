@@ -276,8 +276,8 @@ public class HulkAI : HostileEntity
             AvoidOtherHulk();
     }
 
-    //Pushes the Hulk back a small amount when hit by one of the players projectiles
-    private void PushBack(Vector3 ShotDirection)
+//Pushes the Hulk back a small amount when hit by one of the players projectiles
+private void PushBack(Vector3 ShotDirection)
     {
         //Get a new location to move the Hulk to, based on which direction the projectile was travelling that hit the Hulk
         Vector3 NewPos = transform.position + ShotDirection * ProjectilePushback * Time.deltaTime;

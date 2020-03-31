@@ -315,7 +315,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7549597912838802232}
-  - component: {fileID: 7549597912838802235}
   - component: {fileID: 7549597912838802239}
   - component: {fileID: 7549597912838802238}
   - component: {fileID: 7549597912838802233}
@@ -342,25 +341,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7549597912838802235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7549597912838802234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98b59e0a91029054fa551eab2f89812b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FrontSprites: {fileID: 7549597913313799079}
-  SideSprites: {fileID: 7549597911995118044}
-  FrontLegAnimator: {fileID: 7549597913313799076}
-  SideLegAnimator: {fileID: 7549597911995118045}
-  SideArmAnimator: {fileID: 7549597912646852892}
-  SideBodyRenderer: {fileID: 7549597911995118034}
-  SideArmRenderer: {fileID: 7549597912646852893}
 --- !u!61 &7549597912838802239
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -421,6 +401,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 3
+  FrontRenderers:
+  - {fileID: 7549597913313799077}
+  - {fileID: 7549597911645053549}
+  SideRenderers:
+  - {fileID: 7549597911995118034}
+  - {fileID: 7549597912646852893}
+  Animators:
+  - {fileID: 7549597913313799076}
+  - {fileID: 7549597911645053548}
+  - {fileID: 7549597911995118045}
+  - {fileID: 7549597912646852892}
 --- !u!1 &7549597913313799079
 GameObject:
   m_ObjectHideFlags: 0
