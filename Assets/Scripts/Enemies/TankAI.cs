@@ -32,6 +32,7 @@ public class TankAI : HostileEntity
     private float ShotCooldownRemaining = 0.5f; //Time left until another projectile can be fired
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.25f); //How far from the Player to offset where the projectiles are aimed
     private List<GameObject> ActiveShellProjectiles = new List<GameObject>();   //Keep a list of active shell projectiles which have been fired by this Tank
+    private int MaxActiveShots = 3; //Maximum number of tank shots each Tank may have active at any 1 time
 
     private void Awake()
     {
@@ -93,6 +94,16 @@ public class TankAI : HostileEntity
         {
             //Reset the cooldown timer
             ShotCooldownRemaining = Random.Range(ShotCooldownRange.x, ShotCooldownRange.y);
+
+            //Count how many active shots the Tank currents has
+            int ActiveShots = 0;
+            foreach (GameObject ActiveShell in ActiveShellProjectiles)
+                if (ActiveShell != null)
+                    ActiveShots++;
+
+            //Exit out if this tank already has the maximum amount of shots active
+            if (ActiveShots >= MaxActiveShots)
+                return;
 
             //50% of shots are fired toward the player, the other 50% aim to hit the player after rebounding off a wall
             bool DirectShot = Random.Range(1, 100) >= 50;

@@ -19330,7 +19330,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: StartWaveNumber
-      value: 2
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d74d42b07e179f64eb5fc8361b52d68b, type: 3}
