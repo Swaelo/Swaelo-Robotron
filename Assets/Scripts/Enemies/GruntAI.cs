@@ -120,7 +120,7 @@ public class GruntAI : HostileEntity
         //Destroy self once the death animation has played out
         if (DeathAnimationRemaining <= 0.0f)
         {
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             Destroy(this.gameObject);
         }
     }

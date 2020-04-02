@@ -8,423 +8,419 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public enum WavePreperationStage
+//Used to track progress through the different stages required to set up a new round and spawn in everything correctly
+public enum WaveStartProgress
 {
-    SpawningFriendlies = 0,
-    SpawningHostiles = 1,
-    WarmUp = 2
+    SpawnHumans = 1,    //Spawning in all the human survivors which must be rescued
+    SpawnEnemies = 2,   //Spawning in all the enemies which must be killed
+    WarmingUp = 3   //Once everything is spawned, theres a short pause before the round begins to give the player a chance to plan their strategy
 }
 
 public class WaveManager : MonoBehaviour
 {
+    //Singleton Instance
     public static WaveManager Instance;
     private void Awake() { Instance = this; }
-    public List<BaseEntity> ActiveEntities = new List<BaseEntity>();    //Every entity currently active in the game
-    public List<HostileEntity> TargetEntities = new List<HostileEntity>();  //Every enemy currently active that must be killed for the wave to complete
-    private Vector2 XBounds = new Vector2(-7f, 7f); //Value range that entities can be spawned along the X axis while remaining inside the level boundaries
-    private Vector2 YBounds = new Vector2(-4f, 4f); //Value range that entities can be spawned along the Y axis while remaining inside the level boundaries
-    private float MinimumEntityDistacne = 0.65f;  //Minimum distance entities can be spawned from one another
-    private float MinimumPlayerDistance = 1.5f; //Minimum distance entities can be spawned from the player
-    private int MaxPositionTries = 15;  //Maxmimum number of tries allowed to get a new random position for spawning something in
-    public bool RoundWarmingUp = false;    //Flagged when a new round has begun then disabled once the countdown has expired
-    public Text UIRoundDisplay; //UI Text component used to display the current round number
-    private WavePreperationStage WavePrepStage = WavePreperationStage.SpawningFriendlies;
-    private float SpawnPeriodDuration = 0.75f;  //How much time is allowed at the start of a new round for each group (friendly and hostile) of entities to be spawned in
-    private List<GameObject> FriendlySpawns = new List<GameObject>();
-    private float FriendlySpawnInterval;    //How often to spawn in friendly entities during the friendly spawn period
-    private float NextFriendlySpawn;    //How long until the next friendly entity should be spawned in during the friendly spawn period
-    private int FriendlySpawnsRemaining;    //How many friendly spawns remaining for the current friendly spawn period
-    private List<GameObject> HostileSpawns = new List<GameObject>();
-    private float HostileSpawnInterval; //How often to spawn in hostile entities during the hostile spawn period
-    private float NextHostileSpawn; //How long until the next hostile entity should be spawned in during the hostile spawn period
-    private int HostileSpawnsRemaining; //How many hostile spawns remaining for the current hostile spawn period
-    private float WarmUpPeriod = 0.5f;  //How long the game waits once everything has been spawned before the round begins
-    private float WarmUpRemaining = 0.5f;   //Time left until the round begins
-    public bool StartCustomWave = false;    //When set to true the game will start from the specified wave number for debugging purposes
-    public int StartWaveNumber = 1; //Custom wave number to start on while debugging
 
-    //Spawns in all the enemies for the given wave number
+    //User Interface
+    public Text WaveDisplay; //Used to display the current wave number to the user during gameplay
+
+    //Wave Override
+    public bool WaveStartOverride = false;  //If enabled through the instead the game will skip straight to the specified wave number
+    public int CustomWaveStart = 1; //Which wave to skip to when the game begins
+
+    //Entities
+    private List<BaseEntity> ActiveEntities = new List<BaseEntity>();   //A list of every entity currently active in the game
+    private List<HostileEntity> TargetEntities = new List<HostileEntity>(); //A list of every entity currently active which is a required target that must be killed to complete the round
+
+    //Wave Setup
+    public bool SpawnPeriodActive = false; //Set as true when preparations are done and its time to start spawning everything in
+    private WaveStartProgress WavePrepStage = WaveStartProgress.SpawnHumans;    //Tracks progress through the stages of setting up the wave
+    private float SpawnPeriodDuration = 0.75f;  //How long each group of entities is given to spawn into the game
+    private float WarmUpPeriod = 0.5f;  //Time between when the final enemy is spawned and the round begins
+    private float WarmUpLeft = 0.5f;    //How long until the warmup period is over and the round can begin
+
+    //Spawn Restrictions
+    private Vector2 XBounds = new Vector2(-7f, 7f); //Range of X position values that lie inside the level bounds
+    private Vector2 YBounds = new Vector2(-4f, 4f); //Range of Y position values that lie inside the level bounds
+    private float MinPlayerDistance = 1.75f;    //How close entities are allowed to spawn to the player character
+    private float MinEntityDistance = 0.65f;    //How close entities are allowed to spawn to one another
+
+    //Spawning
+    private List<GameObject> HumansToSpawn = new List<GameObject>();    //List of humans which still need to be spawned into the game
+    private float HumanSpawnInterval;   //How often humans will be spawned during the friendly spawning stage
+    private float NextHumanSpawn;   //How long until the next human survivor is spawned in
+    private List<GameObject> EnemiesToSpawn = new List<GameObject>();   //List of enemies which still need to be spawned into the game
+    private float EnemySpawnInterval;   //How often enemies will be spawned during the hostile spawning stage
+    private float NextEnemySpawn;   //How long until the next enemy is spawned in
+
+    //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {
-        //Set to the custom wave number when set to
-        if (StartCustomWave)
-            WaveNumber = StartWaveNumber;
+        //Overwrite the WaveNumber argument with the CustomWaveStart if WaveStartOverride has been enabled through the inspector
+        if (WaveStartOverride)
+            WaveNumber = CustomWaveStart;
 
-        //Update the UI round display
-        UIRoundDisplay.text = "Round    " + WaveNumber.ToString();
+        //Display the new wave number to the user
+        WaveDisplay.text = "Round " + WaveNumber.ToString();
 
-        //Reset the human rescue score multiplier
+        //Reset the rescue score multiplier
         GameState.Instance.RescueMultiplier = 1;
 
-        //Grab the list of entities which belong to the given wave number
-        WaveEntities Entities = WaveData.Instance.GetWaveData(WaveNumber);
+        //Get the list of enemies and humans to spawn in on this wave
+        WaveEntities WaveInfo = WaveData.Instance.GetWaveData(WaveNumber);
 
-        //Count the total number of hostile and friendly entities there are for this round
-        FriendlySpawnsRemaining = Entities.Mommies + Entities.Daddies + Entities.Mikeys;
-        HostileSpawnsRemaining = Entities.Grunts + Entities.Electrodes + Entities.Hulks + Entities.Brains + Entities.Spheroids + Entities.Quarks + Entities.Enforcer + Entities.Tank;
+        //Fill up the two lists with all the humans and enemies which will need to be spawned in to start this wave
+        HumansToSpawn = new List<GameObject>();
+        AddHumansToSpawn("Mummy", WaveInfo.Mommies);
+        AddHumansToSpawn("Daddy", WaveInfo.Daddies);
+        AddHumansToSpawn("Mikey", WaveInfo.Mikeys);
+        EnemiesToSpawn = new List<GameObject>();
+        AddEnemiesToSpawn("Grunt", WaveInfo.Grunts);
+        for (int i = 0; i < WaveInfo.Electrodes; i++)
+            EnemiesToSpawn.Add(PrefabSpawner.Instance.GetElectrodePrefab());
+        AddEnemiesToSpawn("Hulk", WaveInfo.Hulks);
+        AddEnemiesToSpawn("Brain", WaveInfo.Brains);
+        AddEnemiesToSpawn("Spheroid", WaveInfo.Spheroids);
+        AddEnemiesToSpawn("Quark", WaveInfo.Quarks);
 
-        //Set the timers for how often each friendly and hostile entity should be spawned in so they spread out across their respective spawning periods
-        FriendlySpawnInterval = SpawnPeriodDuration / FriendlySpawnsRemaining;
-        NextFriendlySpawn = FriendlySpawnInterval;
-        HostileSpawnInterval = SpawnPeriodDuration / HostileSpawnsRemaining;
-        NextHostileSpawn = HostileSpawnInterval;
+        //Figure out how often to spawn each human and enemy to space them out evenly over the spawning period
+        HumanSpawnInterval = SpawnPeriodDuration / HumansToSpawn.Count;
+        NextHumanSpawn = HumanSpawnInterval;
+        EnemySpawnInterval = SpawnPeriodDuration / EnemiesToSpawn.Count;
+        NextEnemySpawn = EnemySpawnInterval;
 
-        //Begin the warmup period, started by spawning in all the friendly entities first
-        RoundWarmingUp = true;
-        WavePrepStage = WavePreperationStage.SpawningFriendlies;
-
-        //Create two lists, of all the friendly and hostile entities that need to be spawned into the level
-        FriendlySpawns = new List<GameObject>();
-        for (int i = 0; i < Entities.Mommies; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Mummy"));
-        for (int i = 0; i < Entities.Daddies; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Daddy"));
-        for (int i = 0; i < Entities.Mikeys; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Mikey"));
-
-        HostileSpawns = new List<GameObject>();
-        for (int i = 0; i < Entities.Grunts; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Grunt"));
-        for (int i = 0; i < Entities.Electrodes; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetElectrodePrefab());
-        for (int i = 0; i < Entities.Hulks; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Hulk"));
-        for (int i = 0; i < Entities.Brains; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Brain"));
-        for (int i = 0; i < Entities.Spheroids; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Spheroid"));
-        for (int i = 0; i < Entities.Quarks; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Quark"));
-        for (int i = 0; i < Entities.Enforcer; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Enforcer"));
-        for (int i = 0; i < Entities.Tank; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Tank"));
-        
+        //Now the round is ready to begin, first the humans will be spawned in
+        SpawnPeriodActive = true;
+        WavePrepStage = WaveStartProgress.SpawnHumans;
     }
 
-    //Restarts the current wave with the same amount of enemies and everything thats left
+    //Adds a number of human prefabs to the list of humans to be spawned in
+    private void AddHumansToSpawn(string PrefabName, int Amount)
+    {
+        for (int i = 0; i < Amount; i++)
+            HumansToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
+    }
+    //Adds a number of enemy prefabs to the list of enemies to be spawned in
+    private void AddEnemiesToSpawn(string PrefabName, int Amount)
+    {
+        for (int i = 0; i < Amount; i++)
+            EnemiesToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
+    }
+
+    //Restarts the current wave with mostly the same amount of enemies that were remaining when the player died
     public void RestartWave()
     {
-        //Make a new WaveData so we can count up all the entities that still remain in this wave before we clean them all up
-        WaveEntities EntityCount = new WaveEntities();
-        
-        //Loop through all the entities in active list and add them to the counter
-        foreach(BaseEntity Entity in ActiveEntities)
-        {
-            switch(Entity.Type)
-            {
-                case (EntityType.Brain):
-                    Entity.GetComponent<BrainAI>().CleanMissiles();
-                    EntityCount.Brains++;
-                    break;
-                case (EntityType.Daddy):
-                    EntityCount.Daddies++;
-                    break;
-                case (EntityType.Electrode):
-                    EntityCount.Electrodes++;
-                    break;
-                case (EntityType.Enforcer):
-                    //Tell Enforcers to clean up any remaining projectiles they have fired before they get cleaned up
-                    Entity.GetComponent<EnforcerAI>().CleanProjectiles();
-                    break;
-                case (EntityType.Grunt):
-                    EntityCount.Grunts++;
-                    break;
-                case (EntityType.Hulk):
-                    EntityCount.Hulks++;
-                    break;
-                case (EntityType.Mikey):
-                    EntityCount.Mikeys++;
-                    break;
-                case (EntityType.Mummy):
-                    EntityCount.Mommies++;
-                    break;
-                case (EntityType.Quark):
-                    EntityCount.Quarks++;
-                    break;
-                case (EntityType.Spheroid):
-                    EntityCount.Spheroids++;
-                    break;
-                case (EntityType.Tank):
-                    //They need to be told to clean up any left over projectiles they have fired though
-                    Entity.GetComponent<TankAI>().CleanProjectiles();
-                    EntityCount.Tank++;
-                    break;
-                case (EntityType.DaddyProg):
-                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
-                    EntityCount.DaddyProg++;
-                    break;
-                case (EntityType.MummyProg):
-                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
-                    EntityCount.MummyProg++;
-                    break;
-                case (EntityType.MikeyProg):
-                    Entity.GetComponent<ProgAI>().DestroyTrailSprites();
-                    EntityCount.MikeyProg++;
-                    break;
-            }
-        }
-
-        //Reset the human rescue score multiplier
-        GameState.Instance.RescueMultiplier = 1;
-
-        //Have any remaining player projectiles cleaned up, and return the player back to the level center
+        //Clean up the players projectiles and reset their position and score multiplier
         GameState.Instance.Player.GetComponent<PlayerShooting>().CleanProjectiles();
         GameState.Instance.Player.GetComponent<PlayerMovement>().ResetPosition();
+        GameState.Instance.RescueMultiplier = 1;
 
-        //Clean up all the enemies which are still in the level, and reset the two tracking lists
+        //Tally up the number of remaining humans, and the number of each enemy type which is will remain when the round starts over again
+        WaveEntities RestartingEntities = new WaveEntities();
+        foreach (BaseEntity Entity in ActiveEntities)
+        {
+            //Tally up any remaining human survivors
+            if (Entity.Type == EntityType.Mummy || Entity.Type == EntityType.Daddy || Entity.Type == EntityType.Mikey)
+                TallyHumanSurvivor(RestartingEntities, Entity);
+            //Tally up enemies only including Grunts, Electrodes, Hulks, Brains, Spheroids, Quarks and Tanks; Progs and Enforcers do not respawn when the round starts over again
+            if (Entity.Type == EntityType.Grunt || Entity.Type == EntityType.Electrode || Entity.Type == EntityType.Hulk || Entity.Type == EntityType.Brain || Entity.Type == EntityType.Spheroid || Entity.Type == EntityType.Quark || Entity.Type == EntityType.Tank)
+                TallyPersistantEnemy(RestartingEntities, Entity);
+
+            //Instruct any Brains, Enforcers and Tanks to clean up any remaining projectiles that belong to them
+            if (Entity.Type == EntityType.Brain)
+                Entity.GetComponent<BrainAI>().CleanMissiles();
+            else if (Entity.Type == EntityType.Enforcer)
+                Entity.GetComponent<EnforcerAI>().CleanProjectiles();
+            else if (Entity.Type == EntityType.Tank)
+                Entity.GetComponent<TankAI>().CleanProjectiles();
+
+            //Instruct any Progs to clean up their trail sprites that follow behind
+            if (Entity.Type == EntityType.MummyProg || Entity.Type == EntityType.DaddyProg || Entity.Type == EntityType.MikeyProg)
+                Entity.GetComponent<ProgAI>().DestroyTrailSprites();
+        }
+
+        //Clean up all the entities which were still active when the player died, and reset the tracking lists
         foreach (BaseEntity Entity in ActiveEntities)
             Destroy(Entity.gameObject);
         ActiveEntities.Clear();
         TargetEntities.Clear();
 
-        //Find and clean up any left over enemy projectiles which managed to survive this long
-        foreach (GameObject Projectile in GameObject.FindGameObjectsWithTag("EnemyProjectile"))
-            Projectile.SendMessage("DestroyProjectile");
+        //Reset and fill up the spawning lists with the humans and enemies which will persist ones the round begins over again
+        HumansToSpawn = new List<GameObject>();
+        AddHumansToSpawn("Mummy", RestartingEntities.Mommies);
+        AddHumansToSpawn("Daddy", RestartingEntities.Daddies);
+        AddHumansToSpawn("Mikey", RestartingEntities.Mikeys);
+        EnemiesToSpawn = new List<GameObject>();
+        AddEnemiesToSpawn("Grunt", RestartingEntities.Grunts);
+        for (int i = 0; i < RestartingEntities.Electrodes; i++)
+            EnemiesToSpawn.Add(PrefabSpawner.Instance.GetElectrodePrefab());
+        AddEnemiesToSpawn("Hulk", RestartingEntities.Hulks);
+        AddEnemiesToSpawn("Brain", RestartingEntities.Brains);
+        AddEnemiesToSpawn("Spheroid", RestartingEntities.Spheroids);
+        AddEnemiesToSpawn("Quark", RestartingEntities.Quarks);
+        AddEnemiesToSpawn("Tank", RestartingEntities.Tank);
 
-        //Count the total number of hostile and friendly entities that will need to be spawned back in to restart this round properly
-        FriendlySpawnsRemaining = EntityCount.Mommies + EntityCount.Daddies + EntityCount.Mikeys;
-        HostileSpawnsRemaining = EntityCount.Grunts + EntityCount.Electrodes + EntityCount.Hulks + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.Tank + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
+        //Reconfigure the timers for spawning in the entities during their spawn periods
+        HumanSpawnInterval = SpawnPeriodDuration / HumansToSpawn.Count;
+        NextHumanSpawn = HumanSpawnInterval;
+        EnemySpawnInterval = SpawnPeriodDuration / EnemiesToSpawn.Count;
+        NextEnemySpawn = EnemySpawnInterval;
 
-        //Progress onto the next wave if there are no hostile spawns remaining (this happens when dying with only Enforcers or Tanks left alive)
-        int TargetSpawnsRemaining = EntityCount.Grunts + EntityCount.Brains + EntityCount.Spheroids + EntityCount.Quarks + EntityCount.DaddyProg + EntityCount.MummyProg + EntityCount.MikeyProg;
-        if(TargetSpawnsRemaining <= 0)
+        //Now the round is ready to begin over again
+        SpawnPeriodActive = true;
+        WavePrepStage = WaveStartProgress.SpawnHumans;
+    }
+
+    //Adds one of the human survivors to the tally
+    private void TallyHumanSurvivor(WaveEntities TallyBoard, BaseEntity HumanEntity)
+    {
+        switch(HumanEntity.Type)
         {
-            GameState.Instance.CurrentWave++;
-            StartWave(GameState.Instance.CurrentWave);
-            return;
+            case (EntityType.Mummy):
+                TallyBoard.Mommies++;
+                break;
+            case (EntityType.Daddy):
+                TallyBoard.Daddies++;
+                break;
+            case (EntityType.Mikey):
+                TallyBoard.Mikeys++;
+                break;
         }
+    }
 
-        //Set the timers for how often each entity type should be spawned in during their periods
-        FriendlySpawnInterval = SpawnPeriodDuration / FriendlySpawnsRemaining;
-        NextFriendlySpawn = FriendlySpawnInterval;
-        HostileSpawnInterval = SpawnPeriodDuration / HostileSpawnsRemaining;
-        NextHostileSpawn = HostileSpawnInterval;
-
-        //Begin the warmup period, spawning in friendlies first
-        RoundWarmingUp = true;
-        WavePrepStage = WavePreperationStage.SpawningFriendlies;
-
-        //Create two lists, one for each of all the friendly and hostile entities that need to be spawned back in to restart this round
-        FriendlySpawns = new List<GameObject>();
-        for (int i = 0; i < EntityCount.Mommies; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Mummy"));
-        for (int i = 0; i < EntityCount.Daddies; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Daddy"));
-        for (int i = 0; i < EntityCount.Mikeys; i++)
-            FriendlySpawns.Add(PrefabSpawner.Instance.GetPrefab("Mummy"));
-
-        HostileSpawns = new List<GameObject>();
-        for (int i = 0; i < EntityCount.Grunts; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Grunt"));
-        for (int i = 0; i < EntityCount.Electrodes; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetElectrodePrefab());
-        for (int i = 0; i < EntityCount.Hulks; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Hulk"));
-        for (int i = 0; i < EntityCount.Brains; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Brain"));
-        for (int i = 0; i < EntityCount.Spheroids; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Spheroid"));
-        for (int i = 0; i < EntityCount.Quarks; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Quark"));
-        for (int i = 0; i < EntityCount.Enforcer; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Enforcer"));
-        for (int i = 0; i < EntityCount.Tank; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("Tank"));
-        for (int i = 0; i < EntityCount.DaddyProg; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("DaddyProg"));
-        for (int i = 0; i < EntityCount.MummyProg; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("MummyProg"));
-        for (int i = 0; i < EntityCount.MikeyProg; i++)
-            HostileSpawns.Add(PrefabSpawner.Instance.GetPrefab("MikeyProg"));
+    //Adds one of the enemies to the tally
+    private void TallyPersistantEnemy(WaveEntities TallyBoard, BaseEntity HostileEntity)
+    {
+        switch(HostileEntity.Type)
+        {
+            case (EntityType.Grunt):
+                TallyBoard.Grunts++;
+                break;
+            case (EntityType.Electrode):
+                TallyBoard.Electrodes++;
+                break;
+            case (EntityType.Hulk):
+                TallyBoard.Hulks++;
+                break;
+            case (EntityType.Brain):
+                TallyBoard.Brains++;
+                break;
+            case (EntityType.Spheroid):
+                TallyBoard.Spheroids++;
+                break;
+            case (EntityType.Quark):
+                TallyBoard.Quarks++;
+                break;
+            case (EntityType.Tank):
+                TallyBoard.Tank++;
+                break;
+        }
     }
 
     private void Update()
     {
-        //All enemy/human AI and player controls are disabled during the warmup period
-        if(RoundWarmingUp)
+        //During the spawning period, keep spawning in everything until the round is ready to begin
+        if (SpawnPeriodActive)
+            ContinueSpawningProcess();
+    }
+
+    //Progresses through the stages of getting everything spawned in to start the new round
+    private void ContinueSpawningProcess()
+    {
+        //Break out into the current stage of preparation
+        switch(WavePrepStage)
         {
-            //Go to the current round prep stage
-            switch(WavePrepStage)
+            //Humans are spawned in during the first stage
+            case (WaveStartProgress.SpawnHumans):
+                SpawnHumans();
+                break;
+            //Enemies are spawned in during the second stage
+            case (WaveStartProgress.SpawnEnemies):
+                SpawnEnemies();
+                break;
+            //Small pause after everything has spawned before the round starts
+            case (WaveStartProgress.WarmingUp):
+                WaitForRoundStart();
+                break;
+        }
+    }
+
+    //Spawns in humans during their stage of wave preparation
+    private void SpawnHumans()
+    {
+        //Wait for the spawn timer
+        NextHumanSpawn -= Time.deltaTime;
+        if(NextHumanSpawn <= 0.0f)
+        {
+            //Reset the timer
+            NextHumanSpawn = HumanSpawnInterval;
+            //Spawn a new human in a random location
+            Vector3 SpawnPos = GetSpawnPos();
+            GameObject NewSpawn = Instantiate(HumansToSpawn[0], SpawnPos, Quaternion.identity);
+            //Remove them from the HumansToSpawn list and add them to the list of active entities
+            HumansToSpawn.RemoveAt(0);
+            ActiveEntities.Add(NewSpawn.GetComponent<BaseEntity>());
+            //If all humans have now been spawned move on to the enemy spawning stage
+            if (HumansToSpawn.Count <= 0)
+                WavePrepStage = WaveStartProgress.SpawnEnemies;
+        }
+    }
+
+    //Spawns in enemies during their stage of wave preparation
+    private void SpawnEnemies()
+    {
+        //Wait for the spawn timer
+        NextEnemySpawn -= Time.deltaTime;
+        if(NextEnemySpawn <= 0.0f)
+        {
+            //Reset the timer
+            NextEnemySpawn = EnemySpawnInterval;
+            //Spawn the next enemy in a random location
+            Vector3 SpawnPos = GetSpawnPos();
+            GameObject NewSpawn = Instantiate(EnemiesToSpawn[0], SpawnPos, Quaternion.identity);
+            //Remove them from the EnemiesToSpawn list and add them to both the list of active entities
+            EnemiesToSpawn.RemoveAt(0);
+            ActiveEntities.Add(NewSpawn.GetComponent<BaseEntity>());
+            //Also have them added onto the list of targets if this is an enemy type that must be killed to complete the round
+            if (IsEnemyRequired(NewSpawn))
+                TargetEntities.Add(NewSpawn.GetComponent<HostileEntity>());
+            //If all enemies have been spawned in, move onto the final waiting period before the round begins
+            if(EnemiesToSpawn.Count <= 0)
             {
-                //In the first stage, all friendly entities are spawned in
-                case (WavePreperationStage.SpawningFriendlies):
-                    SpawnFriendlyEntities();
-                    break;
-                //In the second stage, all enemies are spawned in
-                case (WavePreperationStage.SpawningHostiles):
-                    SpawnHostileEntities();
-                    break;
-                //There is a final short waiting period after everything is spawned, before the round starts
-                case (WavePreperationStage.WarmUp):
-                    WaitForWarmUp();
-                    break;
+                WavePrepStage = WaveStartProgress.WarmingUp;
+                WarmUpLeft = WarmUpPeriod;
             }
         }
     }
 
-    //Spawns in friendly entities over the course of the friendly entity spawning period
-    private void SpawnFriendlyEntities()
+    //Starts the round once the warmup period expires
+    private void WaitForRoundStart()
     {
-        //Wait until the timer to spawn in the next friendly entity expires
-        NextFriendlySpawn -= Time.deltaTime;
-        if(NextFriendlySpawn <= 0.0f)
-        {
-            //Reset the timer and decrement the number of friendly spawns remaining
-            NextFriendlySpawn = FriendlySpawnInterval;
-            FriendlySpawnsRemaining--;
-            //Spawn in the next friendly entity
-            Vector3 SpawnPos = GetNewSpawnPosition(0);
-            GameObject FriendlySpawn = Instantiate(FriendlySpawns[0], SpawnPos, Quaternion.identity);
-            //Remove it from the list to be spawned and add it to the list of active entities
-            FriendlySpawns.RemoveAt(0);
-            ActiveEntities.Add(FriendlySpawn.GetComponent<BaseEntity>());
-            //Move onto the hostile spawning stage if all friendly entities have now been spawned in
-            if (FriendlySpawnsRemaining <= 0)
-                WavePrepStage = WavePreperationStage.SpawningHostiles;
-        }
+        WarmUpLeft -= Time.deltaTime;
+        if (WarmUpLeft <= 0.0f)
+            SpawnPeriodActive = false;
     }
 
-    //Spawns in hostile entities over the course of the hostile entity spawning period
-    private void SpawnHostileEntities()
-    {
-        //Wait until the timer to spawn in the next hostile entity expires
-        NextHostileSpawn -= Time.deltaTime;
-        if(NextHostileSpawn <= 0.0f)
-        {
-            //Reset the timer and decrement the number of hostile spawns remaining
-            NextHostileSpawn = HostileSpawnInterval;
-            HostileSpawnsRemaining--;
-            //Spawn in the next hostile entity
-            Vector3 SpawnPos = GetNewSpawnPosition(0);
-            GameObject HostileSpawn = Instantiate(HostileSpawns[0], SpawnPos, Quaternion.identity);
-            //Remove it from the list of hostiles to be spawned, add it to the list of active entities and the list of targets if required
-            HostileSpawns.RemoveAt(0);
-            ActiveEntities.Add(HostileSpawn.GetComponent<BaseEntity>());
-            if (IsEnemyRequired(HostileSpawn))
-                TargetEntities.Add(HostileSpawn.GetComponent<HostileEntity>());
-            //Move onto the final preperation waiting period once all hostile entities have been spawned in
-            if (HostileSpawnsRemaining <= 0)
-            {
-                WavePrepStage = WavePreperationStage.WarmUp;
-                WarmUpRemaining = WarmUpPeriod;
-            }
-        }
-    }
-
-    //Waits until the warm up period is over before allowing the round to actually begin
-    private void WaitForWarmUp()
-    {
-        //Start the round once the warm up period is over
-        WarmUpRemaining -= Time.deltaTime;
-        if (WarmUpRemaining <= 0.0f)
-            RoundWarmingUp = false;
-    }
-
-    //Checks if the enemy that has been spawned in should be added to the list of target enemies that must be killed for the round to progress
+    //Checks if the given enemy is a target that must be killed for the round to be completed
     private bool IsEnemyRequired(GameObject Enemy)
     {
         //Get the enemies type
         EntityType EnemyType = Enemy.GetComponent<HostileEntity>().Type;
 
-        //Grunts, Brains, Spheroids, Quarks, Enforcers and Tanks are required enemy types
-        if (EnemyType == EntityType.Grunt || EnemyType == EntityType.Brain || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Quark || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Tank || EnemyType == EntityType.DaddyProg || EnemyType == EntityType.MummyProg || EnemyType == EntityType.MikeyProg )
+        //Grunts, Brains, Spheroids, Quarks, Enforcers and Tanks are all required targets to finish the round
+        if (EnemyType == EntityType.Grunt || EnemyType == EntityType.Brain || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Quark || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Tank)
             return true;
 
-        //All the others (electrodes and hulks) are not required to be killed to complete the round
+        //All others are optional
         return false;
     }
 
-    //Cleans up anything left over from the current wave
+    //Cleans up anything remaining in the current wave, allowing everything to be replaced and start over again
     private void CleanWave()
     {
-        //Destroy any leftover entities
+        //Destroy any remaining entities
         foreach (BaseEntity Entity in ActiveEntities)
             Destroy(Entity.gameObject);
-        //Clear the tracking lists
+
+        //Empty the tracking lists
         ActiveEntities.Clear();
         TargetEntities.Clear();
-        //Move the player character back to the center of the screen
-        GameState.Instance.Player.GetComponent<PlayerMovement>().ResetPosition();
-        //Have any remaining player projectiles cleaned up
-        GameState.Instance.Player.GetComponent<PlayerShooting>().CleanProjectiles();
-    }
-    
-    //Returns a random spawn position that isnt too close to the player character or too close to any other already active entity
-    private Vector3 GetNewSpawnPosition(int Iterations)
-    {
-        //Get a random position inside the level
-        Vector3 NewPosition = new Vector3(Random.Range(XBounds.x, XBounds.y), Random.Range(YBounds.x, YBounds.y), 0f);
 
-        //Print an error message and return the new position if the random position iteration count reached the maximum count
-        if(Iterations > MaxPositionTries)
+        //Cleanup any old player projectiles
+        GameState.Instance.Player.GetComponent<PlayerShooting>().CleanProjectiles();
+
+        //Reposition the player character
+        GameState.Instance.Player.GetComponent<PlayerMovement>().ResetPosition();
+    }
+
+    //Randomly selects a location in the level which will be used to spawn in humans and enemies during the round setup period
+    private Vector3 GetSpawnPos()
+    {
+        //Get a random pos inside the level
+        Vector3 SpawnPos = GetRandomPos();
+
+        //Return this position if its clear of anything else
+        if (SpawnPosFree(SpawnPos))
+            return SpawnPos;
+
+        //If the first random pos wasnt free, try up to 10 times to find one
+        int FreePosAttempts = 1;
+        while(FreePosAttempts < 10)
         {
-            Debug.Log("Exceeded maximum tries for getting a random position for spawning entity, returning whatever position.");
-            return NewPosition;
+            SpawnPos = GetRandomPos();
+            if (SpawnPosFree(SpawnPos))
+                return SpawnPos;
+            FreePosAttempts++;
         }
 
-        //Grab a new position if this is too close to any existing entity
+        //If we tried 10 times and failed, just return whatever was the last position that we generated and it will have to do
+        return SpawnPos;
+    }
+
+    //Returns a random position inside the level bounds
+    private Vector3 GetRandomPos()
+    {
+        return new Vector3(Random.Range(XBounds.x, XBounds.y), Random.Range(YBounds.x, YBounds.y), 0f);
+    }
+
+    //Checks if a position is too close to the player character or any of the entities which are already active
+    private bool SpawnPosFree(Vector3 SpawnPos)
+    {
+        //Check distance from the player character
+        float PlayerDistance = Vector3.Distance(SpawnPos, GameState.Instance.Player.transform.position);
+        if (PlayerDistance <= MinPlayerDistance)
+            return false;
+
+        //Check distance from any active entities
         foreach(BaseEntity Entity in ActiveEntities)
         {
-            //Compare distance between the new position and this entity
-            float EntityDistance = Vector3.Distance(NewPosition, Entity.transform.position);
-
-            //Return a new position if this entity is too close
-            if (EntityDistance < MinimumEntityDistacne)
-                return GetNewSpawnPosition(Iterations+1);
+            float EntityDistance = Vector3.Distance(SpawnPos, Entity.transform.position);
+            if (EntityDistance <= MinEntityDistance)
+                return false;
         }
 
-        //Return a new position this new position is too close to the players position
-        float PlayerDistance = Vector3.Distance(NewPosition, GameState.Instance.Player.transform.position);
-        if (PlayerDistance < MinimumPlayerDistance)
-            return GetNewSpawnPosition(Iterations+1);
-
-        //Return this new position if it wasnt found to be too close to anything else
-        return NewPosition;
+        //All checks have passed, this position is free
+        return true;
     }
 
-    //Any enemy/friendly entity that does alerts the WaveManager through this function so it can be removed from the tracking lists
-    public void OptionalEnemyDead(HostileEntity OptionalEnemy)
+    //Whenever friendly or hostile entities are killed, they alert the WaveManager through this function
+    public void EnemyDead(HostileEntity Enemy)
     {
-        ActiveEntities.Remove(OptionalEnemy);
-    }
-    public void TargetEnemyDead(HostileEntity TargetEnemy)
-    {
-        //Ignore this is wave progression has been disabled
-        if (GameState.Instance.DisableWaveProgression)
-            return;
+        //Remove the entity from the ActiveEntities list
+        ActiveEntities.Remove(Enemy);
 
-        //Remove the entity from both of the tracking lists
-        ActiveEntities.Remove(TargetEnemy);
-        TargetEntities.Remove(TargetEnemy);
+        //Remove them from the TargetEntities list if they're a required target
+        bool IsTarget = IsEnemyRequired(Enemy.gameObject);
+        if (IsTarget)
+            TargetEntities.Remove(Enemy);
 
-        //Whenever a target enemy has been destroyed, check if it was the last one
-        if(TargetEntities.Count == 0)
+        //Whenever a target enemy is destroyed, check to see if they were the last one left
+        if(IsTarget && TargetEntities.Count == 0)
         {
-            //Clean up the current wave, then move onto and begin the next one
+            //Progress onto the next round now since all the target enemies have been destroyed
             CleanWave();
             GameState.Instance.CurrentWave++;
             StartWave(GameState.Instance.CurrentWave);
-            //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
+            Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
         }
     }
-
-    //Adds a new enemy to the list of target enemies needing to be destroyed before the current round can be complete, called by Spheroids and Quarks when they spawn enemies into the game
-    public void AddTargetEnemy(HostileEntity TargetEnemy)
+    public void HumanDead(BaseEntity Human, bool KilledByEnemy = false)
     {
-        ActiveEntities.Add(TargetEnemy);
-        TargetEntities.Add(TargetEnemy);
-    }
+        //Remove them from the ActiveEntities list
+        ActiveEntities.Remove(Human);
 
-    //Removes a human survivor from the active entity list
-    public void RemoveHumanSurvivor(BaseEntity Human, bool KilledByEnemy = false)
-    {
-        //If the entity is being removes as a result of it being killed by one of the enemies, spawn in the skull and crossbones near them
+        //Spawn a skull underneath the human if they died as a result of conflict with an enemy
         if (KilledByEnemy)
             PrefabSpawner.Instance.SpawnPrefab("Skull", Human.transform.position, Quaternion.identity);
+    }
 
-        //Remove the entity from the tracking list
-        ActiveEntities.Remove(Human);
+    //Adds a newly created enemy to the list of required targets, called by Quarks when they spawn tanks into the game
+    public void AddNewTank(HostileEntity Tank)
+    {
+        //Add them to both entity lists
+        ActiveEntities.Add(Tank);
+        TargetEntities.Add(Tank);
     }
 }

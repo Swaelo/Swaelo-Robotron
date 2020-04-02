@@ -13,8 +13,8 @@ public class SoundEffectsPlayer : MonoBehaviour
     [System.Serializable]   //List all the available sound effects that can be played
     public struct Sound
     {
-        public string Name;
-        public AudioClip[] SoundClips;
+        public string Name; //Name used to access this sound through the PlaySound function
+        public AudioClip SoundClip;  //Set of clips used for this sound, adding multiple allows for having variants which are randomly selected from
     }
     public Sound[] SoundEffects;
 
@@ -23,16 +23,22 @@ public class SoundEffectsPlayer : MonoBehaviour
     //Takes the name of a sound effect, and plays it if it can be found
     public void PlaySound(string SoundName)
     {
-        //Find the structure containing the required sound effect
-        foreach (Sound Sound in SoundEffects)
+        //Loop through all the available sounds
+        for(int i = 0; i < SoundEffects.Length; i++)
         {
-            if (Sound.Name == SoundName)
+            //Access each sound from the library as we iterate through the list
+            Sound CurrentSound = SoundEffects[i];
+
+            //Check if this is the sound were looking for
+            if(CurrentSound.Name == SoundName)
             {
-                //Play one of this clips variations at random
-                int Variations = Sound.SoundClips.Length;
-                int Selection = Random.Range(1, Variations);
-                SoundPlayer.PlayOneShot(Sound.SoundClips[Selection-1]);
+                //Exit out now that we found the target sound and tried to play it
+                SoundPlayer.PlayOneShot(CurrentSound.SoundClip);
+                return;
             }
         }
+
+        //Print an error message if the target sound effect couldnt be found
+        Debug.Log("Couldnt find sound effect: " + SoundName);
     }
 }

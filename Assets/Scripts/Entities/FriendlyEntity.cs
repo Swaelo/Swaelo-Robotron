@@ -20,12 +20,13 @@ public class FriendlyEntity : BaseEntity
     public SpriteRenderer SideBodyRenderer; //Renderer for the side view sprite
     public SpriteRenderer BackBodyRenderer; //Renderer for the back view sprite
     public Animator[] AnimationControllers; //Animators for each sprite of the entity
+    private Vector3 PreviousPos;    //For measuring when and in which direction the entity is moving
 
+    //Reprogramming
     public bool TargettedByBrain = false;   //Flagged true when a Brain decides this will be their target, to make sure no other Brain tries to capture the same one
     public bool BeingReprogrammed = false; //Flagged to true once the human has been captured by a Brain
+    private Vector3 FrozenPosition; //Position should not change during the reprogramming process
 
-    private Vector3 PreviousPos;    //For measuring when and in which direction the entity is moving
-    
     private void Start()
     {
         //Store initial position into previous
@@ -55,8 +56,9 @@ public class FriendlyEntity : BaseEntity
         if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
-        //Keep wandering around
-        WanderAround();
+        //Wander around while the entity is able to
+        if(!BeingReprogrammed)
+            WanderAround();
 
         //Make sure the correct sprites are being rendered, and their animations are playing correctly
         ManageSpriteRendering();
@@ -130,7 +132,7 @@ public class FriendlyEntity : BaseEntity
         //The entity is rescued if it comes into contact with the player character
         if(collision.transform.CompareTag("Player"))
         {
-            WaveManager.Instance.RemoveHumanSurvivor(this);
+            WaveManager.Instance.HumanDead(this);
             GameState.Instance.ScoreRescueSurvivor();
             Destroy(this.gameObject);
             //Play sound effect
@@ -143,7 +145,7 @@ public class FriendlyEntity : BaseEntity
             CurrentDirection = Vector3.Reflect(CurrentDirection, SurfaceNormal);
         }
         //Turn and go back in the opposite direction if they walk into an electrode or a Grunt enemy
-        else if(collision.transform.CompareTag("Electrode") || collision.transform.CompareTag("Electrode"))
+        else if(collision.transform.CompareTag("Electrode") || collision.transform.CompareTag("Grunt"))
         {
             CurrentDirection = -CurrentDirection;
         }

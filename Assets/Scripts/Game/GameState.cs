@@ -23,6 +23,7 @@ public class GameState : MonoBehaviour
     public int CurrentWave;    //What wave the player is currently on
     public bool DisableWaveProgression = false; //Waves will not begin or progress while this is enabled (for debugging purposes)
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
+    private int MaxRescueMultiplier = 5;    //Maximum rescue multiplier the player is able to reach
     public Text UIScoreDisplay; //UI Text component used to display the players current score counter
     private bool GamePaused = false; //Everything is paused whenever this is true
     private float PlayerDeathTimeout = 2.5f;    //How long the game is frozen for when the player dies before the round is restarted
@@ -64,7 +65,7 @@ public class GameState : MonoBehaviour
     //Used from AI scripts and other stuff to check if the game should be running right now
     public bool ShouldAdvanceGame()
     {
-        if (GamePaused || WaveManager.Instance.RoundWarmingUp || InDeathTimeout)
+        if (GamePaused || WaveManager.Instance.SpawnPeriodActive || InDeathTimeout)
             return false;
         return true;
     }
@@ -102,8 +103,9 @@ public class GameState : MonoBehaviour
         string PrefabName = RescueMultiplier.ToString() + "000Points";
         PrefabSpawner.Instance.SpawnPrefab(PrefabName, Player.transform.position, Quaternion.identity);
 
-        //Increase the multiplier
-        RescueMultiplier++;
+        //Increase the multiplier until it reaches the maximum allowed value
+        if(RescueMultiplier < MaxRescueMultiplier)
+            RescueMultiplier++;
     }
 
     //Restarts the round if the player has lived remaining, otherwise proceeds to the gameover screen

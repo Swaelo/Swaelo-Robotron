@@ -258,7 +258,7 @@ public class HulkAI : HostileEntity
         //Kill any humans on contact
         else if (collision.transform.CompareTag("Human"))
         {
-            WaveManager.Instance.RemoveHumanSurvivor(collision.transform.GetComponent<BaseEntity>(), true);
+            WaveManager.Instance.HumanDead(collision.transform.GetComponent<BaseEntity>(), true);
             Destroy(collision.gameObject);
         }
         //Push the Hulk back when hit by players projectiles

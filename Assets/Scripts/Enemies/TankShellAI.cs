@@ -31,7 +31,7 @@ public class TankShellAI : MonoBehaviour
         //Destroy the projectile once the lifetime has expired
         ProjectileLifetime -= Time.deltaTime;
         if (ProjectileLifetime <= 0.0f)
-            Destroy(gameObject);
+            ShellDie();
     }
 
     //Called by the Tank which fired this projectile to set the initial movement direction
@@ -49,11 +49,12 @@ public class TankShellAI : MonoBehaviour
             Destroy(collision.gameObject);
             if (ParentTank != null)
                 ParentTank.TankShellDestroyed(gameObject);
-            Destroy(gameObject);
+            ShellDie();
         }
         //Colliding with any Walls reflects the shells direction off that wall, and increases its speed
         else if(collision.transform.CompareTag("Wall"))
         {
+            SoundEffectsPlayer.Instance.PlaySound("TankShellBounce");
             //Reflect the balls movement direction off the surface normal of the wall that it collided with
             Vector3 SurfaceNormal = collision.contacts[0].normal;
             CurrentDirection = Vector3.Reflect(CurrentDirection, SurfaceNormal);
@@ -65,8 +66,14 @@ public class TankShellAI : MonoBehaviour
         else if(collision.transform.CompareTag("Player"))
         {
             GameState.Instance.KillPlayer();
-            Destroy(this.gameObject);
+            ShellDie();
         }
+    }
+
+    private void ShellDie()
+    {
+        SoundEffectsPlayer.Instance.PlaySound("TankShellExplode");
+        DestroyProjectile();
     }
 
     public void DestroyProjectile()

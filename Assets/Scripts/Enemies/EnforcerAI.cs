@@ -64,7 +64,7 @@ public class EnforcerAI : HostileEntity
             DeathAnimationRemaining -= Time.deltaTime;
             if (DeathAnimationRemaining <= 0.0f)
             {
-                WaveManager.Instance.TargetEnemyDead(this);
+                WaveManager.Instance.EnemyDead(this);
                 Destroy(this.gameObject);
             }
         }
@@ -182,6 +182,8 @@ public class EnforcerAI : HostileEntity
     //Disables all normal behaviours, triggers the death animation and waits for that to complete
     private void TriggerDeath()
     {
+        //Play sound
+        SoundEffectsPlayer.Instance.PlaySound("EnforcerDie");
         GameState.Instance.IncreaseScore((int)PointValue.Enforcer);
         //Trigger each of the Enforcers Animation Controllers to start playing the death animation
         foreach (Animator AnimationController in AnimationControllers)

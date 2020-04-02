@@ -95,6 +95,7 @@ public class SparkShotAI : MonoBehaviour
     //Starts playing the death animation, then waits for it to complete before the projectile destroys itself
     private void TriggerDeath()
     {
+        SoundEffectsPlayer.Instance.PlaySound("SparkShotExplode");
         //Trigger the animation controller to begin the death projectiles death animation
         AnimationController.SetTrigger("Death");
         //Flag the projectile as dead, and destroy its components that might cause trouble during the death animation

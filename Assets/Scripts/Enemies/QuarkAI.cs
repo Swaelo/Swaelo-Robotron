@@ -98,15 +98,17 @@ public class QuarkAI : HostileEntity
             Vector3 SpawnLocation = GetTankSpawnLocation();
             GameObject NewTank = Instantiate(PrefabSpawner.Instance.GetPrefab("Tank"), SpawnLocation, Quaternion.identity);
 
+            SoundEffectsPlayer.Instance.PlaySound("SpawnTank");
+
             //Let the WaveManager know this new enemy exists
-            WaveManager.Instance.AddTargetEnemy(NewTank.GetComponent<HostileEntity>());
+            WaveManager.Instance.AddNewTank(NewTank.GetComponent<HostileEntity>());
 
             //Take 1 away from this Quarks spawns counter, then check if its run out to trigger self-destruct
             SpawnsLeft -= 1;
             if(SpawnsLeft <= 0)
             {
                 //Tell the wave manager this enemies being killed, then destroy it
-                WaveManager.Instance.TargetEnemyDead(this);
+                WaveManager.Instance.EnemyDead(this);
                 Destroy(this.gameObject);
             }
         }
@@ -142,7 +144,7 @@ public class QuarkAI : HostileEntity
         if(HitPoints <= 0)
         {
             //Kill the Quark once its hitpoints reach zero
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             GameState.Instance.IncreaseScore((int)PointValue.Quark);
             Destroy(gameObject);
         }
@@ -154,8 +156,10 @@ public class QuarkAI : HostileEntity
         //Player projectiles kill the Quark
         if(collision.transform.CompareTag("PlayerProjectile"))
         {
+            //Play sound
+            SoundEffectsPlayer.Instance.PlaySound("QuarkDie");
             Destroy(collision.gameObject);
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             Destroy(gameObject);
         }
         //Player is killed on contact

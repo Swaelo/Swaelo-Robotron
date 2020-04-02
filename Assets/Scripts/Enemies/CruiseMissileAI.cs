@@ -90,6 +90,8 @@ public class CruiseMissileAI : MonoBehaviour
     //Destroys the cruise missle
     public void DestroyProjectile()
     {
+        //Play sound
+        SoundEffectsPlayer.Instance.PlaySound("CruiseMissileExplode");
         //First destroy all the tail section parts
         foreach (GameObject TailSection in TailSections)
             Destroy(TailSection);

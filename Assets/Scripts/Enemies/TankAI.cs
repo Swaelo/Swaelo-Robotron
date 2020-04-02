@@ -105,8 +105,11 @@ public class TankAI : HostileEntity
             if (ActiveShots >= MaxActiveShots)
                 return;
 
+            //Play sound
+            SoundEffectsPlayer.Instance.PlaySound("FireTankShell");
+    
             //50% of shots are fired toward the player, the other 50% aim to hit the player after rebounding off a wall
-            bool DirectShot = Random.Range(1, 100) >= 50;
+                bool DirectShot = Random.Range(1, 100) >= 50;
             if (DirectShot)
             {
                 //Grab a location slightly offset from the player where we will aim the projectile, and find the direction to that location
@@ -251,10 +254,11 @@ public class TankAI : HostileEntity
         //Player projectiles kill the Tank and are destroyed on impact
         if (collision.transform.CompareTag("PlayerProjectile"))
         {
+            SoundEffectsPlayer.Instance.PlaySound("TankDie");
             Destroy(collision.gameObject);
             CleanProjectiles();
             GameState.Instance.IncreaseScore((int)PointValue.Tank);
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             Destroy(gameObject);
         }
         //Player character is killed on contact

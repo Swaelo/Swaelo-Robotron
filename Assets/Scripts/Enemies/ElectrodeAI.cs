@@ -27,7 +27,7 @@ public class ElectrodeAI : HostileEntity
             //Destroy the Electrode once the decay animation has finished playing out
             if (DecayRemaining <= 0.0f)
             {
-                WaveManager.Instance.OptionalEnemyDead(this);
+                WaveManager.Instance.EnemyDead(this);
                 GameObject.Destroy(this.gameObject);
             }
         }

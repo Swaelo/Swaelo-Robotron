@@ -111,9 +111,6 @@ public class SpheroidAI : HostileEntity
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
             GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
 
-            //Add this enforcer to the wave managers list of target enemies
-            WaveManager.Instance.AddTargetEnemy(NewEnforcer.GetComponent<HostileEntity>());
-
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpawnEnforcer");
 
@@ -122,7 +119,7 @@ public class SpheroidAI : HostileEntity
             if(SpawnsLeft <= 0)
             {
                 //Tell the wave manager to remove this enemy from its lists, then destroy it
-                WaveManager.Instance.TargetEnemyDead(this);
+                WaveManager.Instance.EnemyDead(this);
                 Destroy(this.gameObject);
             }
         }
@@ -181,7 +178,8 @@ public class SpheroidAI : HostileEntity
         if(HitPoints <= 0)
         {
             //Kill the Spheroid once its hitpoints reach zero
-            WaveManager.Instance.TargetEnemyDead(this);
+            SoundEffectsPlayer.Instance.PlaySound("SpheroidDie");
+            WaveManager.Instance.EnemyDead(this);
             GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
             Destroy(gameObject);
         }

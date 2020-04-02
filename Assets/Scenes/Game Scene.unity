@@ -1600,7 +1600,7 @@ PrefabInstance:
     - target: {fileID: 317061469471482040, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: Prefabs.Array.size
-      value: 25
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 317061469471482040, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -1721,13 +1721,13 @@ PrefabInstance:
     - target: {fileID: 317061469471482040, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: Prefabs.Array.data[25].Name
-      value: Mikey
+      value: RoundCompleteAnimation
       objectReference: {fileID: 0}
     - target: {fileID: 317061469471482040, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: Prefabs.Array.data[25].Object
       value: 
-      objectReference: {fileID: 4034027410283534310, guid: b1a1c80f718290d4284338e0deeaa1ec,
+      objectReference: {fileID: 1288534218646877701, guid: 1ad82e123bd0b014ca833b082fda86d3,
         type: 3}
     - target: {fileID: 317061469471482040, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19330,8 +19330,13 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: StartWaveNumber
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveDisplay
+      value: 
+      objectReference: {fileID: 1590569931}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d74d42b07e179f64eb5fc8361b52d68b, type: 3}
 --- !u!1 &317061469471482039 stripped
@@ -19352,7 +19357,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.35
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -19450,61 +19455,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SoundPlayer: {fileID: 317061469471482040}
   SoundEffects:
+  - Name: BrainDie
+    SoundClip: {fileID: 8300000, guid: 8b99714bdb7de2c409523961f914a9ab, type: 3}
   - Name: BrainReprogram
-    SoundClips:
-    - {fileID: 8300000, guid: 74ec14c261256404c881119758f97a95, type: 3}
+    SoundClip: {fileID: 8300000, guid: 26fd4be7752402549a5ee4bf3978b0b8, type: 3}
+  - Name: CruiseMissileExplode
+    SoundClip: {fileID: 8300000, guid: f4d835617b94fb74db4b2e6e7beded81, type: 3}
+  - Name: TankShellExplode
+    SoundClip: {fileID: 8300000, guid: 660dd4444e2d8c94a88235606d604557, type: 3}
   - Name: ElectrodeDie
-    SoundClips:
-    - {fileID: 8300000, guid: e8d8836ce5a22f6458c31b1cf7cb05ad, type: 3}
-    - {fileID: 8300000, guid: bf85d84e64d1d804c9711d2f4035eb0c, type: 3}
-    - {fileID: 8300000, guid: 30802227738885043bf0d5403916ef02, type: 3}
-    - {fileID: 8300000, guid: e687c0ea32b9af04abf28c9c35c32e03, type: 3}
-    - {fileID: 8300000, guid: 10a85e43aed4eb747ae67a240ea78998, type: 3}
+    SoundClip: {fileID: 8300000, guid: f30700de37063c041b0ca80604311341, type: 3}
+  - Name: EnforcerDie
+    SoundClip: {fileID: 8300000, guid: 4eb2d7ea101244b4eb59641bb5b47c4c, type: 3}
   - Name: EnforcerShoot
-    SoundClips:
-    - {fileID: 8300000, guid: 56470d7dfcd2b084a9ef0b197fb894a3, type: 3}
-    - {fileID: 8300000, guid: 698f589958161484fad50a924b593d10, type: 3}
-    - {fileID: 8300000, guid: b312955f7bdfe8045a07a8562d0954ea, type: 3}
-    - {fileID: 8300000, guid: 5ffca736d9b408d4db8a99d741c6b153, type: 3}
-    - {fileID: 8300000, guid: 94fe1d4f8b7224347b81f9cce0a19f36, type: 3}
+    SoundClip: {fileID: 8300000, guid: 5f6fca99bb097294684db0b04d46f6d4, type: 3}
+  - Name: FireCruiseMissile
+    SoundClip: {fileID: 8300000, guid: 7ac7b63833c55fc4880500a98e2df96c, type: 3}
+  - Name: FireTankShell
+    SoundClip: {fileID: 8300000, guid: fe5e7ca522880f141bd97b7d59b38888, type: 3}
   - Name: GruntDie
-    SoundClips:
-    - {fileID: 8300000, guid: 7ef249739bb3c8249a4942497bd80f51, type: 3}
-    - {fileID: 8300000, guid: 23fbfc6417070af4d9f919528c346a6f, type: 3}
-    - {fileID: 8300000, guid: b8a480dec449dc04fa951aca2a0c1d20, type: 3}
-    - {fileID: 8300000, guid: 4438e3a8f63bddc439c422c63d68fb9a, type: 3}
-    - {fileID: 8300000, guid: 53320d6bb517b7e4eab025b89ab7f1e5, type: 3}
+    SoundClip: {fileID: 8300000, guid: 070e6a86450239e409b09fd1bdbb766e, type: 3}
   - Name: GruntStep
-    SoundClips:
-    - {fileID: 8300000, guid: 075822d65f518a247a5228469c7f4175, type: 3}
-    - {fileID: 8300000, guid: 4b114e6767ae6bf44b8e4cb1bde2b44c, type: 3}
-    - {fileID: 8300000, guid: 1a741b7fec9f9c74883c07ed3265985a, type: 3}
-    - {fileID: 8300000, guid: c151ac1eef03673478b688f98e9651bf, type: 3}
-    - {fileID: 8300000, guid: 498feee90b6f24a448a9a6cfa615b16e, type: 3}
+    SoundClip: {fileID: 8300000, guid: 1c56de4d7957b7a488bda38d0c1aeb2d, type: 3}
   - Name: PlayerDie
-    SoundClips:
-    - {fileID: 8300000, guid: b873a93495ab44c41aa745a09bc2b196, type: 3}
+    SoundClip: {fileID: 8300000, guid: 815b25f5484db094ba13081e14914b2a, type: 3}
   - Name: PlayerShoot
-    SoundClips:
-    - {fileID: 8300000, guid: aa8b031ff9fd76f4b9834e10abcbf2fb, type: 3}
-    - {fileID: 8300000, guid: 4995f8b87dbcdde41a44b5b29975570d, type: 3}
-    - {fileID: 8300000, guid: 74e7f8bc19d12414fbaa60f745c2756e, type: 3}
-    - {fileID: 8300000, guid: 6f82d09ce05ccdd47bbee0338d734818, type: 3}
-    - {fileID: 8300000, guid: c8defdd43d4d72d46ad5049f997c8791, type: 3}
+    SoundClip: {fileID: 8300000, guid: f9792a1e0af67f644af9f72f9c322100, type: 3}
+  - Name: ProgDie
+    SoundClip: {fileID: 8300000, guid: c64fc857534402a4ca4e9cabab428358, type: 3}
+  - Name: QuarkDie
+    SoundClip: {fileID: 8300000, guid: 87393ac0a2ad3f740b678081b34ecb0a, type: 3}
   - Name: RescueHuman
-    SoundClips:
-    - {fileID: 8300000, guid: de19c318df9e82247933f489dc2282b5, type: 3}
-    - {fileID: 8300000, guid: aa1cbe54054c31443ad9a0fce52415b9, type: 3}
-    - {fileID: 8300000, guid: 111b4ac40ab9e474583b27e1c3784cff, type: 3}
-    - {fileID: 8300000, guid: 807c6b094dd43ba4a9b5b7c421d90e36, type: 3}
-    - {fileID: 8300000, guid: 9a047e5593d71ff48947086750ac863f, type: 3}
+    SoundClip: {fileID: 8300000, guid: 98130b3a87c23db45af2cf044a0bd0ce, type: 3}
   - Name: RoundComplete
-    SoundClips:
-    - {fileID: 8300000, guid: fede34bb4e8339041bd57571174c4363, type: 3}
+    SoundClip: {fileID: 8300000, guid: 1d6b9cac04362774e8ddadfb0c63bf76, type: 3}
+  - Name: SparkShotExplode
+    SoundClip: {fileID: 8300000, guid: 58325558f27224b4c9f91ae10f9f25eb, type: 3}
   - Name: SpawnEnforcer
-    SoundClips:
-    - {fileID: 8300000, guid: b8635ebcec5bb4d4392ddbbef03e696d, type: 3}
-    - {fileID: 8300000, guid: bd3288e4a6cd1df4f9396bc7d2080d12, type: 3}
-    - {fileID: 8300000, guid: 02d08228f58af9c43a377fee8c6a6fba, type: 3}
-    - {fileID: 8300000, guid: a5fe2a84eefe9504bb5511f2d536bd67, type: 3}
-    - {fileID: 8300000, guid: 5115feb4907454a43a6508f14d44188e, type: 3}
+    SoundClip: {fileID: 8300000, guid: 32893000f17254a479e4b39ec64bd0ab, type: 3}
+  - Name: SpawnTank
+    SoundClip: {fileID: 8300000, guid: 521dc1934c7ea6e49a724ac613523345, type: 3}
+  - Name: SpheroidDie
+    SoundClip: {fileID: 8300000, guid: 4f670b2ed466a064599671337c6350e6, type: 3}
+  - Name: TankDie
+    SoundClip: {fileID: 8300000, guid: 7e54c4b6ef768084eb0c55cc9835c851, type: 3}
+  - Name: TankShellBounce
+    SoundClip: {fileID: 8300000, guid: 885c39729983168458694447135c5791, type: 3}

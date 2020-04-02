@@ -70,7 +70,7 @@ public class ProgAI : HostileEntity
         if(DeathAnimationLeft <= 0.0f)
         {
             //Tell the wave manager this target enemy is now dead
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             //Destroy all the trail sprites
             for (int i = 1; i < 6; i++)
                 Destroy(AnimationControllers[i].gameObject);
@@ -133,6 +133,8 @@ public class ProgAI : HostileEntity
     //Starts playing the death animation and disables all physics and AI during its playback
     private void Die()
     {
+        //Play sound
+        SoundEffectsPlayer.Instance.PlaySound("ProgDie");
         GameState.Instance.IncreaseScore((int)PointValue.Prog);
         IsAlive = false;
         foreach (Animator AnimationController in AnimationControllers)

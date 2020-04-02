@@ -21,6 +21,10 @@ public class BrainAI : HostileEntity
     private Vector2 WanderDuration = new Vector2(0.15f, 3f);    //How long a Brain may wander in 1 direction when it has no Human to seek before it changes directions
     private float WanderTimeLeft;   //Time left to wander in the current direction before the Brain finds a new direction to move in
     private Vector3 WanderDirection;    //Current direction the Brain is wandering when it has no humans left to hunt down
+    private float ReprogramSoundDuration = 2.757f;  //How long it takes to play the reprogramming sound effect
+    private float ReprogramDurationLeft = 2.757f;    //Time left until the reprogram sound finishes playing
+    private bool PlayingReprogramSound = false; //Tracks if this brain is currently using the reprogramming sound effect
+    private static bool ReprogramSoundInUse = false; //Tracks if the reprogam sound is being played by any Brain that exists currently
 
     //Firing
     public GameObject CruiseMissilePrefab;  //Projectiles fired by the Brain which zigzag towards the player
@@ -50,7 +54,7 @@ public class BrainAI : HostileEntity
         //Acquire a human target to reprogram
         TargetHuman();
         //Set an initial cooldown period before the Brain can start firing cruise missiles
-        MissileCooldownLeft = Random.Range(MissileCooldownInterval.x, MissileCooldownInterval.y);
+        MissileCooldownLeft = Random.Range(MissileCooldownInterval.x, MissileCooldownInterval.y*.5f);
     }
 
     private void Update()
@@ -82,6 +86,17 @@ public class BrainAI : HostileEntity
             //Continue reprogramming the current target once we have captured it
             else
                 ReprogramHuman();
+        }
+
+        //If this Brain is using the reprogram sound effect, free it up for use once its finished playing
+        if(PlayingReprogramSound)
+        {
+            ReprogramDurationLeft -= Time.deltaTime;
+            if(ReprogramDurationLeft <= 0.0f)
+            {
+                PlayingReprogramSound = false;
+                ReprogramSoundInUse = false;
+            }
         }
     }
 
@@ -170,12 +185,22 @@ public class BrainAI : HostileEntity
             //Start the reprogramming process
             Reprogramming = true;
             ReprogramLeft = ReprogramInterval;
-            SoundEffectsPlayer.Instance.PlaySound("BrainReprogram");
+
+            //Try playing the reprogram sound effect, making sure to not allow it to play at multiple times at once as it sounds very spammy
+            if(!ReprogramSoundInUse)
+            {
+                //Start playing the sound
+                ReprogramSoundInUse = true;
+                PlayingReprogramSound = true;
+                ReprogramDurationLeft = ReprogramSoundDuration;
+                SoundEffectsPlayer.Instance.PlaySound("BrainReprogram");
+            }
+
             //Alert the entity its been captured so it disables its AI and starts playing the reprogramming animation
             HumanTarget.GetComponent<FriendlyEntity>().CapturedForReprogramming();
-            //Start playing the Brains reprogramming animations
-            foreach (Animator AnimationController in BodyAnimators)
-                AnimationController.SetBool("Reprogramming", true);
+                    //Start playing the Brains reprogramming animations
+                    foreach (Animator AnimationController in BodyAnimators)
+                        AnimationController.SetBool("Reprogramming", true);
         }
     }
 
@@ -191,9 +216,8 @@ public class BrainAI : HostileEntity
             string PrefabName = HumanType.ToString() + "Prog";
             //Spawn in a new prog enemy in the place of the captured human
             GameObject Prog = Instantiate(PrefabSpawner.Instance.GetPrefab(PrefabName), HumanTarget.transform.position, Quaternion.identity);
-            WaveManager.Instance.AddTargetEnemy(Prog.GetComponent<HostileEntity>());
             //Destroy the human that it was created from
-            WaveManager.Instance.RemoveHumanSurvivor(HumanTarget.GetComponent<BaseEntity>());
+            WaveManager.Instance.HumanDead(HumanTarget.GetComponent<BaseEntity>());
             Destroy(HumanTarget.gameObject);
             //Finish the reprogramming process
             Reprogramming = false;
@@ -264,6 +288,8 @@ public class BrainAI : HostileEntity
         MissileCooldownLeft -= Time.deltaTime;
         if (MissileCooldownLeft <= 0.0f)
         {
+            //Play sound
+            SoundEffectsPlayer.Instance.PlaySound("FireCruiseMissile");
             MissileCooldownLeft = Random.Range(MissileCooldownInterval.x, MissileCooldownInterval.y);
             Vector3 ShotTarget = GameState.Instance.Player.transform.position;
             Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
@@ -288,7 +314,7 @@ public class BrainAI : HostileEntity
         DeathAnimationRemaining -= Time.deltaTime;
         if (DeathAnimationRemaining <= 0.0f)
         {
-            WaveManager.Instance.TargetEnemyDead(this);
+            WaveManager.Instance.EnemyDead(this);
             Destroy(this.gameObject);
         }
     }
@@ -312,7 +338,7 @@ public class BrainAI : HostileEntity
         //If the Brain is killed while it was reprogramming a human, that human is destroyed
         if(Reprogramming && HumanTarget != null)
         {
-            WaveManager.Instance.RemoveHumanSurvivor(HumanTarget.GetComponent<BaseEntity>());
+            WaveManager.Instance.HumanDead(HumanTarget.GetComponent<BaseEntity>());
             Destroy(HumanTarget);
         }
         //Tell the wave manager this enemy is now dead, and award points to the player for destroying it
@@ -324,5 +350,14 @@ public class BrainAI : HostileEntity
         //Destroy the rigidbody and boxcollider components so no unwanted collision event occur during the death animation
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
+        //Play sound
+        SoundEffectsPlayer.Instance.PlaySound("BrainDie");
+    }
+
+    private void OnDestroy()
+    {
+        //If this Brain is killed while its using the Reprogram sound effect, it needs to be freed up for use by other Brains
+        if (PlayingReprogramSound)
+            ReprogramSoundInUse = false;
     }
 }
