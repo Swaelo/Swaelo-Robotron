@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d389eec0e7e309244af5d21e0874bdd3
+guid: 06041bcdb588c0e499e2d861a0dcca1d
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 1794698950498801846
-    second: Brain Back Body_0
+    second: Brain Back Body
   - first:
       213: 4196334521049018647
     second: Brain Back Body_1
@@ -26,6 +26,15 @@ TextureImporter:
   - first:
       213: -1205379877934491004
     second: Brain Back Body_7
+  - first:
+      213: -2440803496712142425
+    second: Brain Back Body_8
+  - first:
+      213: -7085625452844669165
+    second: Brain Back Body_9
+  - first:
+      213: -5326959656998014329
+    second: Brain Back Body_10
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -122,7 +131,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Brain Back Body_0
+      name: Brain Back Body
       rect:
         serializedVersion: 2
         x: 0
@@ -285,6 +294,69 @@ TextureImporter:
       bones: []
       spriteID: 48a9f4c2361a54fe0800000000000000
       internalID: -1205379877934491004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Body_8
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a101f3d626802ed0800000000000000
+      internalID: -2440803496712142425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Body_9
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3172abf113dcaad90800000000000000
+      internalID: -7085625452844669165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brain Back Body_10
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 782fbc75a66d216b0800000000000000
+      internalID: -5326959656998014329
       vertices: []
       indices: 
       edges: []

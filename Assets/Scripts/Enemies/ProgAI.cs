@@ -69,8 +69,6 @@ public class ProgAI : HostileEntity
         DeathAnimationLeft -= Time.deltaTime;
         if(DeathAnimationLeft <= 0.0f)
         {
-            //Tell the wave manager this target enemy is now dead
-            WaveManager.Instance.EnemyDead(this);
             //Destroy all the trail sprites
             for (int i = 1; i < 6; i++)
                 Destroy(AnimationControllers[i].gameObject);
@@ -136,9 +134,13 @@ public class ProgAI : HostileEntity
         //Play sound
         SoundEffectsPlayer.Instance.PlaySound("ProgDie");
         GameState.Instance.IncreaseScore((int)PointValue.Prog);
+        //Tell the wave manager this target enemy is now dead
+        WaveManager.Instance.EnemyDead(this);
         IsAlive = false;
+        //Start the death animation
         foreach (Animator AnimationController in AnimationControllers)
-            AnimationController.SetTrigger("Death");
+            AnimationController.SetBool("IsDead", true);
+        //Remove physics components
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
     }
@@ -201,8 +203,16 @@ public class ProgAI : HostileEntity
     public void DestroyTrailSprites()
     {
         foreach (SpriteRenderer FrontTrail in FrontTrailSprites)
-            Destroy(FrontTrail.gameObject);
+            if(FrontTrail != null)
+                Destroy(FrontTrail.gameObject);
         foreach (SpriteRenderer SideTrail in SideTrailSprites)
-            Destroy(SideTrail.gameObject);
+            if(SideTrail != null)
+                Destroy(SideTrail.gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        //Destroy the progs trail sprites
+        DestroyTrailSprites();
     }
 }

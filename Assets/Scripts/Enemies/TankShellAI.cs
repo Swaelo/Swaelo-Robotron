@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class TankShellAI : MonoBehaviour
 {
-    private TankAI ParentTank = null;   //Keep reference to the Tank which fired this projectile so it can be told before its about to be destroyed
-
     //Movement
     private bool MovementSet = false;   //The shell wont move until its been told which direction to go by the Tank which fired it
     private Vector3 CurrentDirection;   //Current direction of movement as set by the Tank which fired the shell
@@ -35,7 +33,7 @@ public class TankShellAI : MonoBehaviour
     }
 
     //Called by the Tank which fired this projectile to set the initial movement direction
-    public void InitializeProjectile(Vector3 Direction, TankAI Parent)
+    public void InitializeProjectile(Vector3 Direction)
     {
         MovementSet = true;
         CurrentDirection = Direction;
@@ -47,8 +45,6 @@ public class TankShellAI : MonoBehaviour
         if(collision.transform.CompareTag("PlayerProjectile"))
         {
             Destroy(collision.gameObject);
-            if (ParentTank != null)
-                ParentTank.TankShellDestroyed(gameObject);
             ShellDie();
         }
         //Colliding with any Walls reflects the shells direction off that wall, and increases its speed

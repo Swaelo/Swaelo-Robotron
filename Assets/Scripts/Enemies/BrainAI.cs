@@ -28,9 +28,8 @@ public class BrainAI : HostileEntity
 
     //Firing
     public GameObject CruiseMissilePrefab;  //Projectiles fired by the Brain which zigzag towards the player
-    private Vector2 MissileCooldownInterval = new Vector2(4.5f, 10f);   //How often the Brain can fire cruise missiles at the player
+    private Vector2 MissileCooldownInterval = new Vector2(6.5f, 10f);   //How often the Brain can fire cruise missiles at the player
     private float MissileCooldownLeft;  //Seconds left until the Brain can fire another cruise missile
-    private List<GameObject> ActiveCruiseMissiles = new List<GameObject>(); //List of active cruise missiles which have been fired by the Brain
 
     //Rendering/Animations
     public SpriteRenderer FrontBodyRenderer;    //Renders the front view body sprite
@@ -54,7 +53,7 @@ public class BrainAI : HostileEntity
         //Acquire a human target to reprogram
         TargetHuman();
         //Set an initial cooldown period before the Brain can start firing cruise missiles
-        MissileCooldownLeft = Random.Range(MissileCooldownInterval.x, MissileCooldownInterval.y*.5f);
+        MissileCooldownLeft = Random.Range(MissileCooldownInterval.x * 0.5f, MissileCooldownInterval.y * 0.5f);
     }
 
     private void Update()
@@ -193,7 +192,7 @@ public class BrainAI : HostileEntity
                 ReprogramSoundInUse = true;
                 PlayingReprogramSound = true;
                 ReprogramDurationLeft = ReprogramSoundDuration;
-                SoundEffectsPlayer.Instance.PlaySound("BrainReprogram");
+                SoundEffectsPlayer.Instance.PlaySound("BrainReprogram", 0.5f);
             }
 
             //Alert the entity its been captured so it disables its AI and starts playing the reprogramming animation
@@ -216,6 +215,8 @@ public class BrainAI : HostileEntity
             string PrefabName = HumanType.ToString() + "Prog";
             //Spawn in a new prog enemy in the place of the captured human
             GameObject Prog = Instantiate(PrefabSpawner.Instance.GetPrefab(PrefabName), HumanTarget.transform.position, Quaternion.identity);
+            //Have the WaveManager add the new enemy to its tracking lists
+            WaveManager.Instance.AddNewEnemy(Prog.GetComponent<HostileEntity>());
             //Destroy the human that it was created from
             WaveManager.Instance.HumanDead(HumanTarget.GetComponent<BaseEntity>());
             Destroy(HumanTarget.gameObject);
@@ -294,17 +295,7 @@ public class BrainAI : HostileEntity
             Vector3 ShotTarget = GameState.Instance.Player.transform.position;
             Vector3 ShotDirection = Vector3.Normalize(ShotTarget - transform.position);
             GameObject CruiseMissile = Instantiate(CruiseMissilePrefab, transform.position, Quaternion.identity);
-            ActiveCruiseMissiles.Add(CruiseMissile);
         }
-    }
-
-    //Cleans up any active cruise missiles which have been fired by this Brain
-    public void CleanMissiles()
-    {
-        foreach (GameObject CruiseMissile in ActiveCruiseMissiles)
-            if (CruiseMissile != null)
-                Destroy(CruiseMissile);
-        ActiveCruiseMissiles.Clear();
     }
 
     //Waits for the death animation to complete before the brain destroys itself
@@ -313,10 +304,7 @@ public class BrainAI : HostileEntity
         //Wait for the animation timer to expire
         DeathAnimationRemaining -= Time.deltaTime;
         if (DeathAnimationRemaining <= 0.0f)
-        {
-            WaveManager.Instance.EnemyDead(this);
             Destroy(this.gameObject);
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -342,11 +330,12 @@ public class BrainAI : HostileEntity
             Destroy(HumanTarget);
         }
         //Tell the wave manager this enemy is now dead, and award points to the player for destroying it
+        WaveManager.Instance.EnemyDead(this);
         GameState.Instance.IncreaseScore((int)PointValue.Brain);
         //Set the Brain as dead and trigger the death animation
         IsAlive = false;
         foreach (Animator AnimationController in DeathAnimators)
-            AnimationController.SetTrigger("Death");
+            AnimationController.SetBool("IsDead", true);
         //Destroy the rigidbody and boxcollider components so no unwanted collision event occur during the death animation
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());

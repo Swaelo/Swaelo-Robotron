@@ -19,11 +19,11 @@ public struct WaveEntities
     public int Brains;
     public int Spheroids;
     public int Quarks;
-    public int Enforcer;
-    public int Tank;
-    public int DaddyProg;
-    public int MummyProg;
-    public int MikeyProg;
+    public int Enforcers;
+    public int Tanks;
+    public int DaddyProgs;
+    public int MummyProgs;
+    public int MikeyProgs;
 }
 
 public class WaveData : MonoBehaviour

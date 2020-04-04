@@ -114,6 +114,9 @@ public class SpheroidAI : HostileEntity
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpawnEnforcer");
 
+            //Have the WaveManager add them to the entity tracking lists
+            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+
             //Take 1 away from this Spheroid spawn counter, then check if its time for the Spheroid to self-destruct
             SpawnsLeft -= 1;
             if(SpawnsLeft <= 0)

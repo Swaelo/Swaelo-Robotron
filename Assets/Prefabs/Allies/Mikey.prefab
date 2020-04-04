@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 2924008603563988289}
   - component: {fileID: 2924008603563988288}
   - component: {fileID: 2924008603563988291}
+  - component: {fileID: 3307586425838600204}
   m_Layer: 12
   m_Name: Mikey
   m_TagString: Human
@@ -208,6 +209,22 @@ MonoBehaviour:
   - {fileID: 2924008602641716519}
   TargettedByBrain: 0
   BeingReprogrammed: 0
+--- !u!114 &3307586425838600204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2924008603563988290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 2924008604052787752}
+  - {fileID: 2924008603944336065}
+  - {fileID: 2924008602641716519}
 --- !u!1 &2924008603944336064
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,11 +28,9 @@ public class TankAI : HostileEntity
 
     //Firing
     public GameObject TankShellPrefab;  //Projectile which is fired at the player
-    private Vector2 ShotCooldownRange = new Vector2(0.5f, 1.75f); //How often projectiles can be fired
+    private Vector2 ShotCooldownRange = new Vector2(1.75f, 3.35f); //How often projectiles can be fired
     private float ShotCooldownRemaining = 0.5f; //Time left until another projectile can be fired
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.25f); //How far from the Player to offset where the projectiles are aimed
-    private List<GameObject> ActiveShellProjectiles = new List<GameObject>();   //Keep a list of active shell projectiles which have been fired by this Tank
-    private int MaxActiveShots = 3; //Maximum number of tank shots each Tank may have active at any 1 time
 
     private void Awake()
     {
@@ -95,16 +93,6 @@ public class TankAI : HostileEntity
             //Reset the cooldown timer
             ShotCooldownRemaining = Random.Range(ShotCooldownRange.x, ShotCooldownRange.y);
 
-            //Count how many active shots the Tank currents has
-            int ActiveShots = 0;
-            foreach (GameObject ActiveShell in ActiveShellProjectiles)
-                if (ActiveShell != null)
-                    ActiveShots++;
-
-            //Exit out if this tank already has the maximum amount of shots active
-            if (ActiveShots >= MaxActiveShots)
-                return;
-
             //Play sound
             SoundEffectsPlayer.Instance.PlaySound("FireTankShell");
     
@@ -120,11 +108,8 @@ public class TankAI : HostileEntity
                 Vector3 ShellSpawnPos = transform.position + ShotDirection * 0.5f;
                 GameObject TankShell = Instantiate(TankShellPrefab, ShellSpawnPos, Quaternion.identity);
 
-                //Store the shell projectile in the list with all the others
-                ActiveShellProjectiles.Add(TankShell);
-
                 //Tell the shot its initial movement direction
-                TankShell.GetComponent<TankShellAI>().InitializeProjectile(ShotDirection, this);
+                TankShell.GetComponent<TankShellAI>().InitializeProjectile(ShotDirection);
             }
             //The non direct shots will aim to hit the player after bouncing off one of the walls
             else
@@ -134,10 +119,9 @@ public class TankAI : HostileEntity
                 //Find the location along that wall which is in between the Tank and Players location, then the direction to that location on the wall
                 Vector3 WallTarget = GetWallTarget(ClosestWall);
                 Vector3 ShotDirection = Vector3.Normalize(WallTarget - transform.position);
-                //Spawn the new projectile, store it in the list with the others, then launch it toward that spot on the wall
+                //Spawn the new projectile then launch it toward that spot on the wall
                 GameObject TankShell = Instantiate(TankShellPrefab, transform.position, Quaternion.identity);
-                ActiveShellProjectiles.Add(TankShell);
-                TankShell.GetComponent<TankShellAI>().InitializeProjectile(ShotDirection, this);
+                TankShell.GetComponent<TankShellAI>().InitializeProjectile(ShotDirection);
             }
         }
     }
@@ -256,7 +240,6 @@ public class TankAI : HostileEntity
         {
             SoundEffectsPlayer.Instance.PlaySound("TankDie");
             Destroy(collision.gameObject);
-            CleanProjectiles();
             GameState.Instance.IncreaseScore((int)PointValue.Tank);
             WaveManager.Instance.EnemyDead(this);
             Destroy(gameObject);
@@ -264,22 +247,5 @@ public class TankAI : HostileEntity
         //Player character is killed on contact
         else if (collision.transform.CompareTag("Player"))
             GameState.Instance.KillPlayer();
-    }
-
-    //Shell projectiles fired by this Tank will alert it when they are going to be destroyed so they can be removed from the tracking list
-    public void TankShellDestroyed(GameObject DestroyedTankShell)
-    {
-        //Remove the shell from the tracking list if its listed there
-        if (ActiveShellProjectiles.Contains(DestroyedTankShell))
-            ActiveShellProjectiles.Remove(DestroyedTankShell);
-    }
-
-    //Cleans up any active tank shell projectiles which have been fired by this Tank
-    public void CleanProjectiles()
-    {
-        foreach (GameObject TankShell in ActiveShellProjectiles)
-            if (TankShell != null)
-                Destroy(TankShell);
-        ActiveShellProjectiles.Clear();
     }
 }

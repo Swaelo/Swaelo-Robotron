@@ -37,7 +37,9 @@ public class GameState : MonoBehaviour
         ExtraLives = 2;
         LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
         CurrentWave = 1;
-        //Player = PrefabSpawner.Instance.SpawnPrefab("Player", Vector3.zero, Quaternion.identity);
+
+        //Play a sound for the game beginning
+        SoundEffectsPlayer.Instance.PlaySound("GameStart");
 
         //Spawn in everything for this wave, if wave progression is enabled
         if(!DisableWaveProgression)
@@ -50,8 +52,12 @@ public class GameState : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
             GamePaused = !GamePaused;
 
+        //All game logic and AI should be paused at certain times
+        if (GamePaused || WaveManager.Instance.SpawnPeriodActive)
+            return;
+
         //Restart the current wave when the death timeout timer expires
-        if(InDeathTimeout)
+        if (InDeathTimeout)
         {
             DeathTimeoutLeft -= Time.deltaTime;
             if (DeathTimeoutLeft <= 0.0f)
@@ -60,6 +66,12 @@ public class GameState : MonoBehaviour
                 InDeathTimeout = false;
             }
         }
+    }
+
+    //Checks if the game is paused
+    public bool IsGamePaused()
+    {
+        return GamePaused;
     }
 
     //Used from AI scripts and other stuff to check if the game should be running right now

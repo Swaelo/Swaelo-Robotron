@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: 8911501547866388903}
   - component: {fileID: 8911501547866388902}
   - component: {fileID: 8911501547866388901}
+  - component: {fileID: 1912197389433367217}
   m_Layer: 12
   m_Name: Mummy
   m_TagString: Human
@@ -208,6 +209,22 @@ MonoBehaviour:
   - {fileID: 8911501548397602163}
   TargettedByBrain: 0
   BeingReprogrammed: 0
+--- !u!114 &1912197389433367217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911501547866388900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 8911501548488182586}
+  - {fileID: 8911501546841560134}
+  - {fileID: 8911501548397602163}
 --- !u!1 &8911501548397602162
 GameObject:
   m_ObjectHideFlags: 0

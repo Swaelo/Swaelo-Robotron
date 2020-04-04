@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6104471510978998541}
   - component: {fileID: 6104471510978998530}
   - component: {fileID: 6104471510978998531}
+  - component: {fileID: 4134109910604631860}
   m_Layer: 17
   m_Name: Enforcer
   m_TagString: Enforcer
@@ -96,9 +97,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 4
+  MoveSpeed: 1
   SparkShotPrefab: {fileID: 2006096919109575938, guid: 0981c6ca76d3cf64a8d63d577420aed4,
     type: 3}
   AnimationControllers:
+  - {fileID: 6104471511877177619}
+  - {fileID: 6104471511095413056}
+  - {fileID: 6104471512179755053}
+--- !u!114 &4134109910604631860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6104471510978998528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
   - {fileID: 6104471511877177619}
   - {fileID: 6104471511095413056}
   - {fileID: 6104471512179755053}

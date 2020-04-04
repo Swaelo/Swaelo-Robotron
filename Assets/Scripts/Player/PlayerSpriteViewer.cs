@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public enum PlayerEyeColor
+public enum EyeColors
 {
     Red = 0,
     Green = 1,
@@ -15,96 +15,110 @@ public enum PlayerEyeColor
 
 public class PlayerSpriteViewer : MonoBehaviour
 {
-    //Current eye color and timer for cycling through
-    private PlayerEyeColor CurrentEyeColor = PlayerEyeColor.Red;
-    private float EyeColorChangeRate = 0.5f;
-    private float NextEyeColorChange = 0.5f;
+    //Eye Color
+    private EyeColors EyeColor = EyeColors.Blue;    //The players current eye color
+    private float NextEyeColor = 0.5f;  //How long until the eye color changes
+    private float ColorChangeRate = 0.5f;   //How often the players eye color changes
 
-    //Sprites for the front and side views of the player
-    public GameObject FrontSprites;
-    public GameObject SideSprites;
+    public SpriteRenderer[] FrontSprites;   //Sprites for rendering the front view of the player
+    public SpriteRenderer[] SideSprites; //Sprites for rendering the side view of the player
 
-    //Animators controlling the walking animations
-    public Animator FrontViewAnimator;
-    public Animator SideViewAnimator;
-
-    //Animators controlling the eye colors
-    public Animator FrontEyesAnimator;
-    public Animator SideEyesAnimator;
-
-    //Renderers for Side Body components, so they can be flipped when moving left/right
-    public SpriteRenderer SideBodyRenderer;
-    public SpriteRenderer SideEyesRenderer;
+    public Animator[] BodyAnimators;    //Body part animators used to control walking animation
+    public Animator[] EyeAnimators; //Used to change the players eye color
 
     //Players change in position over time is used to determine which sprites need to be displayed and when to play the animations
-    private Vector3 PreviousPosition;
+    private Vector3 PreviousPos;
 
     private void Awake()
     {
-        PreviousPosition = transform.position;
-        SideSprites.SetActive(false);
+        //Store initial position and enable only the front sprites
+        PreviousPos = transform.position;
+        SetFrontSpriteVisibility(true);
+        SetSideSpriteVisibility(false);
     }
 
     private void Update()
     {
-        CycleEyeColor();
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
 
-        //Find distance travelled in each direction this frame
-        float VerticalMovement = Mathf.Abs(transform.position.x - PreviousPosition.x);
-        float HorizontalMovement = Mathf.Abs(transform.position.y - PreviousPosition.y);
+        //Change eye color over time
+        CycleEyeColors();
 
-        //Tell the animators if we are currently moving
-        bool IsMoving = transform.position != PreviousPosition;
-        FrontViewAnimator.SetBool("IsMoving", IsMoving);
-        SideViewAnimator.SetBool("IsMoving", IsMoving);
+        //Tell the body animators if the player is moving
+        bool IsMoving = transform.position != PreviousPos;
+        foreach (Animator BodyAnimator in BodyAnimators)
+            BodyAnimator.SetBool("IsMoving", IsMoving);
 
-        //Transition between different spriters being displayed when the Player is moving around
+        //Update what sprites are viewed when moving around
         if(IsMoving)
         {
-            //Update what sprites are being displayed if movement has occured
-            bool MovingVertical = VerticalMovement < HorizontalMovement;
-            FrontSprites.SetActive(MovingVertical);
-            SideSprites.SetActive(!MovingVertical);
+            //Find the distance travelled in each direction since the last frame
+            float VerticalMovement = Mathf.Abs(transform.position.y - PreviousPos.y);
+            float HorizontalMovement = Mathf.Abs(transform.position.x - PreviousPos.x);
 
-            //Flip the side view sprites based on left/right movement
-            bool MovingLeft = transform.position.x < PreviousPosition.x;
-            SideBodyRenderer.flipX = !MovingLeft;
-            SideEyesRenderer.flipX = !MovingLeft;
+            //View front when moving vertical, otherwise view side sprites
+            bool MovingVertically = VerticalMovement > HorizontalMovement;
+            SetFrontSpriteVisibility(MovingVertically);
+            SetSideSpriteVisibility(!MovingVertically);
+
+            //If moving horizontal to the right, flip the side sprites
+            bool MovingRight = transform.position.x > PreviousPos.x;
+            foreach (SpriteRenderer Renderer in SideSprites)
+                Renderer.flipX = MovingRight;
         }
 
-        //Store current position for next frames comparison
-        PreviousPosition = transform.position;
+        //Store current position for next update
+        PreviousPos = transform.position;
     }
 
-    private void CycleEyeColor()
+    //Changes the players eye color periodically
+    private void CycleEyeColors()
     {
-        //Update the eye color timer and move to the next eye color when it runs out
-        NextEyeColorChange -= Time.deltaTime;
-
-        if(NextEyeColorChange <= 0.0f)
+        //Wait for the timer to expire
+        NextEyeColor -= Time.deltaTime;
+        if(NextEyeColor <= 0.0f)
         {
-            //Reset the eye color
-            NextEyeColorChange = EyeColorChangeRate;
-
-            //Move to the next eye color
-            switch(CurrentEyeColor)
+            //Reset the timer
+            NextEyeColor = ColorChangeRate;
+            //Update the color
+            switch(EyeColor)
             {
-                case (PlayerEyeColor.Red):
-                    CurrentEyeColor = PlayerEyeColor.Green;
-                    FrontEyesAnimator.SetTrigger("Green");
-                    SideEyesAnimator.SetTrigger("Green");
+                case (EyeColors.Red):
+                    SetEyeColor(EyeColors.Green);
                     break;
-                case (PlayerEyeColor.Green):
-                    CurrentEyeColor = PlayerEyeColor.Blue;
-                    FrontEyesAnimator.SetTrigger("Blue");
-                    SideEyesAnimator.SetTrigger("Blue");
+                case (EyeColors.Green):
+                    SetEyeColor(EyeColors.Blue);
                     break;
-                case (PlayerEyeColor.Blue):
-                    CurrentEyeColor = PlayerEyeColor.Red;
-                    FrontEyesAnimator.SetTrigger("Red");
-                    SideEyesAnimator.SetTrigger("Red");
+                case (EyeColors.Blue):
+                    SetEyeColor(EyeColors.Red);
                     break;
             }
         }
+    }
+
+    //Updates the eye animators to display the new eye color
+    private void SetEyeColor(EyeColors NewColor)
+    {
+        EyeColor = NewColor;
+        foreach(Animator EyeAnimator in EyeAnimators)
+        {
+            EyeAnimator.SetBool("Blue", NewColor == EyeColors.Blue);
+            EyeAnimator.SetBool("Red", NewColor == EyeColors.Red);
+            EyeAnimator.SetBool("Green", NewColor == EyeColors.Green);
+        }
+    }
+
+    //Toggles the visibility of the front view sprites
+    private void SetFrontSpriteVisibility(bool ShouldDisplay)
+    {
+        foreach (SpriteRenderer Renderer in FrontSprites)
+            Renderer.forceRenderingOff = !ShouldDisplay;
+    }
+    private void SetSideSpriteVisibility(bool ShouldDisplay)
+    {
+        foreach (SpriteRenderer Renderer in SideSprites)
+            Renderer.forceRenderingOff = !ShouldDisplay;
     }
 }

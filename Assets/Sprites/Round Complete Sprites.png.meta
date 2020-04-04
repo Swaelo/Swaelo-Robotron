@@ -1,0 +1,1195 @@
+fileFormatVersion: 2
+guid: 4529a926c151d3b4b86fcdcb58a3ef99
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8324423633364577735
+    second: Round Complete Sprites_0
+  - first:
+      213: 3481588358583349055
+    second: Round Complete Sprites_1
+  - first:
+      213: 5613555519984618987
+    second: Round Complete Sprites_2
+  - first:
+      213: 4648375024396214
+    second: Round Complete Sprites_3
+  - first:
+      213: 5426904698293662516
+    second: Round Complete Sprites_4
+  - first:
+      213: -8515251026732679838
+    second: Round Complete Sprites_5
+  - first:
+      213: -5278194003324515357
+    second: Round Complete Sprites_6
+  - first:
+      213: 2053400176096655434
+    second: Round Complete Sprites_7
+  - first:
+      213: 8840483208217260741
+    second: Round Complete Sprites_8
+  - first:
+      213: 5307494636436219134
+    second: Round Complete Sprites_9
+  - first:
+      213: -7877423254423298207
+    second: Round Complete Sprites_10
+  - first:
+      213: -178101700849748841
+    second: Round Complete Sprites_11
+  - first:
+      213: -8903782595666287818
+    second: Round Complete Sprites_12
+  - first:
+      213: 5575684598759332472
+    second: Round Complete Sprites_13
+  - first:
+      213: -2542761581624812578
+    second: Round Complete Sprites_14
+  - first:
+      213: -2982573903386677405
+    second: Round Complete Sprites_15
+  - first:
+      213: 822287331536755895
+    second: Round Complete Sprites_16
+  - first:
+      213: 2926766107175032623
+    second: Round Complete Sprites_17
+  - first:
+      213: 691653371021182659
+    second: Round Complete Sprites_18
+  - first:
+      213: -1229374818062580443
+    second: Round Complete Sprites_19
+  - first:
+      213: 3029534986613755310
+    second: Round Complete Sprites_20
+  - first:
+      213: -1401531693248532602
+    second: Round Complete Sprites_21
+  - first:
+      213: -5143892012346858084
+    second: Round Complete Sprites_22
+  - first:
+      213: -8092758231829476077
+    second: Round Complete Sprites_23
+  - first:
+      213: -7362045848371632521
+    second: Round Complete Sprites_24
+  - first:
+      213: 2536790627234224215
+    second: Round Complete Sprites_25
+  - first:
+      213: 9201326949789956602
+    second: Round Complete Sprites_26
+  - first:
+      213: -4451025143983554139
+    second: Round Complete Sprites_27
+  - first:
+      213: 8427869758005449859
+    second: Round Complete Sprites_28
+  - first:
+      213: -9166967161754596778
+    second: Round Complete Sprites_29
+  - first:
+      213: -1426855214150243364
+    second: Round Complete Sprites_30
+  - first:
+      213: -1781381723746974948
+    second: Round Complete Sprites_31
+  - first:
+      213: -4382325985328176407
+    second: Round Complete Sprites_32
+  - first:
+      213: -823255017980509198
+    second: Round Complete Sprites_33
+  - first:
+      213: -4637925967755200888
+    second: Round Complete Sprites_34
+  - first:
+      213: 1585506488556283722
+    second: Round Complete Sprites_35
+  - first:
+      213: -1581759513558270325
+    second: Round Complete Sprites_36
+  - first:
+      213: 243117485218222015
+    second: Round Complete Sprites_37
+  - first:
+      213: -931617019748465084
+    second: Round Complete Sprites_38
+  - first:
+      213: 1443216145908501873
+    second: Round Complete Sprites_39
+  - first:
+      213: -4882221908106083851
+    second: Round Complete Sprites_40
+  - first:
+      213: 4511903606215894907
+    second: Round Complete Sprites_41
+  - first:
+      213: -5029874807609426223
+    second: Round Complete Sprites_42
+  - first:
+      213: -7351243242224080916
+    second: Round Complete Sprites_43
+  - first:
+      213: -6637599033302648891
+    second: Round Complete Sprites_44
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 25
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Round Complete Sprites_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cdef8a903b468370800000000000000
+      internalID: 8324423633364577735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_1
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3fee777a26115030800000000000000
+      internalID: 3481588358583349055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_2
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bedcd97e00b57ed40800000000000000
+      internalID: 5613555519984618987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_3
+      rect:
+        serializedVersion: 2
+        x: 945
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b7ac162ca3801000800000000000000
+      internalID: 4648375024396214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_4
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43331b3f11d305b40800000000000000
+      internalID: 5426904698293662516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_5
+      rect:
+        serializedVersion: 2
+        x: 1575
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26d71529e40c3d980800000000000000
+      internalID: -8515251026732679838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_6
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ebce30e48610c6b0800000000000000
+      internalID: -5278194003324515357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_7
+      rect:
+        serializedVersion: 2
+        x: 2205
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4837fda4942f7c10800000000000000
+      internalID: 2053400176096655434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_8
+      rect:
+        serializedVersion: 2
+        x: 2520
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c2789493a4bfaa70800000000000000
+      internalID: 8840483208217260741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_9
+      rect:
+        serializedVersion: 2
+        x: 2835
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef46214604208a940800000000000000
+      internalID: 5307494636436219134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_10
+      rect:
+        serializedVersion: 2
+        x: 3150
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16f92b65945cda290800000000000000
+      internalID: -7877423254423298207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_11
+      rect:
+        serializedVersion: 2
+        x: 3465
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79435fa5271478df0800000000000000
+      internalID: -178101700849748841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_12
+      rect:
+        serializedVersion: 2
+        x: 3780
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 633610c47e86f6480800000000000000
+      internalID: -8903782595666287818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_13
+      rect:
+        serializedVersion: 2
+        x: 4095
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87a9aa0f99fc06d40800000000000000
+      internalID: 5575684598759332472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_14
+      rect:
+        serializedVersion: 2
+        x: 4410
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edb1eba40db46bcd0800000000000000
+      internalID: -2542761581624812578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_15
+      rect:
+        serializedVersion: 2
+        x: 4725
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36f694456d4cb96d0800000000000000
+      internalID: -2982573903386677405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_16
+      rect:
+        serializedVersion: 2
+        x: 5040
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bc5d8ba8f9596b00800000000000000
+      internalID: 822287331536755895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_17
+      rect:
+        serializedVersion: 2
+        x: 5355
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2712de8446fd9820800000000000000
+      internalID: 2926766107175032623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_18
+      rect:
+        serializedVersion: 2
+        x: 5670
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c64b6f831f399900800000000000000
+      internalID: 691653371021182659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_19
+      rect:
+        serializedVersion: 2
+        x: 5985
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 525c191dd1260fee0800000000000000
+      internalID: -1229374818062580443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_20
+      rect:
+        serializedVersion: 2
+        x: 6300
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ead0bb7e4021b0a20800000000000000
+      internalID: 3029534986613755310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_21
+      rect:
+        serializedVersion: 2
+        x: 6615
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68f2872c952cc8ce0800000000000000
+      internalID: -1401531693248532602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_22
+      rect:
+        serializedVersion: 2
+        x: 6930
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c95a811e7793d98b0800000000000000
+      internalID: -5143892012346858084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_23
+      rect:
+        serializedVersion: 2
+        x: 7245
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31d8fa2f34fb0bf80800000000000000
+      internalID: -8092758231829476077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_24
+      rect:
+        serializedVersion: 2
+        x: 7560
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7766ba38e42c4d990800000000000000
+      internalID: -7362045848371632521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_25
+      rect:
+        serializedVersion: 2
+        x: 7875
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75816dd82ad743320800000000000000
+      internalID: 2536790627234224215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_26
+      rect:
+        serializedVersion: 2
+        x: 8190
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af975703c1ea1bf70800000000000000
+      internalID: 9201326949789956602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_27
+      rect:
+        serializedVersion: 2
+        x: 8505
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a1478ec638ca32c0800000000000000
+      internalID: -4451025143983554139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_28
+      rect:
+        serializedVersion: 2
+        x: 8820
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3841c2364eec5f470800000000000000
+      internalID: 8427869758005449859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_29
+      rect:
+        serializedVersion: 2
+        x: 9135
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65a42ff5fe368c080800000000000000
+      internalID: -9166967161754596778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_30
+      rect:
+        serializedVersion: 2
+        x: 9450
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdb29a61ebac23ce0800000000000000
+      internalID: -1426855214150243364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_31
+      rect:
+        serializedVersion: 2
+        x: 9765
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1340baa2c24747e0800000000000000
+      internalID: -1781381723746974948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_32
+      rect:
+        serializedVersion: 2
+        x: 10080
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e2ec822cb9de23c0800000000000000
+      internalID: -4382325985328176407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_33
+      rect:
+        serializedVersion: 2
+        x: 10395
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f3c6b54ce53394f0800000000000000
+      internalID: -823255017980509198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_34
+      rect:
+        serializedVersion: 2
+        x: 10710
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8863465b7e6c2afb0800000000000000
+      internalID: -4637925967755200888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_35
+      rect:
+        serializedVersion: 2
+        x: 11025
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a47697f30c9d00610800000000000000
+      internalID: 1585506488556283722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_36
+      rect:
+        serializedVersion: 2
+        x: 11340
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8eb34a5a167c0ae0800000000000000
+      internalID: -1581759513558270325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_37
+      rect:
+        serializedVersion: 2
+        x: 11655
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbf4e11901abf5300800000000000000
+      internalID: 243117485218222015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_38
+      rect:
+        serializedVersion: 2
+        x: 11970
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4464f27a14b3213f0800000000000000
+      internalID: -931617019748465084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_39
+      rect:
+        serializedVersion: 2
+        x: 12285
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17d0cfe2075570410800000000000000
+      internalID: 1443216145908501873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_40
+      rect:
+        serializedVersion: 2
+        x: 12600
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f105bcaa0dde3cb0800000000000000
+      internalID: -4882221908106083851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_41
+      rect:
+        serializedVersion: 2
+        x: 12915
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b776d4dbc608d9e30800000000000000
+      internalID: 4511903606215894907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_42
+      rect:
+        serializedVersion: 2
+        x: 13230
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1def0cb038b423ab0800000000000000
+      internalID: -5029874807609426223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_43
+      rect:
+        serializedVersion: 2
+        x: 13545
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce72eb148332bf990800000000000000
+      internalID: -7351243242224080916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Round Complete Sprites_44
+      rect:
+        serializedVersion: 2
+        x: 13860
+        y: 0
+        width: 315
+        height: 222
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c7f482c8d282e3a0800000000000000
+      internalID: -6637599033302648891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

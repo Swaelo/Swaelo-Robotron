@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 406116473866429631}
   - component: {fileID: 406116473866429624}
   - component: {fileID: 8501341030432038085}
+  - component: {fileID: 1473591815404886587}
   m_Layer: 23
   m_Name: Cruise Missile
   m_TagString: EnemyProjectile
@@ -192,7 +193,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 54eeb9f7e702e3848a3bf43d556c89fd, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.35
+  m_Volume: 0.075
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -276,6 +277,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1473591815404886587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406116473866429625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 406116473866429629}
+  - {fileID: 406116474296986221}
+  - {fileID: 406116474933343638}
+  - {fileID: 406116474023131351}
+  - {fileID: 406116474584243539}
+  - {fileID: 406116474892287376}
+  - {fileID: 406116474556698288}
+  - {fileID: 406116475487992546}
 --- !u!1 &406116474023131347
 GameObject:
   m_ObjectHideFlags: 0

@@ -626,6 +626,7 @@ GameObject:
   - component: {fileID: 1392456313657315274}
   - component: {fileID: 1392456313657315269}
   - component: {fileID: 1392456313657315268}
+  - component: {fileID: 6095153318886587318}
   m_Layer: 16
   m_Name: Brain
   m_TagString: Brain
@@ -728,6 +729,27 @@ MonoBehaviour:
   - {fileID: 756490433029885738}
   - {fileID: 1392456313954054712}
   - {fileID: 756490431258475480}
+--- !u!114 &6095153318886587318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392456313657315271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 1392456313263462260}
+  - {fileID: 756490431429866256}
+  - {fileID: 756490432056970748}
+  - {fileID: 1392456314094061209}
+  - {fileID: 756490433029885738}
+  - {fileID: 1392456313954054712}
+  - {fileID: 756490431258475480}
+  - {fileID: 756490433249354241}
 --- !u!1 &1392456313954054715
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,8 +43,8 @@ public class WaveManager : MonoBehaviour
     //Spawn Restrictions
     private Vector2 XBounds = new Vector2(-7f, 7f); //Range of X position values that lie inside the level bounds
     private Vector2 YBounds = new Vector2(-4f, 4f); //Range of Y position values that lie inside the level bounds
-    private float MinPlayerDistance = 1.75f;    //How close entities are allowed to spawn to the player character
-    private float MinEntityDistance = 0.65f;    //How close entities are allowed to spawn to one another
+    private float MinPlayerDistance = 1.5f;    //How close entities are allowed to spawn to the player character
+    private float MinEntityDistance = 0.15f;    //How close entities are allowed to spawn to one another
 
     //Spawning
     private List<GameObject> HumansToSpawn = new List<GameObject>();    //List of humans which still need to be spawned into the game
@@ -59,7 +59,10 @@ public class WaveManager : MonoBehaviour
     {
         //Overwrite the WaveNumber argument with the CustomWaveStart if WaveStartOverride has been enabled through the inspector
         if (WaveStartOverride)
+        {
             WaveNumber = CustomWaveStart;
+            WaveStartOverride = false;
+        }
 
         //Display the new wave number to the user
         WaveDisplay.text = "Round " + WaveNumber.ToString();
@@ -95,19 +98,6 @@ public class WaveManager : MonoBehaviour
         WavePrepStage = WaveStartProgress.SpawnHumans;
     }
 
-    //Adds a number of human prefabs to the list of humans to be spawned in
-    private void AddHumansToSpawn(string PrefabName, int Amount)
-    {
-        for (int i = 0; i < Amount; i++)
-            HumansToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
-    }
-    //Adds a number of enemy prefabs to the list of enemies to be spawned in
-    private void AddEnemiesToSpawn(string PrefabName, int Amount)
-    {
-        for (int i = 0; i < Amount; i++)
-            EnemiesToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
-    }
-
     //Restarts the current wave with mostly the same amount of enemies that were remaining when the player died
     public void RestartWave()
     {
@@ -116,35 +106,18 @@ public class WaveManager : MonoBehaviour
         GameState.Instance.Player.GetComponent<PlayerMovement>().ResetPosition();
         GameState.Instance.RescueMultiplier = 1;
 
-        //Tally up the number of remaining humans, and the number of each enemy type which is will remain when the round starts over again
-        WaveEntities RestartingEntities = new WaveEntities();
-        foreach (BaseEntity Entity in ActiveEntities)
-        {
-            //Tally up any remaining human survivors
-            if (Entity.Type == EntityType.Mummy || Entity.Type == EntityType.Daddy || Entity.Type == EntityType.Mikey)
-                TallyHumanSurvivor(RestartingEntities, Entity);
-            //Tally up enemies only including Grunts, Electrodes, Hulks, Brains, Spheroids, Quarks and Tanks; Progs and Enforcers do not respawn when the round starts over again
-            if (Entity.Type == EntityType.Grunt || Entity.Type == EntityType.Electrode || Entity.Type == EntityType.Hulk || Entity.Type == EntityType.Brain || Entity.Type == EntityType.Spheroid || Entity.Type == EntityType.Quark || Entity.Type == EntityType.Tank)
-                TallyPersistantEnemy(RestartingEntities, Entity);
+        //Get a tally of all the humans and enemies which need to be respawned to restart the wave
+        WaveEntities RestartingEntities = GetRestartEntities();
 
-            //Instruct any Brains, Enforcers and Tanks to clean up any remaining projectiles that belong to them
-            if (Entity.Type == EntityType.Brain)
-                Entity.GetComponent<BrainAI>().CleanMissiles();
-            else if (Entity.Type == EntityType.Enforcer)
-                Entity.GetComponent<EnforcerAI>().CleanProjectiles();
-            else if (Entity.Type == EntityType.Tank)
-                Entity.GetComponent<TankAI>().CleanProjectiles();
-
-            //Instruct any Progs to clean up their trail sprites that follow behind
-            if (Entity.Type == EntityType.MummyProg || Entity.Type == EntityType.DaddyProg || Entity.Type == EntityType.MikeyProg)
-                Entity.GetComponent<ProgAI>().DestroyTrailSprites();
-        }
-
-        //Clean up all the entities which were still active when the player died, and reset the tracking lists
+        //Destroy all the remaining entities and reset the tracking lists
         foreach (BaseEntity Entity in ActiveEntities)
             Destroy(Entity.gameObject);
         ActiveEntities.Clear();
         TargetEntities.Clear();
+
+        //Find any destroy any left over enemy projectiles
+        foreach (GameObject EnemyProjectile in GameObject.FindGameObjectsWithTag("EnemyProjectile"))
+            Destroy(EnemyProjectile);
 
         //Reset and fill up the spawning lists with the humans and enemies which will persist ones the round begins over again
         HumansToSpawn = new List<GameObject>();
@@ -159,7 +132,7 @@ public class WaveManager : MonoBehaviour
         AddEnemiesToSpawn("Brain", RestartingEntities.Brains);
         AddEnemiesToSpawn("Spheroid", RestartingEntities.Spheroids);
         AddEnemiesToSpawn("Quark", RestartingEntities.Quarks);
-        AddEnemiesToSpawn("Tank", RestartingEntities.Tank);
+        AddEnemiesToSpawn("Tank", RestartingEntities.Tanks);
 
         //Reconfigure the timers for spawning in the entities during their spawn periods
         HumanSpawnInterval = SpawnPeriodDuration / HumansToSpawn.Count;
@@ -172,54 +145,75 @@ public class WaveManager : MonoBehaviour
         WavePrepStage = WaveStartProgress.SpawnHumans;
     }
 
-    //Adds one of the human survivors to the tally
-    private void TallyHumanSurvivor(WaveEntities TallyBoard, BaseEntity HumanEntity)
+    //Returns a new WaveEntities object which lists the number and type of all humans and enemies which should be respawned to restart the current wave
+    private WaveEntities GetRestartEntities()
     {
-        switch(HumanEntity.Type)
+        //Create a new object to store the numbers of everything
+        WaveEntities Entities = new WaveEntities();
+
+        //Loop through all entities that currently exist
+        foreach(BaseEntity Entity in ActiveEntities)
         {
-            case (EntityType.Mummy):
-                TallyBoard.Mommies++;
-                break;
-            case (EntityType.Daddy):
-                TallyBoard.Daddies++;
-                break;
-            case (EntityType.Mikey):
-                TallyBoard.Mikeys++;
-                break;
+            //Search for the entity types which should be respawned on a wave restart and count them all in the WaveEntities object we created
+            switch(Entity.Type)
+            {
+                //Human Types
+                case (EntityType.Mummy):
+                    Entities.Mommies++;
+                    break;
+                case (EntityType.Daddy):
+                    Entities.Daddies++;
+                    break;
+                case (EntityType.Mikey):
+                    Entities.Mikeys++;
+                    break;
+                //Enemy Types
+                case (EntityType.Grunt):
+                    Entities.Grunts++;
+                    break;
+                case (EntityType.Electrode):
+                    Entities.Electrodes++;
+                    break;
+                case (EntityType.Hulk):
+                    Entities.Hulks++;
+                    break;
+                case (EntityType.Brain):
+                    Entities.Brains++;
+                    break;
+                case (EntityType.Spheroid):
+                    Entities.Spheroids++;
+                    break;
+                case (EntityType.Quark):
+                    Entities.Quarks++;
+                    break;
+                case (EntityType.Tank):
+                    Entities.Tanks++;
+                    break;
+            }
         }
+
+        return Entities;
     }
 
-    //Adds one of the enemies to the tally
-    private void TallyPersistantEnemy(WaveEntities TallyBoard, BaseEntity HostileEntity)
+    //Adds a number of human prefabs to the list of humans to be spawned in
+    private void AddHumansToSpawn(string PrefabName, int Amount)
     {
-        switch(HostileEntity.Type)
-        {
-            case (EntityType.Grunt):
-                TallyBoard.Grunts++;
-                break;
-            case (EntityType.Electrode):
-                TallyBoard.Electrodes++;
-                break;
-            case (EntityType.Hulk):
-                TallyBoard.Hulks++;
-                break;
-            case (EntityType.Brain):
-                TallyBoard.Brains++;
-                break;
-            case (EntityType.Spheroid):
-                TallyBoard.Spheroids++;
-                break;
-            case (EntityType.Quark):
-                TallyBoard.Quarks++;
-                break;
-            case (EntityType.Tank):
-                TallyBoard.Tank++;
-                break;
-        }
+        for (int i = 0; i < Amount; i++)
+            HumansToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
+    }
+    //Adds a number of enemy prefabs to the list of enemies to be spawned in
+    private void AddEnemiesToSpawn(string PrefabName, int Amount)
+    {
+        for (int i = 0; i < Amount; i++)
+            EnemiesToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
     }
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (GameState.Instance.IsGamePaused())
+            return;
+
         //During the spawning period, keep spawning in everything until the round is ready to begin
         if (SpawnPeriodActive)
             ContinueSpawningProcess();
@@ -308,8 +302,9 @@ public class WaveManager : MonoBehaviour
         //Get the enemies type
         EntityType EnemyType = Enemy.GetComponent<HostileEntity>().Type;
 
-        //Grunts, Brains, Spheroids, Quarks, Enforcers and Tanks are all required targets to finish the round
-        if (EnemyType == EntityType.Grunt || EnemyType == EntityType.Brain || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Quark || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Tank)
+        //Brains, Progs, Enforcers, Grunts, Quarks, Spheroids and Tanks are all the required enemies that must be killed for the round to progress
+        if (EnemyType == EntityType.Brain || EnemyType == EntityType.DaddyProg || EnemyType == EntityType.MummyProg || EnemyType == EntityType.MikeyProg || EnemyType == EntityType.Enforcer || EnemyType == EntityType.Grunt
+             || EnemyType == EntityType.Quark || EnemyType == EntityType.Spheroid || EnemyType == EntityType.Tank)
             return true;
 
         //All others are optional
@@ -340,22 +335,25 @@ public class WaveManager : MonoBehaviour
         //Get a random pos inside the level
         Vector3 SpawnPos = GetRandomPos();
 
-        //Return this position if its clear of anything else
-        if (SpawnPosFree(SpawnPos))
+        //Return this position straight away if its already clear of everything
+        if (PosAwayFromPlayer(SpawnPos) && PosAwayFromEntities(SpawnPos))
             return SpawnPos;
 
-        //If the first random pos wasnt free, try up to 10 times to find one
+        //Otherwise, make a maximum of 10 attempts trying to find a spawn pos free of anyway
         int FreePosAttempts = 1;
         while(FreePosAttempts < 10)
         {
+            //Get a new position
             SpawnPos = GetRandomPos();
-            if (SpawnPosFree(SpawnPos))
+            //Return this if its a proper position
+            if (PosAwayFromPlayer(SpawnPos) && PosAwayFromEntities(SpawnPos))
                 return SpawnPos;
+            //Increment attempt counter
             FreePosAttempts++;
         }
 
-        //If we tried 10 times and failed, just return whatever was the last position that we generated and it will have to do
-        return SpawnPos;
+        //After 10 failed tries just find a position away from the player and that will have to do
+        return GetPosAwayFromPlayer();
     }
 
     //Returns a random position inside the level bounds
@@ -364,15 +362,25 @@ public class WaveManager : MonoBehaviour
         return new Vector3(Random.Range(XBounds.x, XBounds.y), Random.Range(YBounds.x, YBounds.y), 0f);
     }
 
-    //Checks if a position is too close to the player character or any of the entities which are already active
-    private bool SpawnPosFree(Vector3 SpawnPos)
+    //Returns a random position which isnt too close to the player character
+    private Vector3 GetPosAwayFromPlayer()
     {
-        //Check distance from the player character
-        float PlayerDistance = Vector3.Distance(SpawnPos, GameState.Instance.Player.transform.position);
-        if (PlayerDistance <= MinPlayerDistance)
-            return false;
+        Vector3 RandomPos = GetRandomPos();
+        if (PosAwayFromPlayer(RandomPos))
+            return RandomPos;
+        return GetPosAwayFromPlayer();
+    }
 
-        //Check distance from any active entities
+    //Checks if a spawn position is too close to the player charcter
+    private bool PosAwayFromPlayer(Vector3 SpawnPos)
+    {
+        float PlayerDistance = Vector3.Distance(SpawnPos, GameState.Instance.Player.transform.position);
+        return PlayerDistance > MinPlayerDistance;
+    }
+
+    //Checks if a spawn position is too close to any other entity
+    private bool PosAwayFromEntities(Vector3 SpawnPos)
+    {
         foreach(BaseEntity Entity in ActiveEntities)
         {
             float EntityDistance = Vector3.Distance(SpawnPos, Entity.transform.position);
@@ -380,13 +388,16 @@ public class WaveManager : MonoBehaviour
                 return false;
         }
 
-        //All checks have passed, this position is free
         return true;
     }
 
     //Whenever friendly or hostile entities are killed, they alert the WaveManager through this function
     public void EnemyDead(HostileEntity Enemy)
     {
+        //Totally ignore this if wave progression has been disabled
+        if (GameState.Instance.DisableWaveProgression)
+            return;
+
         //Remove the entity from the ActiveEntities list
         ActiveEntities.Remove(Enemy);
 
@@ -396,7 +407,7 @@ public class WaveManager : MonoBehaviour
             TargetEntities.Remove(Enemy);
 
         //Whenever a target enemy is destroyed, check to see if they were the last one left
-        if(IsTarget && TargetEntities.Count == 0)
+        if (IsTarget && TargetEntities.Count == 0)
         {
             //Progress onto the next round now since all the target enemies have been destroyed
             CleanWave();
@@ -416,11 +427,11 @@ public class WaveManager : MonoBehaviour
             PrefabSpawner.Instance.SpawnPrefab("Skull", Human.transform.position, Quaternion.identity);
     }
 
-    //Adds a newly created enemy to the list of required targets, called by Quarks when they spawn tanks into the game
-    public void AddNewTank(HostileEntity Tank)
+    //For adding newly created Tanks and Enforcers to the tracking lists when they are spawned into the game by the Spheroids and Quarks
+    public void AddNewEnemy(HostileEntity NewEnemy)
     {
-        //Add them to both entity lists
-        ActiveEntities.Add(Tank);
-        TargetEntities.Add(Tank);
+        //Add them to both tracking lists
+        ActiveEntities.Add(NewEnemy);
+        TargetEntities.Add(NewEnemy);
     }
 }

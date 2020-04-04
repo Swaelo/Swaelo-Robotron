@@ -101,7 +101,7 @@ public class QuarkAI : HostileEntity
             SoundEffectsPlayer.Instance.PlaySound("SpawnTank");
 
             //Let the WaveManager know this new enemy exists
-            WaveManager.Instance.AddNewTank(NewTank.GetComponent<HostileEntity>());
+            WaveManager.Instance.AddNewEnemy(NewTank.GetComponent<HostileEntity>());
 
             //Take 1 away from this Quarks spawns counter, then check if its run out to trigger self-destruct
             SpawnsLeft -= 1;

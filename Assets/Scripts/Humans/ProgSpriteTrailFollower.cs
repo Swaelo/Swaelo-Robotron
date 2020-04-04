@@ -14,6 +14,10 @@ public class ProgSpriteTrailFollower : MonoBehaviour
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         //Move toward the follow target if it gets too far away
         float TargetDistance = Vector3.Distance(transform.position, FollowTarget.transform.position);
         if(TargetDistance >= MaxDistance)

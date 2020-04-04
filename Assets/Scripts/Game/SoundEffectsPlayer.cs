@@ -21,8 +21,12 @@ public class SoundEffectsPlayer : MonoBehaviour
     private void Awake() { Instance = this; }
 
     //Takes the name of a sound effect, and plays it if it can be found
-    public void PlaySound(string SoundName)
+    public void PlaySound(string SoundName, float VolumeScale = 1.0f)
     {
+        //Make sure the provided volume scale isnt outside the proper value range
+        VolumeScale = Mathf.Clamp(VolumeScale, 0f, 1f);
+        VolumeScale *= 0.35f;
+
         //Loop through all the available sounds
         for(int i = 0; i < SoundEffects.Length; i++)
         {
@@ -33,7 +37,7 @@ public class SoundEffectsPlayer : MonoBehaviour
             if(CurrentSound.Name == SoundName)
             {
                 //Exit out now that we found the target sound and tried to play it
-                SoundPlayer.PlayOneShot(CurrentSound.SoundClip);
+                SoundPlayer.PlayOneShot(CurrentSound.SoundClip, VolumeScale);
                 return;
             }
         }

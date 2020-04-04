@@ -12,6 +12,10 @@ public class RescueBonusDisplayKiller : MonoBehaviour
 
     private void Update()
     {
+        //All game logic and AI should be paused at certain times
+        if (!GameState.Instance.ShouldAdvanceGame())
+            return;
+
         //Wait for the lifetime to expire
         LifetimeRemaining -= Time.deltaTime;
         if (LifetimeRemaining <= 0.0f)

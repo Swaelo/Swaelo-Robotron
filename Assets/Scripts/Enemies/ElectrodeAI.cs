@@ -56,7 +56,7 @@ public class ElectrodeAI : HostileEntity
         SoundEffectsPlayer.Instance.PlaySound("ElectrodeDie");
         //Start the death animation
         IsActive = false;
-        AnimationController.SetTrigger("Decay");
+        AnimationController.SetBool("IsDead", true);
         DecayRemaining = DecayLength;
         //Destroy the collider component so no unwanted collisions occur during the death animation
         Destroy(GetComponent<BoxCollider2D>());

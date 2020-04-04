@@ -122,7 +122,7 @@ public class FriendlyEntity : BaseEntity
         //Start playing the reprogramming animation and make sure the entities AI is disabled and it doesnt trigger any more collisions
         BeingReprogrammed = true;
         foreach (Animator AnimationController in AnimationControllers)
-            AnimationController.SetTrigger("Reprogram");
+            AnimationController.SetBool("Reprogrammed", true);
         Destroy(GetComponent<BoxCollider2D>());
         Destroy(GetComponent<Rigidbody2D>());
     }

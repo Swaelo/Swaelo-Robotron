@@ -564,6 +564,7 @@ GameObject:
   - component: {fileID: 1534644669402100661}
   - component: {fileID: 1534644669402100658}
   - component: {fileID: 1534644669402100659}
+  - component: {fileID: 7854022451738144976}
   m_Layer: 22
   m_Name: Daddy Prog
   m_TagString: Prog
@@ -685,6 +686,31 @@ MonoBehaviour:
   - {fileID: 1534644670110244170}
   - {fileID: 1534644669183382829}
   - {fileID: 1534644669957404458}
+--- !u!114 &7854022451738144976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534644669402100657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 1534644668785883012}
+  - {fileID: 1534644670349493444}
+  - {fileID: 1534644668806818256}
+  - {fileID: 1534644670825318422}
+  - {fileID: 1534644670464121621}
+  - {fileID: 1534644668752214955}
+  - {fileID: 1534644669234940003}
+  - {fileID: 1534644670054784861}
+  - {fileID: 1534644670713633240}
+  - {fileID: 1534644670110244168}
+  - {fileID: 1534644669183382827}
+  - {fileID: 1534644669957404460}
 --- !u!1 &1534644669957404459
 GameObject:
   m_ObjectHideFlags: 0

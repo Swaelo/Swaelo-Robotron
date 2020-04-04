@@ -592,6 +592,7 @@ GameObject:
   - component: {fileID: 7700788030389007633}
   - component: {fileID: 7700788030389007632}
   - component: {fileID: 7700788030389007635}
+  - component: {fileID: 606298725853124995}
   m_Layer: 22
   m_Name: Mikey Prog
   m_TagString: Prog
@@ -713,6 +714,31 @@ MonoBehaviour:
   - {fileID: 7700788030589170202}
   - {fileID: 7700788029334397348}
   - {fileID: 7700788029811558269}
+--- !u!114 &606298725853124995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700788030389007645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bbe2e0eeef33f3499db30061c8dbe5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 7700788030420984507}
+  - {fileID: 7700788030688364580}
+  - {fileID: 7700788029629175696}
+  - {fileID: 7700788029862665242}
+  - {fileID: 7700788030501523902}
+  - {fileID: 7700788031405961555}
+  - {fileID: 7700788031400494712}
+  - {fileID: 7700788030139571140}
+  - {fileID: 7700788031426963491}
+  - {fileID: 7700788030589170212}
+  - {fileID: 7700788029334397350}
+  - {fileID: 7700788029811558259}
 --- !u!1 &7700788030420984506
 GameObject:
   m_ObjectHideFlags: 0
