@@ -29,13 +29,15 @@ public class TankAI : HostileEntity
     //Firing
     public GameObject TankShellPrefab;  //Projectile which is fired at the player
     private Vector2 ShotCooldownRange = new Vector2(1.75f, 3.35f); //How often projectiles can be fired
-    private float ShotCooldownRemaining = 0.5f; //Time left until another projectile can be fired
+    private float ShotCooldownRemaining = 0f; //Time left until another projectile can be fired
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.25f); //How far from the Player to offset where the projectiles are aimed
 
     private void Awake()
     {
         //Get a random target location to seek towards
         GetNewTarget();
+        //Set an initial shot cooldown timer
+        ShotCooldownRemaining = Random.Range(ShotCooldownRange.x, ShotCooldownRange.y);
     }
 
     private void Update()

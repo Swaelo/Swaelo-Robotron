@@ -43,6 +43,10 @@ public class BrainAI : HostileEntity
     private float DeathAnimationRemaining = 0.417f; //Time remaining until the Brains death animation is finished playing out
     public Animator[] DeathAnimators;   //Animators for each component of the Brain which have death animations which can be played
 
+    //Physics
+    public BoxCollider2D FrontCollider;
+    public BoxCollider2D SideCollider;
+
     private void Start()
     {
         //Store initial position and enable only the front sprites
@@ -124,6 +128,12 @@ public class BrainAI : HostileEntity
             float VerticalMovement = Mathf.Abs(transform.position.y - PreviousPos.y);
             float HorizontalMovement = Mathf.Abs(transform.position.x - PreviousPos.x);
             bool MovingVertical = VerticalMovement > HorizontalMovement;
+
+            //Toggle box colliders
+            if(FrontCollider != null)
+                FrontCollider.enabled = MovingVertical;
+            if(SideCollider != null)
+                SideCollider.enabled = !MovingVertical;
 
             //Manage renderering of Front/Back sprites during vertical movement
             if (MovingVertical)
@@ -338,7 +348,8 @@ public class BrainAI : HostileEntity
             AnimationController.SetBool("IsDead", true);
         //Destroy the rigidbody and boxcollider components so no unwanted collision event occur during the death animation
         Destroy(GetComponent<Rigidbody2D>());
-        Destroy(GetComponent<BoxCollider2D>());
+        Destroy(FrontCollider);
+        Destroy(SideCollider);
         //Play sound
         SoundEffectsPlayer.Instance.PlaySound("BrainDie");
     }

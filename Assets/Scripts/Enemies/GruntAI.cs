@@ -151,6 +151,6 @@ public class GruntAI : HostileEntity
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
         //Play sound effect
-        SoundEffectsPlayer.Instance.PlaySound("GruntDie");
+        SoundEffectsPlayer.Instance.PlaySound("GruntDie", 0.45f);
     }
 }

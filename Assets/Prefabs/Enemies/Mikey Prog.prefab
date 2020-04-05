@@ -593,6 +593,7 @@ GameObject:
   - component: {fileID: 7700788030389007632}
   - component: {fileID: 7700788030389007635}
   - component: {fileID: 606298725853124995}
+  - component: {fileID: 8672237211970220901}
   m_Layer: 22
   m_Name: Mikey Prog
   m_TagString: Prog
@@ -650,7 +651,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.19, y: 0.41}
+  m_Size: {x: 0.2, y: 0.4}
   m_EdgeRadius: 0
 --- !u!50 &7700788030389007632
 Rigidbody2D:
@@ -714,6 +715,8 @@ MonoBehaviour:
   - {fileID: 7700788030589170202}
   - {fileID: 7700788029334397348}
   - {fileID: 7700788029811558269}
+  FrontCollider: {fileID: 7700788030389007633}
+  SideCollider: {fileID: 8672237211970220901}
 --- !u!114 &606298725853124995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -739,6 +742,32 @@ MonoBehaviour:
   - {fileID: 7700788030589170212}
   - {fileID: 7700788029334397350}
   - {fileID: 7700788029811558259}
+--- !u!61 &8672237211970220901
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700788030389007645}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.12, y: 0.4}
+  m_EdgeRadius: 0
 --- !u!1 &7700788030420984506
 GameObject:
   m_ObjectHideFlags: 0

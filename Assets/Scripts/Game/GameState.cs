@@ -77,7 +77,7 @@ public class GameState : MonoBehaviour
     //Used from AI scripts and other stuff to check if the game should be running right now
     public bool ShouldAdvanceGame()
     {
-        if (GamePaused || WaveManager.Instance.SpawnPeriodActive || InDeathTimeout)
+        if (GamePaused || WaveManager.Instance.SpawnPeriodActive || WaveManager.Instance.WarmingUp || InDeathTimeout)
             return false;
         return true;
     }
@@ -96,6 +96,7 @@ public class GameState : MonoBehaviour
             //Award an extra life to the player if they arent already at the maximum amount
             if(ExtraLives < MaxExtraLives)
             {
+                SoundEffectsPlayer.Instance.PlaySound("ExtraLife");
                 ExtraLives++;
                 LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
             }

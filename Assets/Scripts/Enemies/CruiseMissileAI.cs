@@ -8,13 +8,24 @@ using UnityEngine;
 
 public class CruiseMissileAI : MonoBehaviour
 {
-    public GameObject[] TailSections;   //Set of tail sections which trail behind this main body section
+    //Targetting/Movement
     private float MoveSpeed = 3f;   //How fast the cruise missiles travel
     private Vector3 CurrentDirection;   //Current direction the cruise missile is travelling
-    private Vector2 ZigZagInterval = new Vector2(0.25f, 1.25f); //How often the missile zigzags falls within these value ranges
-    private float NextZigZag = 0.75f;   //Seconds left until the cruise missile zigzags again
     private bool MovingDirect = true;   //The zigzagging changes between moving directly toward the player, and random directions offset from that
-    private Vector2 ZigZagRange = new Vector2(15f, 75f);    //Degrees of rotation that may be applied to the current movement direction when zigzagging
+    private Vector2 DirectSeekDurationRange = new Vector2(0.5f, 3.5f);  //How long to remain seeking toward the current target before zigzagging off
+    private float DirectSeekLeft;   //Time left for direct seeking before zigzagging
+    private Vector2 ZigZagSeekDurationRange = new Vector2(0.35f, 1.65f);    //How long to remain seeking in zigzag offset direction before going straight back toward the target
+    private float ZigZagSeekLeft;   //Time left for zigzag seeking before going back to direct
+    private Vector2 ZigZagPowerRange = new Vector2(15f, 75f);    //Degrees of rotation that may be applied to the currect direction to zigzag away
+
+    //Rendering
+    public GameObject[] TailSections;   //Set of tail sections which trail behind this main body section
+
+    //Audio
+    private static bool TravelSoundInUse = false;   //Tracks if any active cruise missile is currently playing the travel sound effect
+    private bool PlayingTravelSound = false;    //Tracks if this cruise missile is playing the sound effect
+    private float TravelSoundLength = 2.38f;    //How long the cruise missle travel sound lasts for
+    private float TravelSoundLeft = 0f;  //Time left until the travel sound finishes playing and needs to be restarted
 
     private void Start()
     {
@@ -36,6 +47,27 @@ public class CruiseMissileAI : MonoBehaviour
 
         //Travel forward in the current direction
         transform.position += CurrentDirection * MoveSpeed * Time.deltaTime;
+
+        //Start playing the travel sound if its not being played already
+        if(!TravelSoundInUse && !PlayingTravelSound)
+        {
+            //Start playing the sound
+            TravelSoundInUse = true;
+            PlayingTravelSound = true;
+            SoundEffectsPlayer.Instance.PlaySound("CruiseMissileTravel");
+            TravelSoundLeft = TravelSoundLength;
+        }
+        //If we are playing it, wait for it to finish before starting it again
+        else if(PlayingTravelSound)
+        {
+            //Play it again once it finishes
+            TravelSoundLeft -= Time.deltaTime;
+            if(TravelSoundLeft <= 0.0f)
+            {
+                TravelSoundLeft = TravelSoundLength;
+                SoundEffectsPlayer.Instance.PlaySound("CruiseMissileTravel");
+            }
+        }
     }
 
     //Sets the current movement direction to go straight toward the players current location
@@ -48,22 +80,33 @@ public class CruiseMissileAI : MonoBehaviour
     //Periodically changes the movement direction to create a zigzag effect
     private void ZigZagDirection()
     {
-        //ZigZag changing directions periodically
-        NextZigZag -= Time.deltaTime;
-        if (NextZigZag <= 0.0f)
+        //Keep moving straight if thats the current method of travel
+        if(MovingDirect)
         {
-            //Reset the timer and change between direct and random rotation movement direction
-            NextZigZag = Random.Range(ZigZagInterval.x, ZigZagInterval.y);
-            MovingDirect = !MovingDirect;
-            //If the missile is now set to move direct, get a new direction to travel which goes straight towards the players current location
-            if (MovingDirect)
-                DirectTowardPlayer();
-            //Otherwise, we apply some random rotation onto the current direction to zigzag away from the player for a moment
-            else
+            //Wait for the timer to expire
+            DirectSeekLeft -= Time.deltaTime;
+            if(DirectSeekLeft <= 0.0f)
             {
-                bool RotateClockwise = Random.value >= 0.5f;
-                float RotationForce = Random.Range(ZigZagRange.x, ZigZagRange.y);
-                CurrentDirection = Quaternion.Euler(0f, 0f, RotationForce) * CurrentDirection;
+                //ZigZag to move in some totally different direction
+                bool ZigZagLeft = Random.value >= 0.5f;
+                float ZigZagStrength = Random.Range(ZigZagPowerRange.x, ZigZagPowerRange.y);
+                CurrentDirection = Quaternion.Euler(0f, 0f, ZigZagLeft ? ZigZagStrength : -ZigZagStrength) * CurrentDirection;
+                //Change to zigzag movement and decide how long thats going to remain for
+                MovingDirect = false;
+                ZigZagSeekLeft = Random.Range(ZigZagSeekDurationRange.x, ZigZagSeekDurationRange.y);
+            }
+        }
+        //Otherwise keep zigzagging
+        else
+        {
+            //Wait for the timer
+            ZigZagSeekLeft -= Time.deltaTime;
+            if(ZigZagSeekLeft <= 0.0f)
+            {
+                //Move back to direct movement now
+                DirectTowardPlayer();
+                MovingDirect = true;
+                DirectSeekLeft = Random.Range(DirectSeekDurationRange.x, DirectSeekDurationRange.y);
             }
         }
     }
@@ -90,6 +133,9 @@ public class CruiseMissileAI : MonoBehaviour
     //Destroys the cruise missle
     public void DestroyProjectile()
     {
+        //If this missile was playing the travel sound effect, free it up for some other missile to use now instead
+        if (TravelSoundInUse && PlayingTravelSound)
+            TravelSoundInUse = false;
         //Play sound
         SoundEffectsPlayer.Instance.PlaySound("CruiseMissileExplode");
         //First destroy all the tail section parts

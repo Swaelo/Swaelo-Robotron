@@ -31,6 +31,10 @@ public class ProgAI : HostileEntity
     public SpriteRenderer[] SideTrailSprites;   //Sprites used to display side view trail effect
     private Vector3 PreviousPos;    //Used to measure the Progs distance/direction travelled over time
 
+    //Physics
+    public BoxCollider2D FrontCollider;
+    public BoxCollider2D SideCollider;
+
     private void Start()
     {
         //Store initial position
@@ -142,12 +146,15 @@ public class ProgAI : HostileEntity
             AnimationController.SetBool("IsDead", true);
         //Remove physics components
         Destroy(GetComponent<Rigidbody2D>());
-        Destroy(GetComponent<BoxCollider2D>());
+        Destroy(FrontCollider);
+        Destroy(SideCollider);
     }
 
     //Toggles visibility of the front view sprites
     private void ToggleFrontSprites(bool ShouldRender)
     {
+        if(FrontCollider != null)
+            FrontCollider.enabled = ShouldRender;
         FrontSprite.forceRenderingOff = !ShouldRender;
         foreach (SpriteRenderer TrailRenderer in FrontTrailSprites)
             TrailRenderer.forceRenderingOff = !ShouldRender;
@@ -156,6 +163,8 @@ public class ProgAI : HostileEntity
     //Toggles visibility of the side view sprites
     private void ToggleSideSprites(bool ShouldRender)
     {
+        if(SideCollider != null)
+            SideCollider.enabled = ShouldRender;
         SideSprite.forceRenderingOff = !ShouldRender;
         foreach (SpriteRenderer TrailRenderer in SideTrailSprites)
             TrailRenderer.forceRenderingOff = !ShouldRender;

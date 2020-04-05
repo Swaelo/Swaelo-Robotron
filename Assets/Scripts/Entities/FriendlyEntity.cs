@@ -25,16 +25,20 @@ public class FriendlyEntity : BaseEntity
     //Reprogramming
     public bool TargettedByBrain = false;   //Flagged true when a Brain decides this will be their target, to make sure no other Brain tries to capture the same one
     public bool BeingReprogrammed = false; //Flagged to true once the human has been captured by a Brain
-    private Vector3 FrozenPosition; //Position should not change during the reprogramming process
+
+    //Physics
+    public BoxCollider2D FrontCollider;
+    public BoxCollider2D SideCollider;
 
     private void Start()
     {
         //Store initial position into previous
         PreviousPos = transform.position;
-        //Set only the front view sprite to be viewed
+        //Set only the front view sprite to be viewed, and disable the side collider for now
         FrontBodyRenderer.forceRenderingOff = false;
         SideBodyRenderer.forceRenderingOff = true;
         BackBodyRenderer.forceRenderingOff = true;
+        SideCollider.enabled = false;
         //Get an initial direction for the entity to wander in
         NewWanderDirection();
     }
@@ -89,8 +93,14 @@ public class FriendlyEntity : BaseEntity
         float HorizontalMovement = Mathf.Abs(transform.position.x - PreviousPos.x);
         bool MovingVertical = VerticalMovement > HorizontalMovement;
 
+        //Toggle the box colliders so only 1 is active at a time
+        if(FrontCollider != null)
+            FrontCollider.enabled = MovingVertical;
+        if(SideCollider != null)
+            SideCollider.enabled = !MovingVertical;
+
         //Manage rendering of Front/Back sprites during vertical movement
-        if(MovingVertical)
+        if (MovingVertical)
         {
             //Side sprites should always be hidden during vertical movement
             SideBodyRenderer.forceRenderingOff = true;
@@ -123,7 +133,8 @@ public class FriendlyEntity : BaseEntity
         BeingReprogrammed = true;
         foreach (Animator AnimationController in AnimationControllers)
             AnimationController.SetBool("Reprogrammed", true);
-        Destroy(GetComponent<BoxCollider2D>());
+        Destroy(FrontCollider);
+        Destroy(SideCollider);
         Destroy(GetComponent<Rigidbody2D>());
     }
 

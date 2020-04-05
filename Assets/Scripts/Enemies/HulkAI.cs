@@ -32,22 +32,28 @@ public class HulkAI : HostileEntity
     private Vector2 ValidXPosRange = new Vector2(-7.43f, 7.43f);    //Range of XPos values the Hulk may travel between while remaining inside the level bounds
     private Vector2 ValidYPosRange = new Vector2(-4.4f, 4.4f);  //Range of YPos values the Hulk my travel between while remaining inside the level bounds
     private Vector3 PreviousPos;    //Used to measure the Hulks distance travelled between frames
+    private float FollowRequestCooldown = 0.25f; //How often the Hulk can instruct another Hulk to follow it
+    private float FollowRequestAvailable = 0f;  //How long until the Hulk is allowed to instruct others to follow it again
 
     //Turning
     private bool TurningClockwise = true;   //Tracks which direction the Hulk is turning in
-    private float TurningInterval = 2.5f;   //How long it takes for the Hulk to change directions
-    private float TurnTimeLeft = 2.5f;  //How long until the Hulk completes its current turning process
+    private float TurningInterval = 1.15f;   //How long it takes for the Hulk to change directions
+    private float TurnTimeLeft = 1.15f;  //How long until the Hulk completes its current turning process
     private bool IsTurning = false; //True while the Hulk is performing its direction changing process
     private Direction TurningFrom = Direction.North;  //The direction the Hulk is currently turning away from
     private Direction TurningTo = Direction.North;    //The new direction the Hulk is currently turning to
-    private float TurningAnimationInterval = 0.25f; //How often to flash between the current and next direction during the turning animation
-    private float NextTurnSwap = 0.25f; //How long until the next flash between current and next directions
+    private float TurningAnimationInterval = 0.2875f; //How often to flash between the current and next direction during the turning animation
+    private float NextTurnSwap = 0.2875f; //How long until the next flash between current and next directions
     private bool ShowingCurrentDirection = true;    //Tracks which direction if currently being viewed during the turning animation
 
     //Rendering/Animation
     public SpriteRenderer[] FrontRenderers;   //Renderers for viewing the Hulks front view sprites
     public SpriteRenderer[] SideRenderers;    //Renderers for viewing the Hulks side view sprites
     public Animator[] Animators;    //Animation Controllers for all the Hulks main body sprites
+
+    //Physics
+    public BoxCollider2D FrontCollider;
+    public BoxCollider2D SideCollider;
 
     private void Start()
     {
@@ -107,6 +113,18 @@ public class HulkAI : HostileEntity
 
         //Return the new value offset by a random amount
         return PosValue += PositiveOffset ? OffsetAmount : -OffsetAmount;
+    }
+
+    //Starts the process to turn toward a specific direction
+    private void StartTurningTowards(Direction NewFacingDirection)
+    {
+        TurningFrom = FacingDirection;
+        TurningTo = NewFacingDirection;
+        TurnTimeLeft = TurningInterval;
+        IsTurning = true;
+        NextTurnSwap = TurningAnimationInterval;
+        ShowingCurrentDirection = true;
+        FaceDirection(FacingDirection);
     }
 
     //Starts the direction changing process
@@ -260,6 +278,7 @@ public class HulkAI : HostileEntity
         {
             WaveManager.Instance.HumanDead(collision.transform.GetComponent<BaseEntity>(), true);
             Destroy(collision.gameObject);
+            SoundEffectsPlayer.Instance.PlaySound("HumanDie");
         }
         //Push the Hulk back when hit by players projectiles
         else if (collision.transform.CompareTag("PlayerProjectile"))
@@ -273,11 +292,19 @@ public class HulkAI : HostileEntity
             Destroy(collision.transform.gameObject);
         //Start travelling in another direction when colliding with another Hulk to avoid them getting stuck together
         else if (collision.transform.CompareTag("Hulk"))
-            AvoidOtherHulk();
+        {
+            //If able to, tell the other Hulk to follow us
+            if(FollowRequestAvailable <= 0.0f)
+            {
+                collision.transform.GetComponent<HulkAI>().TravelWithMe(FacingDirection, TargetPos);
+                FollowRequestAvailable = FollowRequestCooldown;
+            }
+
+        }
     }
 
-//Pushes the Hulk back a small amount when hit by one of the players projectiles
-private void PushBack(Vector3 ShotDirection)
+    //Pushes the Hulk back a small amount when hit by one of the players projectiles
+    private void PushBack(Vector3 ShotDirection)
     {
         //Get a new location to move the Hulk to, based on which direction the projectile was travelling that hit the Hulk
         Vector3 NewPos = transform.position + ShotDirection * ProjectilePushback * Time.deltaTime;
@@ -288,38 +315,25 @@ private void PushBack(Vector3 ShotDirection)
         transform.position = NewPos;
     }
 
-    //Forces the Hulk to change which axis its currently travelling toward its target whenever it runs into another Hulk to stop them getting stuck together
-    private void AvoidOtherHulk()
+    //Helps Hulks from getting stuck together
+    public void TravelWithMe(Direction Facing, Vector3 Target)
     {
-        //Change which axis the Hulk is currently travelling
-        SeekingX = !SeekingX;
-
-        //Figure out which way the Hulk needs to rotate so it faces the direction needed to travel in the new direction
-        if(SeekingX)
-        {
-            //First figure out which direction we want to be travelling on this axis to reach our target
-            bool ShouldMoveLeft = transform.position.x <= TargetPos.x;
-            //Now figure out which way the Hulk needs to rotate to travel in that direction
-            if (ShouldMoveLeft)
-                TurningClockwise = FacingDirection != Direction.South;
-            else
-                TurningClockwise = FacingDirection != Direction.North;
-            StartTurning();
-        }
-        else
-        {
-            bool ShouldMoveUp = transform.position.y <= TargetPos.y;
-            if (ShouldMoveUp)
-                TurningClockwise = FacingDirection != Direction.East;
-            else
-                TurningClockwise = FacingDirection != Direction.West;
-            StartTurning();
-        }
+        //Only accept these instructions while available to do so
+        if (FollowRequestAvailable > 0.0f)
+            return;
+        //Update the Hulks target destination
+        TargetPos = Target;
+        //Start turning to face the same as the Hulk told us
+        if(FacingDirection != Facing)
+            StartTurningTowards(Facing);
+         //Set a cooldown before we can send or recieve these instructions again
+        FollowRequestAvailable = FollowRequestCooldown;
     }
 
     //Toggles visibility of the front sprites
     private void SetFrontSpriteVisibility(bool ShouldRender)
     {
+        FrontCollider.enabled = ShouldRender;
         foreach (SpriteRenderer Renderer in FrontRenderers)
             Renderer.forceRenderingOff = !ShouldRender;
     }
@@ -327,6 +341,7 @@ private void PushBack(Vector3 ShotDirection)
     //Toggles visibility of the side sprites
     private void SetSideSpriteVisibility(bool ShouldRender)
     {
+        SideCollider.enabled = ShouldRender;
         foreach (SpriteRenderer Renderer in SideRenderers)
             Renderer.forceRenderingOff = !ShouldRender;
     }
