@@ -38,12 +38,13 @@ public class GameState : MonoBehaviour
         LivesDisplay.Instance.SetExtraLivesDisplay(ExtraLives);
         CurrentWave = 1;
 
-        //Play a sound for the game beginning
-        SoundEffectsPlayer.Instance.PlaySound("GameStart");
-
         //Spawn in everything for this wave, if wave progression is enabled
         if(!DisableWaveProgression)
+        {
+            SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
+            Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
             WaveManager.Instance.StartWave(CurrentWave);
+        }
     }
 
     private void Update()
@@ -63,6 +64,8 @@ public class GameState : MonoBehaviour
             if (DeathTimeoutLeft <= 0.0f)
             {
                 WaveManager.Instance.RestartWave();
+                SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
+                Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
                 InDeathTimeout = false;
             }
         }

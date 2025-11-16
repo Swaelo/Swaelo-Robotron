@@ -16,11 +16,10 @@ public class WaveManager : MonoBehaviour
 
     //User Interface
     public Text WaveDisplay; //Used to display the current wave number to the user during gameplay
-    private bool CustomWaveDisplay = false;
     private int CustomNumberOffset = 0;
 
     //Wave Override
-    public bool WaveStartOverride = false;  //If enabled through the instead the game will skip straight to the specified wave number
+    public bool WaveStartOverride = false;  //If enabled through inspector the game will instead skip straight to the specified wave number
     public int CustomWaveStart = 1; //Which wave to skip to when the game begins
 
     //Entities
@@ -57,7 +56,6 @@ public class WaveManager : MonoBehaviour
         //After the player reaches wave 40 it loops back to wave 21 enemies
         if(WaveNumber == 40)
         {
-            CustomWaveDisplay = true;
             CustomNumberOffset += 20;
             WaveNumber = 21;
         }

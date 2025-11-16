@@ -387,13 +387,8 @@ public class HulkAI : HostileEntity
     //Manages display of movement animations while the Hulk is moving around the level
     private void DisplayMovementAnimations()
     {
-        //Keep all animation controllers aware of when the Hulk is and isnt moving
-        bool IsMoving = transform.position != PreviousPos;
-        foreach (Animator AnimationController in Animators)
-            AnimationController.SetBool("IsMoving", IsMoving);
-
         //Handle which sprites are displaying during movement
-        if (IsMoving)
+        if (transform.position != PreviousPos)
         {
             //Measure distance travelled on each axis since last update
             float XMovement = Mathf.Abs(transform.position.x - PreviousPos.x);
