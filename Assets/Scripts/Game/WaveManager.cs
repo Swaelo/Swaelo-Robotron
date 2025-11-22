@@ -39,9 +39,9 @@ public class WaveManager : MonoBehaviour
     private float NextEntitySpawn;  //How long until the next entity should be spawned
     private Vector3 SpawnDirection = new Vector3(0f, 1f, 0f);   //Start by spawning the first entity directly north of the player
     private float RotationPerSpawn = 0f;    //How many degrees to rotate the spawn direction vector after each entity is spawned
-    private Vector2 SpawnRange = new Vector2(1.5f, 8f); //Range of how far away from the middle entities will be spawned in at
-    private Vector2 XBounds = new Vector2(-7f, 7f); //Range of x pos values allowed to spawn entities onto
-    private Vector2 YBounds = new Vector2(-4f, 4f); //Range of y pos values allowed to spawn entities onto
+    private Vector2 SpawnRange = new Vector2(2f, 8.5f); //Distance range that enemies can be spawned from the middle x is min y is max
+    private Vector2 XBounds = new Vector2(-9f, 9f); //Range of x pos values allowed to spawn entities onto
+    private Vector2 YBounds = new Vector2(-6f, 6); //Range of y pos values allowed to spawn entities onto
 
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
