@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 284109994}
   - component: {fileID: 284109995}
   - component: {fileID: 284109996}
+  - component: {fileID: 284109997}
   m_Layer: 2
   m_Name: Right Wall
   m_TagString: Wall
@@ -407,6 +408,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.25, y: 5.775}
   m_EdgeRadius: 0.3
+--- !u!114 &284109997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284109993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b577b73043fd24e62aff228cc6f3892e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteColorCycle
+  ColorSpeed: 1
 --- !u!1 &382690528
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +590,7 @@ GameObject:
   - component: {fileID: 550582609}
   - component: {fileID: 550582610}
   - component: {fileID: 550582611}
+  - component: {fileID: 550582612}
   m_Layer: 2
   m_Name: Top Wall
   m_TagString: Wall
@@ -592,8 +607,8 @@ Transform:
   m_GameObject: {fileID: 550582608}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.5, z: 0}
-  m_LocalScale: {x: 8.69, y: 0.25, z: 50}
+  m_LocalPosition: {x: 0, y: 6.5138, z: 0}
+  m_LocalScale: {x: 8.69, y: 0.237775, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -702,6 +717,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 8.69, y: 0.25}
   m_EdgeRadius: 0.3
+--- !u!114 &550582612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550582608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b577b73043fd24e62aff228cc6f3892e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteColorCycle
+  ColorSpeed: 1
 --- !u!1 &848417649
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,6 +820,7 @@ GameObject:
   - component: {fileID: 981573590}
   - component: {fileID: 981573591}
   - component: {fileID: 981573592}
+  - component: {fileID: 981573593}
   m_Layer: 2
   m_Name: Bottom Wall
   m_TagString: Wall
@@ -918,6 +947,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 8.68, y: 0.25}
   m_EdgeRadius: 0.3
+--- !u!114 &981573593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981573589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b577b73043fd24e62aff228cc6f3892e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteColorCycle
+  ColorSpeed: 1
 --- !u!1 &983762528
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,6 +1063,7 @@ GameObject:
   - component: {fileID: 1221007175}
   - component: {fileID: 1221007176}
   - component: {fileID: 1221007177}
+  - component: {fileID: 1221007178}
   m_Layer: 2
   m_Name: Left Wall
   m_TagString: Wall
@@ -1147,6 +1190,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.25, y: 5.775}
   m_EdgeRadius: 0.3
+--- !u!114 &1221007178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1221007174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b577b73043fd24e62aff228cc6f3892e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteColorCycle
+  ColorSpeed: 1
 --- !u!1 &1447967345
 GameObject:
   m_ObjectHideFlags: 0

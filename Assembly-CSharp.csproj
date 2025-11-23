@@ -57,6 +57,7 @@
     <Compile Include="Assets/Scripts/Game/RoundCompleteAnimationDestroyer.cs" />
     <Compile Include="Assets/Scripts/Enemies/GruntAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/ProgAI.cs" />
+    <Compile Include="Assets/Scripts/Interface/SpriteColorCycle.cs" />
     <Compile Include="Assets/Scripts/Enemies/QuarkAI.cs" />
     <Compile Include="Assets/Scripts/Entities/BaseEntity.cs" />
     <Compile Include="Assets/Scripts/Enemies/TankShellAI.cs" />
