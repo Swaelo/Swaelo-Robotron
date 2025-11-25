@@ -42,9 +42,14 @@ public class PlayerShooting : MonoBehaviour
             //Aim projectiles toward the mouse cursor whenever the right mouse button is being held down
             if (Input.GetMouseButton(0))
                 FireProjectileMouseCursor();
-            //Aim projectiles with the right joystick whenever any input from it is being detected
-            else if (Input.GetAxis("ControllerHorizontalFiring") != 0f || Input.GetAxis("ControllerVerticalFiring") != 0f)
-                FireProjectileRightJoystick();
+            else
+            {
+                //Try joystick aiming instead
+                float XInput = Input.GetAxis("JoystickAxis3");
+                float YInput = Input.GetAxis("JoystickAxis4");
+                if(XInput != 0f || YInput != 0f)
+                    FireProjectileRightJoystick(XInput, YInput);
+            }
         }
 
         //Cycle through firing of different colored projectiles
@@ -81,15 +86,13 @@ public class PlayerShooting : MonoBehaviour
     }
 
     //Fires a projectile aimed with the right joystick
-    private void FireProjectileRightJoystick()
+    private void FireProjectileRightJoystick(float XInput, float YInput)
     {
         //Reset the shot cooldown timer
         ShotCooldownRemaining = ShotCooldownDuration;
-
         //Create a direction vector based on the right joystick input
-        Vector3 JoystickDirection = new Vector3(Input.GetAxis("ControllerHorizontalFiring"), Input.GetAxis("ControllerVerticalFiring"));
+        Vector3 JoystickDirection = new Vector3(XInput, YInput);
         JoystickDirection.Normalize();
-
         //Fire a projectile in this direction
         FireProjectile(JoystickDirection);
     }
