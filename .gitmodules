@@ -1,0 +1,3 @@
+[submodule "Assets/Textures"]
+	path = Assets/Textures
+	url = https://github.com/Swaelo/1x1Textures.git
