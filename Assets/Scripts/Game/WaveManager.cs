@@ -43,9 +43,21 @@ public class WaveManager : MonoBehaviour
     private Vector2 XBounds = new Vector2(-9f, 9f); //Range of x pos values allowed to spawn entities onto
     private Vector2 YBounds = new Vector2(-6f, 6); //Range of y pos values allowed to spawn entities onto
 
+    //Grabs the current border level size from the level border manager
+    private void UpdateLevelBounds()
+    {
+        //Get the current level bounds from the level borders manager
+        LevelBorders BorderManager = GameObject.Find("LevelBorders").GetComponent<LevelBorders>();
+        XBounds = BorderManager.GetXBounds();
+        YBounds = BorderManager.GetYBounds();
+    }
+
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {
+        //Make sure we have the current level size before we spawn in the new wave
+        UpdateLevelBounds();
+
         //Overwrite the WaveNumber argument with the CustomWaveStart if WaveStartOverride has been enabled through the inspector
         if (WaveStartOverride)
         {

@@ -5,6 +5,7 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class LevelBorders : MonoBehaviour
@@ -72,5 +73,21 @@ public class LevelBorders : MonoBehaviour
         //Add the seizure trigger
         SpriteColorCycle ColorCycle = NewBorder.AddComponent<SpriteColorCycle>();
         ColorCycle.ColorSpeed = .5f;
+    }
+
+    public Vector2 GetXBounds()
+    {
+        float halfWidth = LevelWidth * .5f;
+        float XMin = -halfWidth + BorderThickness;
+        float XMax = halfWidth - BorderThickness;
+        return new Vector2(XMin, XMax);
+    }
+
+    public Vector2 GetYBounds()
+    {
+        float halfHeight = LevelHeight * .5f;
+        float YMin = -halfHeight + BorderThickness;
+        float YMax = halfHeight - BorderThickness;
+        return new Vector2(YMin, YMax);
     }
 }

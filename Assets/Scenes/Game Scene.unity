@@ -240,8 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3268aa971212b449d9bc04f7d6d89f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBorders
-  LevelWidth: 25
-  LevelHeight: 13
+  LevelWidth: 5
+  LevelHeight: 8
   BorderThickness: 0.5
 --- !u!4 &187810393
 Transform:
