@@ -46,21 +46,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Cycle through eye colors periodically
         CycleEyeColor();
 
-        //Create a new movement vector
-        float HorizontalInput = Mathf.Clamp(Input.GetAxis("KeyboardHorizontalMovement") + Input.GetAxis("ControllerHorizontalMovement"), -1f, 1f);
-        float VerticalInput = Mathf.Clamp(Input.GetAxis("KeyboardVerticalMovement") + Input.GetAxis("ControllerVerticalMovement"), -1f, 1f);
-        Vector3 MovementVector = new Vector3(HorizontalInput, VerticalInput, 0f);
+        //All game logic and AI should be paused at certain times
+        if (GameState.Instance.ShouldAdvanceGame())
+        {
+            //Create a new movement vector
+            float HorizontalInput = Mathf.Clamp(Input.GetAxis("KeyboardHorizontalMovement") + Input.GetAxis("ControllerHorizontalMovement"), -1f, 1f);
+            float VerticalInput = Mathf.Clamp(Input.GetAxis("KeyboardVerticalMovement") + Input.GetAxis("ControllerVerticalMovement"), -1f, 1f);
+            Vector3 MovementVector = new Vector3(HorizontalInput, VerticalInput, 0f);
 
-        //Apply this to update the players position
-        transform.position += MovementVector * MoveSpeed * Time.deltaTime;
-
+            //Apply this to update the players position
+            transform.position += MovementVector * MoveSpeed * Time.deltaTime;
+        }
+        
         //Update the body animators if the player is moving or not
         bool IsMoving = transform.position != PreviousPos;
         foreach (Animator BodyAnimator in BodyAnimators)
