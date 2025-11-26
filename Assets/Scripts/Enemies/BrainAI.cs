@@ -13,11 +13,10 @@ public class BrainAI : HostileEntity
     //Movement/Targetting
     private float MoveSpeed = 1.15f;    //How fast the Brains can move around the level
     private GameObject HumanTarget; //Current human the Brain is moving towards so it can be turned into a Prog
-    private bool TargetAvailable = false;   //Set to false when no humans remain, the Brain just focuses on fighting the player character
     private float ReprogramVicinity = 0.5f;    //How close the Brain must be from a Human to start reprogramming it
     private float ReprogramInterval = 2.5f;    //How long it takes a Brain to turn a Human into a Prog
     private float ReprogramLeft = 2.5f;    //Seconds left until the Brain finishes reprogramming its current target
-    private bool Reprogramming = false; //Flagged to true while the Brain is busy reprogramming a Human into a Prog
+    public bool Reprogramming = false; //Flagged to true while the Brain is busy reprogramming a Human into a Prog
     private Vector2 WanderDuration = new Vector2(0.15f, 3f);    //How long a Brain may wander in 1 direction when it has no Human to seek before it changes directions
     private float WanderTimeLeft;   //Time left to wander in the current direction before the Brain finds a new direction to move in
     private Vector3 WanderDirection;    //Current direction the Brain is wandering when it has no humans left to hunt down
@@ -76,12 +75,18 @@ public class BrainAI : HostileEntity
             //Seek the current human target until we get close enough to start reprogramming it
             if (!Reprogramming)
             {
-                //Seek towards the target human if the Brain has one
-                if (TargetAvailable)
+                //Seek the current target if we already have one
+                if(HumanTarget != null)
                     SeekHuman();
-                //Otherwise just wander around
                 else
-                    WanderAround();
+                {
+                    //Since we dont have a human to target, see if there's one we can find, then target it
+                    if(TargetHuman())
+                        SeekHuman();
+                    //Otherwise, when no humans remains for reprogramming, just wander around
+                    else
+                        WanderAround();
+                }
 
                 //Fire projectiles whenever the Brain isnt busy reprogramming
                 FireMissiles();
@@ -240,7 +245,7 @@ public class BrainAI : HostileEntity
     }
 
     //Targets the nearest human survivor
-    private void TargetHuman()
+    private bool TargetHuman()
     {
         //Grab a list of all the survivors currently in the game
         GameObject[] Humans = GameObject.FindGameObjectsWithTag("Human");
@@ -257,9 +262,8 @@ public class BrainAI : HostileEntity
         //If there arent any humans left to go after, then we just wander around aimlessly
         if(AvailableHumans.Count <= 0)
         {
-            TargetAvailable = false;
             NewWanderDirection();
-            return;
+            return false;
         }
 
         //Figure out which of the available humans is closest to the Brain
@@ -279,9 +283,10 @@ public class BrainAI : HostileEntity
         }
 
         //Now we have the closest human, set that as our target and flag it to make sure no other Brain tries to go after it
-        TargetAvailable = true;
         HumanTarget = ClosestHuman;
         HumanTarget.GetComponent<FriendlyEntity>().TargettedByBrain = true;
+
+        return true;
     }
 
     //Gets a new random direction for the Brain to wander
@@ -339,6 +344,9 @@ public class BrainAI : HostileEntity
             WaveManager.Instance.HumanDead(HumanTarget.GetComponent<BaseEntity>());
             Destroy(HumanTarget);
         }
+        //If the brain is killed white it has a human targetting, but it hasnt started reprogramming yet, allow another brain to go for it
+        if(!Reprogramming && HumanTarget != null)
+            HumanTarget.GetComponent<FriendlyEntity>().TargettedByBrain = false;
         //Tell the wave manager this enemy is now dead, and award points to the player for destroying it
         WaveManager.Instance.EnemyDead(this);
         GameState.Instance.IncreaseScore((int)PointValue.Brain);

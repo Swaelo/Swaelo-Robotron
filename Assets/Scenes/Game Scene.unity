@@ -18967,7 +18967,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: CustomWaveStart
-      value: 39
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
