@@ -36,12 +36,15 @@ public class WaveManager : MonoBehaviour
     //Spawning
     private List<GameObject> EntitiesToSpawn = new List<GameObject>();  //List of entites which need to be spawned into the game
     private float EntitySpawnInterval;  //How often to spawn each entity
+    private int EntitySpawnCount = 0; //Number of entities spawned so far this wave
     private float NextEntitySpawn;  //How long until the next entity should be spawned
-    private Vector3 SpawnDirection = new Vector3(0f, 1f, 0f);   //Start by spawning the first entity directly north of the player
-    private float RotationPerSpawn = 0f;    //How many degrees to rotate the spawn direction vector after each entity is spawned
     private Vector2 SpawnRange = new Vector2(2f, 8.5f); //Distance range that enemies can be spawned from the middle x is min y is max
     private Vector2 XBounds = new Vector2(-9f, 9f); //Range of x pos values allowed to spawn entities onto
     private Vector2 YBounds = new Vector2(-6f, 6); //Range of y pos values allowed to spawn entities onto
+
+    public float MinPlayerSpawnDistance = 3.5f; //How close to the player new enemies can be spawned into the level
+    public float MinEnemySpawnDistance = 1.5f; //How close together enemies can be spawned from one another
+    private List<Vector2> EnemySpawnLocations; //List of enemy spawn locations to be used when starting a new wave
 
     //Grabs the current border level size from the level border manager
     private void UpdateLevelBounds()
@@ -55,6 +58,8 @@ public class WaveManager : MonoBehaviour
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {
+        EntitySpawnCount = 0;
+
         //Make sure we have the current level size before we spawn in the new wave
         UpdateLevelBounds();
 
@@ -97,9 +102,11 @@ public class WaveManager : MonoBehaviour
         //Now all entities are in the list it needs to be shuffled
         EntitiesToSpawn = ShuffleList(EntitiesToSpawn);
 
-        //Figure out how often to spawn each entity, and how much to rotate the spawn direction after each one
+        //Grab a location of where to spawn each new enemy at
+        EnemySpawnLocations = GetSpawnLocations(EntitiesToSpawn.Count);
+
+        //Figure out how often to spawn each entity
         EntitySpawnInterval = SpawnPeriodDuration / EntitiesToSpawn.Count;
-        RotationPerSpawn = 360f / EntitiesToSpawn.Count;
 
         //Now the round is ready to begin, first the humans will be spawned in
         SpawnPeriodActive = true;
@@ -143,6 +150,8 @@ public class WaveManager : MonoBehaviour
     //Restarts the current wave with mostly the same amount of enemies that were remaining when the player died
     public void RestartWave()
     {
+        EntitySpawnCount = 0;
+
         //Get a tally of all the entities which need to be respawned to restart the wave properly
         WaveEntities RestartingEntities = GetRestartEntities();
 
@@ -166,9 +175,11 @@ public class WaveManager : MonoBehaviour
         //Now shuffle the list of entities needing to be spawned in
         EntitiesToSpawn = ShuffleList(EntitiesToSpawn);
 
+        //Grab a location of where to spawn each new enemy at
+        EnemySpawnLocations = GetSpawnLocations(EntitiesToSpawn.Count);
+
         //Figure out how often to spawn each enemy, and how far to rotate the spawn direction after each one
         EntitySpawnInterval = SpawnPeriodDuration / EntitiesToSpawn.Count;
-        RotationPerSpawn = 360f / EntitiesToSpawn.Count;
 
         //Now the round is ready to begin
         SpawnPeriodActive = true;
@@ -254,7 +265,8 @@ public class WaveManager : MonoBehaviour
             //Reset the spawn timer
             NextEntitySpawn = EntitySpawnInterval;
             //Spawn the next entity in at a random location
-            Vector3 SpawnPos = GetNextSpawnPos();
+            Vector3 SpawnPos = GetSpawnPos(EntitySpawnCount);
+            EntitySpawnCount++;
             GameObject NewSpawn = Instantiate(EntitiesToSpawn[0], SpawnPos, Quaternion.identity);
             //Remove them from the list of what needs to be spawned, and add them to the tracking lists
             EntitiesToSpawn.RemoveAt(0);
@@ -272,20 +284,58 @@ public class WaveManager : MonoBehaviour
     }
 
     //Rotates the spawn direction vector, then gets the next spawn location from that
-    private Vector3 GetNextSpawnPos()
+    private Vector3 GetSpawnPos(int SpawnIndex)
     {
-        //Get a new spawn location a random distance in the current pointing direction
-        Vector3 NewSpawnPos = Vector3.zero;
-        NewSpawnPos += SpawnDirection * Random.Range(SpawnRange.x, SpawnRange.y);
+        return EnemySpawnLocations[SpawnIndex];
+    }
 
-        //Make sure the new pos is inside the level bounds
-        NewSpawnPos.x = Mathf.Clamp(NewSpawnPos.x, XBounds.x, XBounds.y);
-        NewSpawnPos.y = Mathf.Clamp(NewSpawnPos.y, YBounds.x, YBounds.y);
+    //Returns a list of valid spawn locations to use for all the enemies to be placed into the level
+    private List<Vector2> GetSpawnLocations(int LocationCount)
+    {
+        //Start the list and set a hard limit on attempts to prevent soft locking
+        List<Vector2> SpawnPositions = new List<Vector2>();
+        int SpawnAttempts = 0;
+        int MaxSpawnAttempts = 5000;
 
-        //Now rotate the spawn direction vector so its ready for getting the next position
-        SpawnDirection = Quaternion.AngleAxis(-RotationPerSpawn, Vector3.forward) * SpawnDirection;
+        //Generate new spawning positions until enough positions have been found or attempts have run out
+        while (SpawnPositions.Count < LocationCount && SpawnAttempts < MaxSpawnAttempts)
+        {
+            SpawnAttempts++;
 
-        return NewSpawnPos;
+            //Get a new random spawn position
+            Vector2 SpawnPosCandidate = new Vector2(
+                Random.Range(XBounds.x, XBounds.y),
+                Random.Range(YBounds.x, YBounds.y));
+            
+            //Reject the new position if its too close to the center
+            if(SpawnPosCandidate.magnitude < MinPlayerSpawnDistance)
+                continue;
+            
+            //Check if this new position is too close to any other positions already selected
+            bool TooClose = false;
+            foreach (Vector2 SpawnPosition in SpawnPositions)
+            {
+                if(Vector2.Distance(SpawnPosCandidate, SpawnPosition) < MinEnemySpawnDistance)
+                {
+                    TooClose = true;
+                    break;
+                }
+            }
+
+            //Add the new position to the list if its found to be valid
+            if(!TooClose)
+            SpawnPositions.Add(SpawnPosCandidate);
+        }
+
+        //Now that we have the list of locations, we want to sort them by angle from the middle so everythings spawns in a ring / clock like fashion
+        SpawnPositions.Sort((a, b) =>
+        {
+            float AngleA = Mathf.Atan2(a.y, a.x);
+            float AngleB = Mathf.Atan2(b.y, b.x);
+            return AngleB.CompareTo(AngleA);
+        });
+
+        return SpawnPositions;
     }
 
     //Starts the round once the warmup period expires
