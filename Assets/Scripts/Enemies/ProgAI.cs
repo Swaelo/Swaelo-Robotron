@@ -51,13 +51,12 @@ public class ProgAI : HostileEntity
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Seek player while alive
         if (IsAlive)
-            SeekPlayer();
+        {
+            if(GameState.Instance.ShouldAdvanceGame())
+                SeekPlayer();
+        }
         //Play death animation otherwise
         else
             PlayDeath();

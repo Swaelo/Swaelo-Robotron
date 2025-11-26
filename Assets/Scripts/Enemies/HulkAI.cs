@@ -67,23 +67,23 @@ public class HulkAI : HostileEntity
     private void Update()
     {
         //All logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
-        //Continue active turning process until its complete, movement disallowed until its done
-        if(IsTurning)
+        if (GameState.Instance.ShouldAdvanceGame())
         {
-            TurnTimeLeft -= Time.deltaTime;
-            if (TurnTimeLeft <= 0.0f)
-                FinishTurning();
+            //Continue active turning process until its complete, movement disallowed until its done
+            if(IsTurning)
+            {
+                TurnTimeLeft -= Time.deltaTime;
+                if (TurnTimeLeft <= 0.0f)
+                    FinishTurning();
+            }
+            //Otherwise, allow normal movement
+            else
+            {
+                UpdateTarget();
+                SeekTarget();
+            }
         }
-        //Otherwise, allow normal movement
-        else
-        {
-            UpdateTarget();
-            SeekTarget();
-        }
-
+        
         //Manage which sprites are viewed, and their animations being played
         AnimateAndRender();
     }

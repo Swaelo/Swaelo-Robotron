@@ -62,16 +62,16 @@ public class BrainAI : HostileEntity
 
     private void Update()
     {
-        //All Enemy AI is disabled during the round warmup period
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         if (!IsAlive)
             PlayDeath();
         else
         {
             //Keep sprites rendering correctly
             RenderBodySprites();
+
+            //All Enemy AI is disabled during the round warmup period
+            if (!GameState.Instance.ShouldAdvanceGame())
+                return;
 
             //Seek the current human target until we get close enough to start reprogramming it
             if (!Reprogramming)

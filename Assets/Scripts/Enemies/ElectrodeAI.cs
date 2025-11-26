@@ -15,10 +15,6 @@ public class ElectrodeAI : HostileEntity
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Countdown the decay timer once its been started
         if (!IsActive)
         {

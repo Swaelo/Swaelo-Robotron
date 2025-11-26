@@ -18,12 +18,8 @@ public class TankShellAI : MonoBehaviour
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Keep travelling forward is movement values have been set
-        if (MovementSet)
+        if (MovementSet && GameState.Instance.ShouldAdvanceGame())
             transform.position += CurrentDirection * CurrentSpeed * Time.deltaTime;
 
         //Destroy the projectile once the lifetime has expired

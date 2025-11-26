@@ -49,22 +49,21 @@ public class EnforcerAI : HostileEntity
 
     private void Update()
     {
-        //Only process AI logic whenever the game isnt paused or anything like that
-        if(GameState.Instance.ShouldAdvanceGame())
+        //Perform normal behaviours while the Enforcer is still alive
+        if(IsAlive)
         {
-            //Perform normal behaviours while the Enforcer is still alive
-            if(IsAlive)
+            if(GameState.Instance.ShouldAdvanceGame())
             {
                 SeekPlayer();
                 FireProjectiles();
             }
-            //Otherwise wait for the death animation to finish before the enforcer destroys itself
-            else
-            {
-                DeathAnimationLeft -= Time.deltaTime;
-                if (DeathAnimationLeft <= 0.0f)
-                    Destroy(this.gameObject);
-            }
+        }
+        //Otherwise wait for the death animation to finish before the enforcer destroys itself
+        else
+        {
+            DeathAnimationLeft -= Time.deltaTime;
+            if (DeathAnimationLeft <= 0.0f)
+                Destroy(this.gameObject);
         }
     }
 

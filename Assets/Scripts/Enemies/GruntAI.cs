@@ -42,13 +42,12 @@ public class GruntAI : HostileEntity
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Seek player while alive
         if (IsAlive)
+        {
+            if(GameState.Instance.ShouldAdvanceGame())
             SeekPlayer();
+        }
         //Play out death animation then destroy self while dead
         else
             PlayDeath();

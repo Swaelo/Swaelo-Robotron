@@ -56,12 +56,8 @@ public class FriendlyEntity : BaseEntity
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Wander around while the entity is able to
-        if(!BeingReprogrammed)
+        if(!BeingReprogrammed && GameState.Instance.ShouldAdvanceGame())
             WanderAround();
 
         //Make sure the correct sprites are being rendered, and their animations are playing correctly

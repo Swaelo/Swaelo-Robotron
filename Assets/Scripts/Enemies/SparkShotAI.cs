@@ -23,21 +23,20 @@ public class SparkShotAI : MonoBehaviour
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
-
         //Perform normal behaviours while alive
         if (IsAlive)
         {
-            //Move by values set from the Enforcer who shot the projectile, if they have indeed been set
-            if (MovementSet)
-                transform.position += Direction * Speed * Time.deltaTime;
+            if(GameState.Instance.ShouldAdvanceGame())
+            {
+                //Move by values set from the Enforcer who shot the projectile, if they have indeed been set
+                if (MovementSet)
+                    transform.position += Direction * Speed * Time.deltaTime;
 
-            //Trigger an early death for the projectile if its reached its maximum lifespan without hitting anything to destroy it
-            ProjectileLifetime -= Time.deltaTime;
-            if (ProjectileLifetime <= 0.0f)
-                TriggerDeath();
+                //Trigger an early death for the projectile if its reached its maximum lifespan without hitting anything to destroy it
+                ProjectileLifetime -= Time.deltaTime;
+                if (ProjectileLifetime <= 0.0f)
+                    TriggerDeath();
+            }
         }
         //Wait for death animation to complete while dead
         else
