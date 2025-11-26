@@ -11,15 +11,11 @@ public class QuarkAI : HostileEntity
     private float MoveSpeed = 3.5f; //How fast the Quark moves around the level
     private Vector3 CurrentTarget;  //Position the Quark is currently moving towards
     private Vector2 TargetRangeOffset = new Vector2(3.5f, 7.5f);    //How far in each direction a Quarks new target location can be from its current position
-    private Vector2 XWanderRange = new Vector2(-7f, 7f);    //Position range on the X axis where the Quark is able to wander to
-    private Vector2 YWanderRange = new Vector2(-4f, 4f);    //Position range on the Y axis where the Quark is able to wander to
     private float NewTargetRange = 1.5f;    //How close the Quark must be from its current target before it picks up a new target location to seek to
     private int SpawnsLeft; //How many more Tanks this Quark is able to spawn before it self-destructs
     private float SpawnCooldown;    //Time left until another Tank can be spawned in
     private Vector2 SpawnCooldownRange = new Vector2(1.5f, 3.75f);    //Time before the first Tank can be spawned in
     private int MaxSpawnCount = 6;  //Maximum number of Tanks that any one Quark is able to spawn in
-    private Vector2 XSpawnRange = new Vector2(-7.087f, 7.084f); //Range along the X axis where Tanks can be spawned in
-    private Vector2 YSpawnRange = new Vector2(-4f, 4f); //Range along the Y axis where Tank can be spawned in
     private Vector2 SpawnRangeOffset = new Vector2(0.75f, 1.65f);   //How far in each direction a Tanks spawn location may be offset from the Quarks location
     private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Quark when its spawned in
     private int HitPoints;  //Hits that can be taken before the Quark dies
@@ -76,9 +72,12 @@ public class QuarkAI : HostileEntity
             Random.Range(TargetRangeOffset.x, TargetRangeOffset.y) :
             Random.Range(-TargetRangeOffset.x, -TargetRangeOffset.y);
 
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+
         //Make sure the new location stays inside the level boundaries
-        NewTarget.x = Mathf.Clamp(NewTarget.x, XWanderRange.x, XWanderRange.y);
-        NewTarget.y = Mathf.Clamp(NewTarget.y, YWanderRange.x, YWanderRange.y);
+        NewTarget.x = Mathf.Clamp(NewTarget.x, XBounds.x, XBounds.y);
+        NewTarget.y = Mathf.Clamp(NewTarget.y, YBounds.x, YBounds.y);
 
         //Set this location as the new target
         CurrentTarget = NewTarget;
@@ -115,7 +114,7 @@ public class QuarkAI : HostileEntity
     }
 
     //Returns a random location near the Quark where a Tank may be spawned in at
-    private Vector3 GetTankSpawnLocation()
+    private Vector2 GetTankSpawnLocation()
     {
         //Start with the Quarks current location
         Vector3 SpawnLocation = transform.position;
@@ -128,9 +127,12 @@ public class QuarkAI : HostileEntity
             Random.Range(SpawnRangeOffset.x, SpawnRangeOffset.y) :
             Random.Range(-SpawnRangeOffset.x, -SpawnRangeOffset.y);
 
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+
         //Make sure this location stays inside the level bounds
-        SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XSpawnRange.x, XSpawnRange.y);
-        SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YSpawnRange.x, YSpawnRange.y);
+        SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XBounds.x, XBounds.y);
+        SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YBounds.x, YBounds.y);
 
         //Return the new location
         return SpawnLocation;

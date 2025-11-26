@@ -10,6 +10,10 @@ using UnityEngine;
 
 public class LevelBorders : MonoBehaviour
 {
+    //Singleton Instance
+    public static LevelBorders Instance;
+    private void Awake() { Instance = this; }
+
     [Header("Level Size")]
     public float LevelWidth = 15f;
     public float LevelHeight = 8f;

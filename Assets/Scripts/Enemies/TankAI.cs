@@ -22,8 +22,6 @@ public class TankAI : HostileEntity
     private float MoveSpeed = 2.5f; //How fast the Quark moves around the level
     private Vector3 CurrentTarget;  //Position the Quark is currently moving towards
     private Vector2 TargetRangeOffset = new Vector2(3.5f, 7.5f);    //How far in each direction a Quarks new target location can be from its current position
-    private Vector2 XWanderRange = new Vector2(-7f, 7f);    //Position range on the X axis where the Quark is able to wander to
-    private Vector2 YWanderRange = new Vector2(-4f, 4f);    //Position range on the Y axis where the Quark is able to wander to
     private float NewTargetRange = 1.5f;    //How close the Quark must be from its current target before it picks up a new target location to seek to
 
     //Firing
@@ -77,9 +75,12 @@ public class TankAI : HostileEntity
             Random.Range(TargetRangeOffset.x, TargetRangeOffset.y) :
             Random.Range(-TargetRangeOffset.x, -TargetRangeOffset.y);
 
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+
         //Make sure the new location stays inside the level boundaries
-        NewTarget.x = Mathf.Clamp(NewTarget.x, XWanderRange.x, XWanderRange.y);
-        NewTarget.y = Mathf.Clamp(NewTarget.y, YWanderRange.x, YWanderRange.y);
+        NewTarget.x = Mathf.Clamp(NewTarget.x, XBounds.x, XBounds.y);
+        NewTarget.y = Mathf.Clamp(NewTarget.y, YBounds.x, YBounds.y);
 
         //Set this location as the new target
         CurrentTarget = NewTarget;

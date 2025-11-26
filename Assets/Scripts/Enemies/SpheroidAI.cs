@@ -11,6 +11,7 @@
 //Spheroid has been in that corner for atleast 3.5 seconds, the cooldown is 1-1.5 seconds.
 //If this spheroids maximum number of Enforcers have been spawned, it self destructs
 
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class SpheroidAI : HostileEntity
@@ -34,14 +35,20 @@ public class SpheroidAI : HostileEntity
     private bool InCorner = false;  //Tracks if the Spheroid is currently idling in one of the corners
     private float TimeInCorner = 0.0f;  //Tracks how long the Spheroid has spent sitting in the corner
     private float CornerSafeTimer = 3.5f;   //How much time must be spent in 1 corner before the Spheroid considers itself to be in a safe position
-    private Vector2 XSpawnRange = new Vector2(-7.173f, 7.172f); //Range along the X axis where enforcers can be spawned in
-    private Vector2 YSpawnRange = new Vector2(-4.126f, 4.125f); //Range along the Y axis where enforcers can be spawned in
     private Vector2 SpawnRangeOffset = new Vector2(0.5f, 1.25f);    //How far in each direction an Enforcers spawn location will be offset from the Spheroids location
     private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Spheroid when its spawned in
     private int HitPoints; //Hits left before the Spheroid dies
 
     private void Start()
     {
+        //Set the corner positions based on the constraints of the game level
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        CornerPositions[0] = new Vector3(XBounds.y, YBounds.y); //North-East
+        CornerPositions[1] = new Vector3(XBounds.y, YBounds.x); //South-East
+        CornerPositions[2] = new Vector3(XBounds.x, YBounds.x); //South_West
+        CornerPositions[3] = new Vector3(XBounds.x, YBounds.y); //North-West
+
         //Assign a random number of health points to the spheroid
         HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
 
@@ -142,9 +149,12 @@ public class SpheroidAI : HostileEntity
             Random.Range(SpawnRangeOffset.x, SpawnRangeOffset.y) :
             Random.Range(-SpawnRangeOffset.x, -SpawnRangeOffset.y);
 
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+
         //Make sure this location stays inside the level bounds
-        SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XSpawnRange.x, XSpawnRange.y);
-        SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YSpawnRange.x, YSpawnRange.y);
+        SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XBounds.x, XBounds.y);
+        SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YBounds.x, YBounds.y);
 
         //Return the new location
         return SpawnLocation;

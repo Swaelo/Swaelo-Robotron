@@ -240,8 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3268aa971212b449d9bc04f7d6d89f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBorders
-  LevelWidth: 15
-  LevelHeight: 10
+  LevelWidth: 30
+  LevelHeight: 20
   BorderThickness: 0.25
 --- !u!4 &187810393
 Transform:
@@ -18982,7 +18982,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: WaveStartOverride
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}

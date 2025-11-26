@@ -29,8 +29,6 @@ public class HulkAI : HostileEntity
     private float TargetUpdateMinimumDistance = 3.5f;   //Distance between current target pos and player pos required to force trigger a new target location to be acquired
     private bool SeekingX = true;   //Which axis the Hulk is currently focused on travelling to move toward its target location
     private float ProjectilePushback = 0.75f;   //How far the Hulks are pushed back when hit by the players projectiles
-    private Vector2 ValidXPosRange = new Vector2(-7.43f, 7.43f);    //Range of XPos values the Hulk may travel between while remaining inside the level bounds
-    private Vector2 ValidYPosRange = new Vector2(-4.4f, 4.4f);  //Range of YPos values the Hulk my travel between while remaining inside the level bounds
     private Vector3 PreviousPos;    //Used to measure the Hulks distance travelled between frames
     private float FollowRequestCooldown = 0.25f; //How often the Hulk can instruct another Hulk to follow it
     private float FollowRequestAvailable = 0f;  //How long until the Hulk is allowed to instruct others to follow it again
@@ -83,7 +81,7 @@ public class HulkAI : HostileEntity
                 SeekTarget();
             }
         }
-        
+
         //Manage which sprites are viewed, and their animations being played
         AnimateAndRender();
     }
@@ -309,8 +307,10 @@ public class HulkAI : HostileEntity
         //Get a new location to move the Hulk to, based on which direction the projectile was travelling that hit the Hulk
         Vector3 NewPos = transform.position + ShotDirection * ProjectilePushback * Time.deltaTime;
         //Make sure the new positions isnt outside the level boundaries
-        NewPos.x = Mathf.Clamp(NewPos.x, ValidXPosRange.x, ValidXPosRange.y);
-        NewPos.y = Mathf.Clamp(NewPos.y, ValidYPosRange.x, ValidYPosRange.y);
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        NewPos.x = Mathf.Clamp(NewPos.x, XBounds.x, XBounds.y);
+        NewPos.y = Mathf.Clamp(NewPos.y, YBounds.x, YBounds.y);
         //Move the Hulk to the new position
         transform.position = NewPos;
     }
