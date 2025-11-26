@@ -27,7 +27,7 @@ public class BrainAI : HostileEntity
 
     //Firing
     public GameObject CruiseMissilePrefab;  //Projectiles fired by the Brain which zigzag towards the player
-    private Vector2 MissileCooldownInterval = new Vector2(6.5f, 10f);   //How often the Brain can fire cruise missiles at the player
+    private Vector2 MissileCooldownInterval = new Vector2(2.5f, 5f);   //How often the Brain can fire cruise missiles at the player
     private float MissileCooldownLeft;  //Seconds left until the Brain can fire another cruise missile
 
     //Rendering/Animations
