@@ -11,6 +11,7 @@
 //Spheroid has been in that corner for atleast 3.5 seconds, the cooldown is 1-1.5 seconds.
 //If this spheroids maximum number of Enforcers have been spawned, it self destructs
 
+using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -19,13 +20,7 @@ public class SpheroidAI : HostileEntity
     private float MoveSpeed = 4.5f; //How fast the spheroid moves around the level
     private Vector3 CurrentTarget;  //Current position the spheroid is seeking towards
     //Position of each corner of the arena where the spheroids like to rest at
-    private Vector3[] CornerPositions =
-    {
-        new Vector3(7.009f, 4.006f, 0f),    //North-East Corner
-        new Vector3(7.009f, -4.37f, 0f),   //South-East Corner
-        new Vector3(-7.369f, -4.37f, 0f),  //South-West Corner
-        new Vector3(-7.369f, 4.006f, 0f)    //North-West Corner
-    };
+    private List<Vector2> CornerPositions;
     private int SpawnsLeft; //How many more Enforcers this Spheroid is able to spawn before it self-destructs
     private float SpawnCooldown;    //Cooldown remaining until another Enforcer can be spawned in
     private Vector2 InitialSpawnCooldown = new Vector2(5f, 8f); //Time before the first Enforcer can be spawned in
@@ -44,10 +39,11 @@ public class SpheroidAI : HostileEntity
         //Set the corner positions based on the constraints of the game level
         Vector2 XBounds = LevelBorders.Instance.GetXBounds();
         Vector2 YBounds = LevelBorders.Instance.GetYBounds();
-        CornerPositions[0] = new Vector3(XBounds.y, YBounds.y); //North-East
-        CornerPositions[1] = new Vector3(XBounds.y, YBounds.x); //South-East
-        CornerPositions[2] = new Vector3(XBounds.x, YBounds.x); //South_West
-        CornerPositions[3] = new Vector3(XBounds.x, YBounds.y); //North-West
+        CornerPositions = new List<Vector2>();
+        CornerPositions.Add(new Vector2(XBounds.y, YBounds.y)); //North-East
+        CornerPositions.Add(new Vector2(XBounds.y, YBounds.x)); //South-East
+        CornerPositions.Add(new Vector2(XBounds.x, YBounds.x)); //South_West
+        CornerPositions.Add(new Vector2(XBounds.x, YBounds.y)); //North-West
 
         //Assign a random number of health points to the spheroid
         HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
@@ -55,12 +51,30 @@ public class SpheroidAI : HostileEntity
         //Randomly set the number of Enforcers that this Spheroid will be allowed to spawn before it self-destructs
         SpawnsLeft = Random.Range(1, MaxSpawnCount);
 
-        //Randomly select one of the 4 corner positions to start moving toward
-        int CornerSelection = Random.Range(1, 4);
-        CurrentTarget = CornerPositions[CornerSelection - 1];
+        //Select the closest corner to start moving toward
+        CurrentTarget = GetClosestCornerPos();
 
         //Set the timer before the first Enforcer can be spawned in
         SpawnCooldown = Random.Range(InitialSpawnCooldown.x, InitialSpawnCooldown.y);
+    }
+
+    //Compare the distance of all 4 corner locations, and returns the closest one
+    private Vector2 GetClosestCornerPos()
+    {
+        Vector2 ClosestPosition = CornerPositions[0];
+        float BestDistance = Vector2.Distance(ClosestPosition, transform.position);
+
+        for (int i = 1; i < CornerPositions.Count; i++)
+        {
+            float CompareDistance = Vector2.Distance(CornerPositions[i], transform.position);
+            if(CompareDistance < BestDistance)
+            {
+                ClosestPosition = CornerPositions[i];
+                BestDistance = CompareDistance;
+            }
+        }
+
+        return ClosestPosition;
     }
 
     private void Update()
