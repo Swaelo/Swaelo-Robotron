@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelBorders
   LevelWidth: 15
   LevelHeight: 10
-  BorderThickness: 0.5
+  BorderThickness: 0.25
 --- !u!4 &187810393
 Transform:
   m_ObjectHideFlags: 0
@@ -19018,7 +19018,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: WaveStartOverride
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19237,7 +19237,7 @@ MonoBehaviour:
   Mikeys: 0
   Hulks: 0
   Brains: 0
-  Spheroids: 25
+  Spheroids: 5
   Quarks: 0
   Enforcers: 0
   Tanks: 0

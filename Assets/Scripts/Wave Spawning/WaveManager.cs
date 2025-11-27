@@ -439,4 +439,21 @@ public class WaveManager : MonoBehaviour
         ActiveEntities.Add(NewEnemy);
         TargetEntities.Add(NewEnemy);
     }
+
+    //Returns a list of all the spheroid enemies, they need access to each other for their flocking behaviour
+    public List<SpheroidAI> GetSpheroidList()
+    {
+        //Start a list to store all the spheroids
+        List<SpheroidAI> SpheroidList = new List<SpheroidAI>();
+
+        //Go through all the currently active hostile entities
+        foreach(HostileEntity Hostile in TargetEntities)
+        {
+            if(Hostile.gameObject.tag == "Spheroid")
+                SpheroidList.Add(Hostile.GetComponent<SpheroidAI>());
+        }
+
+        //Return the list of all other spheroids
+        return SpheroidList;
+    }
 }

@@ -15,11 +15,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class SpheroidAI : HostileEntity
 {
     private float MoveSpeed = 4.5f; //How fast the spheroid moves around the level
-    private Vector3 CurrentTarget;  //Current position the spheroid is seeking towards
+    public Vector2 CurrentTarget;  //Current position the spheroid is seeking towards
     //Position of each corner of the arena where the spheroids like to rest at
     private List<Vector2> CornerPositions;
     private int SpawnsLeft; //How many more Enforcers this Spheroid is able to spawn before it self-destructs
@@ -35,6 +37,22 @@ public class SpheroidAI : HostileEntity
     private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Spheroid when its spawned in
     private int HitPoints; //Hits left before the Spheroid dies
 
+    public float FlockRadius = 3f;
+    public float SeperationRadius = 1.5f;
+
+    public Vector2 Steering = Vector2.zero;
+
+    private Vector2 GetVelocity()
+    {
+        return Steering * MoveSpeed;
+    }
+
+    private void GetSteering()
+    {
+        List<SpheroidAI> OtherSpheroids = WaveManager.Instance.GetSpheroidList();
+        Steering = GetSteering(this, OtherSpheroids, CurrentTarget, (Vector2)GameState.Instance.Player.transform.position);
+    }
+
     private void Start()
     {
         //Set the corner positions based on the constraints of the game level
@@ -45,6 +63,14 @@ public class SpheroidAI : HostileEntity
         CornerPositions.Add(new Vector2(XBounds.y, YBounds.x)); //South-East
         CornerPositions.Add(new Vector2(XBounds.x, YBounds.x)); //South_West
         CornerPositions.Add(new Vector2(XBounds.x, YBounds.y)); //North-West
+
+        //Offset corner position targets so we are moving towards the corners instead of right to them
+        for(int i = 0; i < CornerPositions.Count; i++)
+        {
+            Vector2 MiddleDirection = -CornerPositions[i];
+            Vector2 OffsetAmount = MiddleDirection.normalized * LevelBorders.Instance.BorderThickness;
+            CornerPositions[i] = CornerPositions[i] + OffsetAmount;
+        }
 
         //Assign a random number of health points to the spheroid
         HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
@@ -66,25 +92,33 @@ public class SpheroidAI : HostileEntity
         if (!GameState.Instance.ShouldAdvanceGame())
             return;
 
-        //Seek the current corner target until the Spheroid reaches that location
-        if (!InCorner)
-            SeekCorner();
-        else
-            IdleInCorner();
+        Movement();
 
         SpawnEnforcers();
     }
 
-    //Moves towards the CurrentTarget until the destination has been reached
+    private void Movement()
+    {
+        if(!InCorner)
+            SeekCorner();
+        else
+            IdleInCorner();
+    }
+
     private void SeekCorner()
     {
-        //Find the direction to the current corner location
-        Vector3 CornerDirection = Vector3.Normalize(CurrentTarget - transform.position);
-        //Move toward this corner
-        transform.position += CornerDirection * MoveSpeed * Time.deltaTime;
-        //Check if we have reached the target corner location yet
+        //Get steering based on other spheroids positions around me
+        GetSteering();
+
+        //Figure out the new target location
+        Vector2 MovementVelocity = Steering * MoveSpeed;
+
+        //Apply the final movement velocity to move in a pack but not into walls
+        transform.position += (Vector3)MovementVelocity * Time.deltaTime;
+
+        //Check if we have reached the corner location yet
         float CornerDistance = Vector3.Distance(transform.position, CurrentTarget);
-        if (CornerDistance <= 1.5f)
+        if (CornerDistance <= 2f)
             InCorner = true;
     }
 
@@ -102,8 +136,6 @@ public class SpheroidAI : HostileEntity
             InCorner = false;
             TimeInCorner = 0.0f;
         }
-            
-        
 
         //Track how long has been spend in this corner
         TimeInCorner += Time.deltaTime;
@@ -204,5 +236,141 @@ public class SpheroidAI : HostileEntity
             Destroy(collision.gameObject);
             TakeDamage();
         }
+    }
+
+    //Computes force to apply to prevent spheroids from bunching up together
+    Vector2 ComputeSeperation(SpheroidAI Self, List<SpheroidAI> AllSpheroids, float SeperationRadius)
+    {
+        //Compute a force to apply which will prevent the spheroids from colliding with each other
+        Vector2 SeperationForce = Vector2.zero;
+        int SpheroidCount = 0;
+
+        //Grab the list of all other spheroid enemies and loop through to compare and apply forces
+        List<SpheroidAI> Spheroids = WaveManager.Instance.GetSpheroidList();
+        foreach(SpheroidAI Other in Spheroids)
+        {
+            //Ignore self
+            if(Other == this) continue;
+
+            //Apply seperation force if other spheroid is inside the seperation radius
+            float OtherDistance = Vector2.Distance(transform.position, Other.transform.position);
+            if(OtherDistance < SeperationRadius && OtherDistance > 0f)
+            {
+                SeperationForce += ((Vector2)transform.position - (Vector2)Other.transform.position).normalized / OtherDistance;
+                SpheroidCount++;
+            }
+        }
+
+        if(SpheroidCount > 0)
+            SeperationForce /= SpheroidCount;
+
+        return SeperationForce;
+    }
+
+    //Matches velocity/direction with nearby spheroids
+    Vector2 ComputeAlignment(SpheroidAI Self, List<SpheroidAI> AllSpheroids, float AlignmentRadius)
+    {
+        //Find the average velocity of all nearby spheroids
+        Vector2 Average = Vector2.zero;
+        int Count = 0;
+
+        //Compare against all others to find the average
+        foreach(SpheroidAI Other in AllSpheroids)
+        {
+            float OtherDistance = Vector2.Distance(transform.position, Other.transform.position);
+            if (Other != Self && OtherDistance < AlignmentRadius)
+            {
+                Average += Other.GetVelocity();
+                Count++;
+            }
+        }
+
+        if(Count > 0)
+        {
+            Average /= Count;
+            return Average.normalized;
+        }
+
+        return Vector2.zero;
+    }
+
+    //Pulls the spheroid towards the center of the pack
+    Vector2 ComputeCohesion(SpheroidAI Self, List<SpheroidAI> AllSpheroids, float CohesionRadius)
+    {
+        //Where to store the center of the pack
+        Vector2 Center = Vector2.zero;
+        int Count = 0;
+
+        //Compare against other in the pack to find the center of the pack
+        foreach (SpheroidAI Other in AllSpheroids)
+        {
+            float OtherDistance = Vector2.Distance(transform.position, Other.transform.position);
+            if(Other != Self && OtherDistance < CohesionRadius)
+            {
+                Center += (Vector2)Other.transform.position;
+                Count++;
+            }
+        }
+
+        //Average the position to get the center location
+        if(Count > 0)
+        {
+            Center /= Count;
+            return (Center - (Vector2)transform.position).normalized;
+        }
+
+        return Vector2.zero;
+    }
+
+    //Prevents them running into the walls and corners
+    private Vector2 ComputeWallAvoidance(float AvoidanceDistance)
+    {
+        Vector2 Pos = transform.position;
+        Vector2 AvoidanceForce = Vector2.zero;
+
+        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
+        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+
+        //Left Wall
+        if(Pos.x - XBounds.x < AvoidanceDistance)
+            AvoidanceForce += new Vector2(1f / Mathf.Max(Pos.x - XBounds.x, 0.01f), 0f);
+
+        //Right Wall
+        if(XBounds.y - Pos.x < AvoidanceDistance)
+            AvoidanceForce += new Vector2(-1f / Mathf.Max(XBounds.y - Pos.x, 0.01f), 0f);
+
+        //Bottom Wall
+        if(Pos.y - YBounds.x < AvoidanceDistance)
+            AvoidanceForce += new Vector2(0f, 1f / Mathf.Max(Pos.y - YBounds.x, 0.01f));
+
+        //Top Wall
+        if(YBounds.y - Pos.y < AvoidanceDistance)
+            AvoidanceForce += new Vector2(0f, -1f / Mathf.Max(YBounds.y - Pos.y, 0.01f));
+        
+        return AvoidanceForce.normalized;
+    }
+
+    //Causes multiple spheroids to flock together
+    Vector2 GetSteering(SpheroidAI Self, List<SpheroidAI> OtherSpheroids, Vector2 CornerTarget, Vector2 PlayerPos)
+    {
+        Vector2 Seperation = ComputeSeperation(Self, OtherSpheroids, 3f) * 4f;
+        Vector2 Alignment = ComputeAlignment(Self, OtherSpheroids, 4f);
+        Vector2 Cohesion = ComputeCohesion(Self, OtherSpheroids, 4f);
+
+        Vector2 AvoidPlayer = ((Vector2)Self.transform.position - PlayerPos).normalized * 3f;
+
+        Vector2 MoveToCorner = (CurrentTarget - (Vector2)transform.position).normalized;
+
+        Vector2 WallAvoidance = ComputeWallAvoidance(1f) * 5f;
+
+        Vector2 Steering =
+            Seperation +
+            Alignment +
+            Cohesion +
+            AvoidPlayer +
+            MoveToCorner +
+            WallAvoidance;
+
+        return Steering.normalized;
     }
 }
