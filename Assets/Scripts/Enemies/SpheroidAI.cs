@@ -12,6 +12,7 @@
 //If this spheroids maximum number of Enforcers have been spawned, it self destructs
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -52,29 +53,11 @@ public class SpheroidAI : HostileEntity
         SpawnsLeft = Random.Range(1, MaxSpawnCount);
 
         //Select the closest corner to start moving toward
-        CurrentTarget = GetClosestCornerPos();
+        SortCornerPositions();
+        CurrentTarget = CornerPositions[0];
 
         //Set the timer before the first Enforcer can be spawned in
         SpawnCooldown = Random.Range(InitialSpawnCooldown.x, InitialSpawnCooldown.y);
-    }
-
-    //Compare the distance of all 4 corner locations, and returns the closest one
-    private Vector2 GetClosestCornerPos()
-    {
-        Vector2 ClosestPosition = CornerPositions[0];
-        float BestDistance = Vector2.Distance(ClosestPosition, transform.position);
-
-        for (int i = 1; i < CornerPositions.Count; i++)
-        {
-            float CompareDistance = Vector2.Distance(CornerPositions[i], transform.position);
-            if(CompareDistance < BestDistance)
-            {
-                ClosestPosition = CornerPositions[i];
-                BestDistance = CompareDistance;
-            }
-        }
-
-        return ClosestPosition;
     }
 
     private void Update()
@@ -101,17 +84,27 @@ public class SpheroidAI : HostileEntity
         transform.position += CornerDirection * MoveSpeed * Time.deltaTime;
         //Check if we have reached the target corner location yet
         float CornerDistance = Vector3.Distance(transform.position, CurrentTarget);
-        if (CornerDistance <= 0.15f)
+        if (CornerDistance <= 1.5f)
             InCorner = true;
     }
 
     //Idles in the corner until the player gets too close, then moves away to another corner
     private void IdleInCorner()
     {
-        //Travel to a different corner if the player gets too close to this one
+        ///Travel to a different corner if the player gets too close to this one
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if (PlayerDistance <= 3.5f)
-            TargetCornerAwayFromPlayer();
+        if (PlayerDistance <= 5f)
+        {
+            //Target the next closest corner from the player
+            SortCornerPositions();
+            CurrentTarget = CornerPositions[1];
+            //Disable the InCorner flag and timer, and start moving toward the new corner target
+            InCorner = false;
+            TimeInCorner = 0.0f;
+        }
+            
+        
+
         //Track how long has been spend in this corner
         TimeInCorner += Time.deltaTime;
     }
@@ -174,27 +167,15 @@ public class SpheroidAI : HostileEntity
         return SpawnLocation;
     }
 
-    //Acquires a new corner target position which is the furthest away from the player character
-    private void TargetCornerAwayFromPlayer()
+    //Sort corner positions by distance
+    private void SortCornerPositions()
     {
-        //Figure out which corner location is furthest away from the player character
-        Vector3 PlayerPosition = GameState.Instance.Player.transform.position;
-        Vector3 FurthestCorner = CornerPositions[0];
-        float FurthestCornerDistance = Vector3.Distance(PlayerPosition, FurthestCorner);
-        for(int i = 1; i < 4; i++)
+        CornerPositions.Sort((a, b) =>
         {
-            float CornerDistance = Vector3.Distance(CornerPositions[i], PlayerPosition);
-            if(CornerDistance > FurthestCornerDistance)
-            {
-                FurthestCorner = CornerPositions[i];
-                FurthestCornerDistance = CornerDistance;
-            }
-        }
-
-        //Disable the InCorner flag and timer, and start moving toward the new corner target
-        InCorner = false;
-        TimeInCorner = 0.0f;
-        CurrentTarget = FurthestCorner;
+            float distA = Vector2.Distance(transform.position, a);
+            float distB = Vector2.Distance(transform.position, b);
+            return distA.CompareTo(distB);
+        });
     }
 
     //Removes one of the Spheroids remaining hit points, kills it once its hitpoints have run out
