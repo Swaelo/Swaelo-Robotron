@@ -21,6 +21,7 @@ public class WaveManager : MonoBehaviour
     //Wave Override
     public bool WaveStartOverride = false;  //If enabled through inspector the game will instead skip straight to the specified wave number
     public int CustomWaveStart = 1; //Which wave to skip to when the game begins
+    public bool PlayCustomWave = false; //If set in the inspector, a wave will begin with the enemies set in the CustomWaveData script and loop that, for testing
 
     //Entities
     private List<BaseEntity> ActiveEntities = new List<BaseEntity>();   //A list of every entity currently active in the game
@@ -83,6 +84,12 @@ public class WaveManager : MonoBehaviour
         //Reset the rescue score multiplier
         GameState.Instance.RescueMultiplier = 1;
 
+        if(PlayCustomWave)
+        {
+            StartCustomWave();
+            return;
+        }
+
         //Get the list of enemies and humans to spawn in on this wave
         WaveEntities WaveInfo = WaveData.Instance.GetWaveData(WaveNumber);
 
@@ -109,6 +116,34 @@ public class WaveManager : MonoBehaviour
         EntitySpawnInterval = SpawnPeriodDuration / EntitiesToSpawn.Count;
 
         //Now the round is ready to begin, first the humans will be spawned in
+        SpawnPeriodActive = true;
+    }
+
+    private void StartCustomWave()
+    {
+        //Start a new list of enemies to spawn in
+        CustomWaveData WaveData = GetComponent<CustomWaveData>();
+        EntitiesToSpawn = new List<GameObject>();
+
+        //Get the count of each type from the custom wave data
+        AddEntitiesToSpawnList("Grunt", WaveData.Grunts);
+        AddEntitiesToSpawnList("Mummy", WaveData.Mommies);
+        AddEntitiesToSpawnList("Daddy", WaveData.Daddies);
+        AddEntitiesToSpawnList("Mikey", WaveData.Mikeys);
+        AddEntitiesToSpawnList("Hulk", WaveData.Hulks);
+        AddEntitiesToSpawnList("Brain", WaveData.Brains);
+        AddEntitiesToSpawnList("Spheroid", WaveData.Spheroids);
+        AddEntitiesToSpawnList("Quark", WaveData.Quarks);
+        AddEntitiesToSpawnList("Enforcer", WaveData.Enforcers);
+        AddEntitiesToSpawnList("Tank", WaveData.Tanks);
+        AddEntitiesToSpawnList("DaddyProg", WaveData.DaddyProgs);
+        AddEntitiesToSpawnList("MummyProg", WaveData.MummyProgs);
+        AddEntitiesToSpawnList("MikeyProg", WaveData.MikeyProgs);
+
+        //Shuffle the list, get spawn locations and prepare them for spawning
+        EntitiesToSpawn = ShuffleList(EntitiesToSpawn);
+        EnemySpawnLocations = GetSpawnLocations(EntitiesToSpawn.Count);
+        EntitySpawnInterval = SpawnPeriodDuration / EntitiesToSpawn.Count;
         SpawnPeriodActive = true;
     }
 

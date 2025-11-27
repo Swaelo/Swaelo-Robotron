@@ -644,7 +644,38 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6260544339253127724}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1104548513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1104548514}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1104548514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104548513}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.84651, y: 1.92474, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1447967345
 GameObject:
@@ -18961,6 +18992,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
+      propertyPath: PlayCustomWave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
       propertyPath: UIRoundDisplay
       value: 
       objectReference: {fileID: 1590569931}
@@ -19006,6 +19042,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 317061469471482041}
+    - targetCorrespondingSourceObject: {fileID: 317061470227577250, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 317061469471482047}
   m_SourcePrefab: {fileID: 100100000, guid: d74d42b07e179f64eb5fc8361b52d68b, type: 3}
 --- !u!1 &317061469471482039 stripped
 GameObject:
@@ -19178,6 +19218,32 @@ MonoBehaviour:
     SoundClip: {fileID: 8300000, guid: 266f7dbda677e8d40b37d7ed67d8f8b5, type: 3}
   - Name: ExtraLife
     SoundClip: {fileID: 8300000, guid: b7538bcda4e339346bb5c6e68b83dcf0, type: 3}
+--- !u!114 &317061469471482047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317061469471482039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401c5476deb08446bacacc518e02e299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomWaveData
+  Grunts: 0
+  Electrodes: 0
+  Mommies: 0
+  Daddies: 0
+  Mikeys: 0
+  Hulks: 0
+  Brains: 0
+  Spheroids: 5
+  Quarks: 0
+  Enforcers: 0
+  Tanks: 0
+  DaddyProgs: 0
+  MummyProgs: 0
+  MikeyProgs: 0
 --- !u!4 &6260544339253127724
 Transform:
   m_ObjectHideFlags: 0
@@ -19195,7 +19261,6 @@ Transform:
   - {fileID: 8153907358514530304}
   - {fileID: 6260544339422964216}
   - {fileID: 8153907360037324851}
-  - {fileID: 983762531}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6260544339253127725
@@ -19848,3 +19913,5 @@ SceneRoots:
   - {fileID: 1447967349}
   - {fileID: 488457742}
   - {fileID: 187810393}
+  - {fileID: 1104548514}
+  - {fileID: 983762531}
