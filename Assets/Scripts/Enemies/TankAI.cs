@@ -75,8 +75,8 @@ public class TankAI : HostileEntity
             Random.Range(TargetRangeOffset.x, TargetRangeOffset.y) :
             Random.Range(-TargetRangeOffset.x, -TargetRangeOffset.y);
 
-        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
-        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
 
         //Make sure the new location stays inside the level boundaries
         NewTarget.x = Mathf.Clamp(NewTarget.x, XBounds.x, XBounds.y);

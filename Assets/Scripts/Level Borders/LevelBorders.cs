@@ -5,14 +5,14 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LevelBorders : MonoBehaviour
 {
     //Singleton Instance
     public static LevelBorders Instance;
-    private void Awake() { Instance = this; }
 
     [Header("Level Size")]
     public float LevelWidth = 15f;
@@ -20,6 +20,21 @@ public class LevelBorders : MonoBehaviour
 
     [Header("Border Settings")]
     public float BorderThickness = 1f;
+
+    //Bounds of the level, used by AI scripts to constrain movement within the level bounds
+    public Vector2 XBounds;
+    public Vector2 YBounds;
+
+    //Corner positions of the level (or positions nearby to the corners), used by spheroids are target locations to flee to
+    private List<Vector3> CornerPositions;
+    public List<Vector3> GetCornerPositions() { return CornerPositions; }
+
+    private void Awake()
+    {
+        Instance = this;
+        SetBounds();
+        DefineCornerLocations();
+    }
 
     private void Start()
     {
@@ -79,19 +94,32 @@ public class LevelBorders : MonoBehaviour
         ColorCycle.ColorSpeed = .5f;
     }
 
-    public Vector2 GetXBounds()
+    //Define the level bounds which will be grabbed from this script by AI scripts
+    private void SetBounds()
     {
-        float halfWidth = LevelWidth * .5f;
-        float XMin = -halfWidth + BorderThickness;
-        float XMax = halfWidth - BorderThickness;
-        return new Vector2(XMin, XMax);
+        float HalfWidth = LevelWidth * 0.5f;
+        float XMin = -HalfWidth + BorderThickness;
+        float XMax = HalfWidth - BorderThickness;
+        XBounds = new Vector2(XMin, XMax);
+
+        float HalfHeight = LevelHeight * 0.5f;
+        float YMin = -HalfHeight + BorderThickness;
+        float YMax = HalfHeight - BorderThickness;
+        YBounds = new Vector2(YMin, YMax);
     }
 
-    public Vector2 GetYBounds()
+    //Define the corner locations which will be grabbed by spheroid scripts
+    private void DefineCornerLocations()
     {
-        float halfHeight = LevelHeight * .5f;
-        float YMin = -halfHeight + BorderThickness;
-        float YMax = halfHeight - BorderThickness;
-        return new Vector2(YMin, YMax);
+        Vector3 TopRight = new Vector3(XBounds.y, YBounds.y, 0f);
+        Vector3 BottomRight = new Vector3(XBounds.y, YBounds.x, 0f);
+        Vector3 BottomLeft = new Vector3(XBounds.x, YBounds.x, 0f);
+        Vector3 TopLeft = new Vector3(XBounds.x, YBounds.y, 0f);
+
+        CornerPositions = new List<Vector3>();
+        CornerPositions.Add(TopRight);
+        CornerPositions.Add(BottomRight);
+        CornerPositions.Add(BottomLeft);
+        CornerPositions.Add(TopLeft);
     }
 }

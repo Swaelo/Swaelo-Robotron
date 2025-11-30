@@ -40,29 +40,17 @@ public class WaveManager : MonoBehaviour
     private int EntitySpawnCount = 0; //Number of entities spawned so far this wave
     private float NextEntitySpawn;  //How long until the next entity should be spawned
     private Vector2 SpawnRange = new Vector2(2f, 8.5f); //Distance range that enemies can be spawned from the middle x is min y is max
-    private Vector2 XBounds = new Vector2(-9f, 9f); //Range of x pos values allowed to spawn entities onto
-    private Vector2 YBounds = new Vector2(-6f, 6); //Range of y pos values allowed to spawn entities onto
 
     public float MinPlayerSpawnDistance = 3.5f; //How close to the player new enemies can be spawned into the level
     public float MinEnemySpawnDistance = 1.5f; //How close together enemies can be spawned from one another
-    private List<Vector2> EnemySpawnLocations; //List of enemy spawn locations to be used when starting a new wave
+    private List<Vector2> EnemySpawnLocations = new List<Vector2>(); //List of enemy spawn locations to be used when starting a new wave
 
     //Grabs the current border level size from the level border manager
-    private void UpdateLevelBounds()
-    {
-        //Get the current level bounds from the level borders manager
-        LevelBorders BorderManager = GameObject.Find("LevelBorders").GetComponent<LevelBorders>();
-        XBounds = BorderManager.GetXBounds();
-        YBounds = BorderManager.GetYBounds();
-    }
 
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {
         EntitySpawnCount = 0;
-
-        //Make sure we have the current level size before we spawn in the new wave
-        UpdateLevelBounds();
 
         //Overwrite the WaveNumber argument with the CustomWaveStart if WaveStartOverride has been enabled through the inspector
         if (WaveStartOverride)
@@ -327,6 +315,10 @@ public class WaveManager : MonoBehaviour
     //Returns a list of valid spawn locations to use for all the enemies to be placed into the level
     private List<Vector2> GetSpawnLocations(int LocationCount)
     {
+        //Get the current level bounds we will constrain the enemies within
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
+
         //Start the list and set a hard limit on attempts to prevent soft locking
         List<Vector2> SpawnPositions = new List<Vector2>();
         int SpawnAttempts = 0;

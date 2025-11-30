@@ -307,8 +307,8 @@ public class HulkAI : HostileEntity
         //Get a new location to move the Hulk to, based on which direction the projectile was travelling that hit the Hulk
         Vector3 NewPos = transform.position + ShotDirection * ProjectilePushback * Time.deltaTime;
         //Make sure the new positions isnt outside the level boundaries
-        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
-        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
         NewPos.x = Mathf.Clamp(NewPos.x, XBounds.x, XBounds.y);
         NewPos.y = Mathf.Clamp(NewPos.y, YBounds.x, YBounds.y);
         //Move the Hulk to the new position

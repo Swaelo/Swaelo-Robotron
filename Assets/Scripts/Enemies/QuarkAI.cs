@@ -72,8 +72,8 @@ public class QuarkAI : HostileEntity
             Random.Range(TargetRangeOffset.x, TargetRangeOffset.y) :
             Random.Range(-TargetRangeOffset.x, -TargetRangeOffset.y);
 
-        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
-        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
 
         //Make sure the new location stays inside the level boundaries
         NewTarget.x = Mathf.Clamp(NewTarget.x, XBounds.x, XBounds.y);
@@ -127,8 +127,8 @@ public class QuarkAI : HostileEntity
             Random.Range(SpawnRangeOffset.x, SpawnRangeOffset.y) :
             Random.Range(-SpawnRangeOffset.x, -SpawnRangeOffset.y);
 
-        Vector2 XBounds = LevelBorders.Instance.GetXBounds();
-        Vector2 YBounds = LevelBorders.Instance.GetYBounds();
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
 
         //Make sure this location stays inside the level bounds
         SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XBounds.x, XBounds.y);
