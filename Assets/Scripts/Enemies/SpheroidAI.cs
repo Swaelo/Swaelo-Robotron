@@ -71,8 +71,7 @@ public class SpheroidAI : HostileEntity
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
         if (PlayerDistance <= 5f)
         {
-            //Debug.Log("need to flee to another corner");
-            //Target the next closest corner from the player
+            //Target a random other corner which isnt our current target
             CurrentTarget = GetRandomOtherCornerPos();
             OffsetCornerTargetPos(1.5f);
             //Disable the InCorner flag and timer, and start moving toward the new corner target
@@ -231,7 +230,7 @@ public class SpheroidAI : HostileEntity
         Vector3 AvoidPlayer = Vector3.zero;
 
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if(PlayerDistance < 2f)
+        if(PlayerDistance < 3f)
             AvoidPlayer = (transform.position - GameState.Instance.Player.transform.position).normalized * 3f;
         
         return AvoidPlayer;
@@ -243,7 +242,7 @@ public class SpheroidAI : HostileEntity
         Vector3 Flocking = ComputeFlockingVector(Self, OtherSpheroids, 4f, 1f);
         Vector3 MoveToCorner = (CurrentTarget - transform.position).normalized * 2f;
         Vector3 AvoidPlayer = ComputePlayerAvoidance();
-        Vector3 WallAvoidance = ComputeWallAvoidance(.25f) * 5f;
+        Vector3 WallAvoidance = ComputeWallAvoidance(.25f) * 3f;
 
         Vector3 Steering = Flocking + MoveToCorner + AvoidPlayer + WallAvoidance;
 
