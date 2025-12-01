@@ -18995,7 +18995,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: PlayCustomWave
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19220,6 +19220,8 @@ MonoBehaviour:
     SoundClip: {fileID: 8300000, guid: 266f7dbda677e8d40b37d7ed67d8f8b5, type: 3}
   - Name: ExtraLife
     SoundClip: {fileID: 8300000, guid: b7538bcda4e339346bb5c6e68b83dcf0, type: 3}
+  - Name: SpheroidSpawnComplete
+    SoundClip: {fileID: 8300000, guid: a57a6375f78f6406b8385c460832dd22, type: 3}
 --- !u!114 &317061469471482047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19239,7 +19241,7 @@ MonoBehaviour:
   Mikeys: 0
   Hulks: 0
   Brains: 0
-  Spheroids: 25
+  Spheroids: 1
   Quarks: 0
   Enforcers: 0
   Tanks: 0

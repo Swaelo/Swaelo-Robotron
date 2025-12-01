@@ -5,12 +5,6 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
-//The first Enforcer can be spawned 5-8 seconds after the Spheroid has spawned
-//If an Enforcer is spawned while the Spheroid is moving, the cooldown is 3-6 seconds
-//If an Enforcer is spawned while the Spheroid is idle in one of the corners, and the
-//Spheroid has been in that corner for atleast 3.5 seconds, the cooldown is 1-1.5 seconds.
-//If this spheroids maximum number of Enforcers have been spawned, it self destructs
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,10 +16,25 @@ public class SpheroidAI : HostileEntity
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
     public bool InCorner = false;  //Tracks if we are in a safe spot or not
 
+    private float TimeInCorner = 0f;    //Track how long we have been sitting in the corner in a safe spot
+    private float TimeToStartSpawning = 1f; //How long we need to wait in the corner before we start spawning a new enemy
+    private float TimeToFinishSpawning = 3.5f; //How long we need to wait in the corner before we finish spawning a new enemy
+    private bool StartedSpawning = false;
+    private float SpawnAnimationTimer = 0f; //How long we have been in the process to spawn a new enemy in
+    private float SpawnAnimationDuration = 2.5f;  //How long it takes to spawn an enemy in
+    private Vector3 BaseScale;
+    private AudioSource SoundEffectPlayer;
+    private int HitPoints = 3;
+
     private void Start()
     {
         //Grab the corner locations from the level borders manager
         CornerPositions = LevelBorders.Instance.GetCornerPositions();
+
+        //Store transformation scale
+        BaseScale = transform.localScale;
+
+        SoundEffectPlayer = GetComponent<AudioSource>();
 
         //Select the closest corner to start moving toward
         CurrentTarget = GetClosestCornerPos();
@@ -38,13 +47,10 @@ public class SpheroidAI : HostileEntity
         if(!GameState.Instance.ShouldAdvanceGame())
             return;
 
-        Movement();
-    }
-
-    private void Movement()
-    {
+        //If we aren't in a corner, move towards our current corner target location
         if(!InCorner)
             SeekCorner();
+        //If we are in a corner, we can try to summon enemies while we are hiding there
         else
             IdleInCorner();
     }
@@ -67,16 +73,69 @@ public class SpheroidAI : HostileEntity
 
     private void IdleInCorner()
     {
+        //Time how long we have been hiding in the corner for
+        TimeInCorner += Time.deltaTime;
+
+        //Start spawning a new enemy once we have been hiding in the corner for long enough
+        if(TimeInCorner >= TimeToStartSpawning && !StartedSpawning)
+        {
+            StartedSpawning = true;
+            SoundEffectPlayer.Play();
+        }
+
+        if(StartedSpawning && TimeInCorner < TimeToFinishSpawning)
+        {
+            SpawnAnimationTimer += Time.deltaTime;
+            //Get progress from 1 to 0 of the current spawn duration
+            float SpawnProgress = Mathf.Clamp01(SpawnAnimationTimer / SpawnAnimationDuration);
+
+            //Scale the growth, small at the start and largest right before completing the spawning
+            float TransformScale = Mathf.Lerp(1f, 3f, SpawnProgress);
+            transform.localScale = BaseScale * TransformScale;
+            //Ramp up the spinning over time too
+            float SpinSpeed = Mathf.Lerp(360f * 3f, 360f * 8f, SpawnProgress * SpawnProgress);
+            transform.Rotate(0f, 0f, SpinSpeed * Time.deltaTime);
+
+            //Rise in pitch the summoning sound effect
+            SoundEffectPlayer.pitch = Mathf.Lerp(1f, 2f, SpawnProgress);
+        }
+
+        //Spawn in a new enemy once we have stayed spawning for long enough, then move to a new corner
+        if(TimeInCorner >= TimeToFinishSpawning)
+        {
+            Vector3 SpawnLocation = GetEnforcerSpawnLocation();
+
+            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+
+            //Play sound effect
+            SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
+
+            //Have the WaveManager add them to the entity tracking lists
+            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+
+            MoveToAnotherCorner();
+            return;
+        }
+
         //Travel to a different corner if the player gets too close to this one
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if (PlayerDistance <= 5f)
-        {
-            //Target a random other corner which isnt our current target
-            CurrentTarget = GetRandomOtherCornerPos();
-            OffsetCornerTargetPos(1.5f);
-            //Disable the InCorner flag and timer, and start moving toward the new corner target
-            InCorner = false;
-        }
+        if (PlayerDistance <= 3f)
+            MoveToAnotherCorner();
+    }
+
+    //Causes the spheroid to pick a new corner to start hiding in and start moving there straight away
+    private void MoveToAnotherCorner()
+    {
+        //Target a random other corner which isnt our current target
+        CurrentTarget = GetRandomOtherCornerPos();
+        OffsetCornerTargetPos(1.5f);
+        //Disable the InCorner flag and timer, and start moving toward the new corner target
+        InCorner = false;
+        TimeInCorner = 0f;
+        StartedSpawning = false;
+        SpawnAnimationTimer = 0f;
+        transform.localScale = BaseScale;
+        SoundEffectPlayer.Stop();
     }
 
     private Vector3 GetClosestCornerPos()
@@ -95,6 +154,31 @@ public class SpheroidAI : HostileEntity
         }
 
         return ClosestCornerPos;
+    }
+
+    //Returns a random location near the Spheroid where an Enforcer may be spawned in at
+    private Vector3 GetEnforcerSpawnLocation()
+    {
+        //Start with the Spheroids current location
+        Vector3 SpawnLocation = transform.position;
+
+        //Pick a random direction on the XY plane
+        Vector2 SpawnDirection = Random.insideUnitCircle.normalized;
+
+        //Pick a random distance in a certain range
+        float SpawnDistance = Random.Range(0.25f, 1.25f);
+
+        //Apply the offset
+        SpawnLocation += new Vector3(SpawnDirection.x, SpawnDirection.y, 0f) * SpawnDistance;
+
+        //Clamp into the arena
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
+        SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XBounds.x, XBounds.y);
+        SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YBounds.x, YBounds.y);
+
+        //Return the new location
+        return SpawnLocation;
     }
     
     //Returns a random corner position which isnt the one we are closest to
@@ -250,134 +334,31 @@ public class SpheroidAI : HostileEntity
         return Steering;
     }
 
-    // //Position of each corner of the arena where the spheroids like to rest at
-    // private int SpawnsLeft; //How many more Enforcers this Spheroid is able to spawn before it self-destructs
-    // private float SpawnCooldown;    //Cooldown remaining until another Enforcer can be spawned in
-    // private Vector2 InitialSpawnCooldown = new Vector2(5f, 8f); //Time before the first Enforcer can be spawned in
-    // private Vector2 MovingSpawnCooldown = new Vector2(3f, 6f);  //Time before the next Enforcer can be spawned while the Spheroid is moving
-    // private Vector2 IdleSpawnCooldown = new Vector2(1f, 1.5f);  //Time before the next Enforcer can be spawned while the Spheroid is safe in one of the corners
-    // private int MaxSpawnCount = 6;  //Maximum number of Enforcers that any one Spheroid is able to spawn
-    // private bool InCorner = false;  //Tracks if the Spheroid is currently idling in one of the corners
-    // private float TimeInCorner = 0.0f;  //Tracks how long the Spheroid has spent sitting in the corner
-    // private float CornerSafeTimer = 3.5f;   //How much time must be spent in 1 corner before the Spheroid considers itself to be in a safe position
-    // private Vector2 SpawnRangeOffset = new Vector2(0.5f, 1.25f);    //How far in each direction an Enforcers spawn location will be offset from the Spheroids location
+    //Removes one of the Spheroids remaining hit points, kills it once its hitpoints have run out
+    private void TakeDamage()
+    {
+        //Take away 1 from the Spheroids hitpoints and check if its still alive
+        HitPoints--;
+        if(HitPoints <= 0)
+        {
+            //Kill the Spheroid once its hitpoints reach zero
+            SoundEffectsPlayer.Instance.PlaySound("SpheroidDie");
+            WaveManager.Instance.EnemyDead(this);
+            GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
+            Destroy(gameObject);
+        }
+    }
 
-    // private Vector2 HitPointRange = new Vector2(1, 3);  //Value range of hitpoints that may be assigned to the Spheroid when its spawned in
-    // private int HitPoints; //Hits left before the Spheroid dies
-
-    // public float FlockRadius = 3f;
-    // public float SeperationRadius = 1.5f;
-
-    // public Vector2 Steering = Vector2.zero;
-
-    // private void Start()
-    // {
-    //     
-
-    //     //Assign a random number of health points to the spheroid
-    //     HitPoints = (int)Random.Range(HitPointRange.x, HitPointRange.y);
-
-    //     //Randomly set the number of Enforcers that this Spheroid will be allowed to spawn before it self-destructs
-    //     SpawnsLeft = Random.Range(1, MaxSpawnCount);
-
-    //     //Set the timer before the first Enforcer can be spawned in
-    //     SpawnCooldown = Random.Range(InitialSpawnCooldown.x, InitialSpawnCooldown.y);
-    // }
-
-    // private void Update()
-    // {
-    //     //All game logic and AI should be paused at certain times
-    //     if (!GameState.Instance.ShouldAdvanceGame())
-    //         return;
-
-    //     Movement();
-
-    //     SpawnEnforcers();
-    // }
-
-    // //Spawns in a new Enforcer whenever the cooldown timer expires
-    // private void SpawnEnforcers()
-    // {
-    //     //Wait for the cooldown timer to expire
-    //     SpawnCooldown -= Time.deltaTime;
-    //     if(SpawnCooldown <= 0.0f)
-    //     {
-    //         //Reset the timer, length based on if the Spheroid is safe in a corner or not
-    //         SpawnCooldown = TimeInCorner >= CornerSafeTimer ?
-    //             Random.Range(IdleSpawnCooldown.x, IdleSpawnCooldown.y) :
-    //             Random.Range(MovingSpawnCooldown.x, MovingSpawnCooldown.y);
-
-    //         //Get a random location near the Spheroid and spawn an Enforcer in there
-    //         Vector3 SpawnLocation = GetEnforcerSpawnLocation();
-    //         GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
-
-    //         //Play sound effect
-    //         SoundEffectsPlayer.Instance.PlaySound("SpawnEnforcer");
-
-    //         //Have the WaveManager add them to the entity tracking lists
-    //         WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
-
-    //         //Take 1 away from this Spheroid spawn counter, then check if its time for the Spheroid to self-destruct
-    //         SpawnsLeft -= 1;
-    //         if(SpawnsLeft <= 0)
-    //         {
-    //             //Tell the wave manager to remove this enemy from its lists, then destroy it
-    //             WaveManager.Instance.EnemyDead(this);
-    //             Destroy(this.gameObject);
-    //         }
-    //     }
-    // }
-
-    // //Returns a random location near the Spheroid where an Enforcer may be spawned in at
-    // private Vector3 GetEnforcerSpawnLocation()
-    // {
-    //     //Start with the Spheroids current location
-    //     Vector3 SpawnLocation = transform.position;
-
-    //     //Offset this location randomly in the X and Y axis
-    //     SpawnLocation.x += Random.value >= 0.5f ?
-    //         Random.Range(SpawnRangeOffset.x, SpawnRangeOffset.y) :
-    //         Random.Range(-SpawnRangeOffset.x, -SpawnRangeOffset.y);
-    //     SpawnLocation.y += Random.value >= 0.5f ?
-    //         Random.Range(SpawnRangeOffset.x, SpawnRangeOffset.y) :
-    //         Random.Range(-SpawnRangeOffset.x, -SpawnRangeOffset.y);
-
-    //     Vector2 XBounds = LevelBorders.Instance.XBounds;
-    //     Vector2 YBounds = LevelBorders.Instance.YBounds;
-
-    //     //Make sure this location stays inside the level bounds
-    //     SpawnLocation.x = Mathf.Clamp(SpawnLocation.x, XBounds.x, XBounds.y);
-    //     SpawnLocation.y = Mathf.Clamp(SpawnLocation.y, YBounds.x, YBounds.y);
-
-    //     //Return the new location
-    //     return SpawnLocation;
-    // }
-
-    // //Removes one of the Spheroids remaining hit points, kills it once its hitpoints have run out
-    // private void TakeDamage()
-    // {
-    //     //Take away 1 from the Spheroids hitpoints and check if its still alive
-    //     HitPoints--;
-    //     if(HitPoints <= 0)
-    //     {
-    //         //Kill the Spheroid once its hitpoints reach zero
-    //         SoundEffectsPlayer.Instance.PlaySound("SpheroidDie");
-    //         WaveManager.Instance.EnemyDead(this);
-    //         GameState.Instance.IncreaseScore((int)PointValue.Spheroid);
-    //         Destroy(gameObject);
-    //     }
-    // }
-
-    // private void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     //Kill the player if we collide with them
-    //     if (collision.transform.CompareTag("Player"))
-    //         GameState.Instance.KillPlayer();
-    //     //Destroy any player projectiles which hit the Spheroid, and deal 1 point of damage to the Spheroid
-    //     else if (collision.transform.CompareTag("PlayerProjectile"))
-    //     {
-    //         Destroy(collision.gameObject);
-    //         TakeDamage();
-    //     }
-    // }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Kill the player if we collide with them
+        if (collision.transform.CompareTag("Player"))
+            GameState.Instance.KillPlayer();
+        //Destroy any player projectiles which hit the Spheroid, and deal 1 point of damage to the Spheroid
+        else if (collision.transform.CompareTag("PlayerProjectile"))
+        {
+            Destroy(collision.gameObject);
+            TakeDamage();
+        }
+    }
 }
