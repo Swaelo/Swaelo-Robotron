@@ -178,13 +178,13 @@ public class SpheroidAI : HostileEntity
         {
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
 
-            //GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            //Spawn the new enemy in
+            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
 
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
-
-            //Have the WaveManager add them to the entity tracking lists
-            //WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+            
 
             MoveToAnotherCorner();
             return;
