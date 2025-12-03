@@ -127,6 +127,8 @@ public class WaveManager : MonoBehaviour
         AddEntitiesToSpawnList("DaddyProg", WaveData.DaddyProgs);
         AddEntitiesToSpawnList("MummyProg", WaveData.MummyProgs);
         AddEntitiesToSpawnList("MikeyProg", WaveData.MikeyProgs);
+        for (int i = 0; i < WaveData.Electrodes; i++)
+            EntitiesToSpawn.Add(PrefabSpawner.Instance.GetElectrodePrefab());
 
         //Shuffle the list, get spawn locations and prepare them for spawning
         EntitiesToSpawn = ShuffleList(EntitiesToSpawn);

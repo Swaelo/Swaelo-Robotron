@@ -10,12 +10,20 @@ using UnityEngine;
 
 public class SpheroidAI : HostileEntity
 {
+    //Movement
     private List<Vector3> CornerPositions = new List<Vector3>(); //Corner position targets the spheroids will move between to avoid the player
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
     private float MoveSpeed = 4.5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
-    public bool InCorner = false;  //Tracks if we are in a safe spot or not
+    //Stuck prevention (electrodes placed down can cause the enemies to get stuck, they can also get blocked from the player at times)
+    private float TargetProgressTimer = 0f; //How long we have been travelling towards our current target location
+    private float ProgressCheckInterval = 1f; //How often to check our progress towards the current target location
+    private float PreviousDistanceToTarget = 0f; //How close we were to the target last time we checked
+    private bool HasTempWaypoint = false; //Tracks if we are moving towards a temporary waypoint we have created to help prevent getting stuck
+    private Vector3 TempWayPoint; //Temporary target location to move towards when we get stuck
 
+    //Enemy spawning
+    public bool InCorner = false;  //Tracks if we are in a safe spot or not
     private float TimeInCorner = 0f;    //Track how long we have been sitting in the corner in a safe spot
     private float TimeToStartSpawning = 1f; //How long we need to wait in the corner before we start spawning a new enemy
     private float TimeToFinishSpawning = 3.5f; //How long we need to wait in the corner before we finish spawning a new enemy
@@ -24,7 +32,11 @@ public class SpheroidAI : HostileEntity
     private float SpawnAnimationDuration = 2.5f;  //How long it takes to spawn an enemy in
     private Vector3 BaseScale;
     private AudioSource SoundEffectPlayer;
+
+    //Hit until dead
     private int HitPoints = 3;
+
+
 
     private void Start()
     {
@@ -61,14 +73,75 @@ public class SpheroidAI : HostileEntity
         List<SpheroidAI> OtherSpheroids = WaveManager.Instance.GetSpheroidList();
         Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
 
-        //Figure out now target location and move towards it
+        //Figure out new target location and move towards it
         Vector3 MovementVelocity = Steering * MoveSpeed;
         transform.position += MovementVelocity * Time.deltaTime;
 
-        //Check if we have reached the corner location yet
-        float CornerDistance = Vector3.Distance(transform.position, CurrentTarget);
-        if (CornerDistance <= 2f)
+        //Check current distance from our target location
+        float TargetDistance = Vector3.Distance(transform.position, HasTempWaypoint ? TempWayPoint : CurrentTarget);
+
+        //Update progress timer if we are still making progress
+        if(TargetDistance <= PreviousDistanceToTarget + 0.1f)
+            TargetProgressTimer += Time.deltaTime;
+        //Otherwise we reset the timer if we are no longer making progress
+        else
+            TargetProgressTimer = 0f;
+
+        //Store the previous distance from our target to compare with in next frame
+        PreviousDistanceToTarget = TargetDistance;
+
+        //If we make no progress for too long we need to assign a temporary waypoint
+        if(TargetProgressTimer > ProgressCheckInterval && !HasTempWaypoint)
+        {
+            TempWayPoint = FindTempWaypoint();
+            HasTempWaypoint = true;
+            TargetProgressTimer = 0f;
+        }
+
+        //Also make sure we dont get stuck trying to move toward the temp waypoints
+        if(TargetProgressTimer > ProgressCheckInterval && HasTempWaypoint)
+        {
+            TempWayPoint = FindTempWaypoint();
+            TargetProgressTimer = 0f;
+        }
+
+        //If we have a temp waypoint, first check if we have reached that location
+        if(HasTempWaypoint)
+        {
+            float TempDistance = Vector3.Distance(transform.position, TempWayPoint);
+            if(TempDistance < 0.1f)
+            {
+                HasTempWaypoint = false;
+                TempWayPoint = Vector3.zero;
+            }
+        }
+        //Otherwise we check for having reached the target corner location
+        else if (TargetDistance <= 2f)
             InCorner = true;
+    }
+
+    //When the spheroid gets stuck on an obstacle, this grabs a temp waypoint for it to use to get out of the way
+    private Vector3 FindTempWaypoint()
+    {
+        float DetourRadius = 1.2f;
+
+        //Try 10 times to get a new temp waypoint
+        for(int i = 0; i < 10; i++)
+        {
+            Vector2 Direction = Random.insideUnitCircle.normalized;
+            Vector3 NewPos = transform.position + new Vector3(Direction.x, Direction.y, 0f) * DetourRadius;
+
+            //Make sure this new position is inside the level bounds
+            NewPos = LevelBorders.Instance.ClampPositionInsideBounds(NewPos);
+
+            if(!Physics2D.OverlapCircle(NewPos, 0.2f, 13))
+            {
+                return NewPos;
+            }
+        }
+
+        //As a fallback, just push sideway from the stuck direction
+        return transform.position + (Vector3)(Random.insideUnitCircle.normalized * DetourRadius);
     }
 
     private void IdleInCorner()
@@ -105,13 +178,13 @@ public class SpheroidAI : HostileEntity
         {
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
 
-            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            //GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
 
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
 
             //Have the WaveManager add them to the entity tracking lists
-            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+            //WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
 
             MoveToAnotherCorner();
             return;
@@ -324,7 +397,12 @@ public class SpheroidAI : HostileEntity
     Vector3 GetSteering(SpheroidAI Self, List<SpheroidAI> OtherSpheroids, Vector3 CornerTarget, Vector3 PlayerPos)
     {
         Vector3 Flocking = ComputeFlockingVector(Self, OtherSpheroids, 4f, 1f);
-        Vector3 MoveToCorner = (CurrentTarget - transform.position).normalized * 2f;
+
+        //Get steering towards current target location
+        Vector3 Target = HasTempWaypoint ? TempWayPoint : CurrentTarget;
+        Vector3 MoveToCorner = (Target - transform.position).normalized * 2f;
+
+
         Vector3 AvoidPlayer = ComputePlayerAvoidance();
         Vector3 WallAvoidance = ComputeWallAvoidance(.25f) * 3f;
 

@@ -108,6 +108,16 @@ public class LevelBorders : MonoBehaviour
         YBounds = new Vector2(YMin, YMax);
     }
 
+    public Vector3 ClampPositionInsideBounds(Vector3 Position)
+    {
+        Vector3 ClampedPos = Position;
+
+        ClampedPos.x = Mathf.Clamp(ClampedPos.x, XBounds.x, XBounds.y);
+        ClampedPos.y = Mathf.Clamp(ClampedPos.y, YBounds.x, YBounds.y);
+
+        return ClampedPos;
+    }
+
     //Define the corner locations which will be grabbed by spheroid scripts
     private void DefineCornerLocations()
     {
