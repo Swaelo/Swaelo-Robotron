@@ -221,8 +221,9 @@ GameObject:
   m_Component:
   - component: {fileID: 187810393}
   - component: {fileID: 187810392}
+  - component: {fileID: 187810394}
   m_Layer: 0
-  m_Name: LevelBorders
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,9 +241,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3268aa971212b449d9bc04f7d6d89f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBorders
-  LevelWidth: 15
-  LevelHeight: 10
-  BorderThickness: 0.5
+  LevelWidth: 8.5
+  LevelHeight: 8.5
+  BorderThickness: 0.25
   XBounds: {x: 0, y: 0}
   YBounds: {x: 0, y: 0}
 --- !u!4 &187810393
@@ -260,6 +261,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &187810394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187810391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b00bc4f90da4efd9f24bcd05749b24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavMeshManager
+  VisibleNavMesh: 1
 --- !u!1 &248332432
 GameObject:
   m_ObjectHideFlags: 0
@@ -18995,7 +19009,7 @@ PrefabInstance:
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: PlayCustomWave
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -19235,13 +19249,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomWaveData
   Grunts: 0
-  Electrodes: 50
+  Electrodes: 30
   Mommies: 0
   Daddies: 0
   Mikeys: 0
   Hulks: 0
   Brains: 0
-  Spheroids: 25
+  Spheroids: 10
   Quarks: 0
   Enforcers: 0
   Tanks: 0

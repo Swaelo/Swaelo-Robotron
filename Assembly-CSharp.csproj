@@ -50,16 +50,17 @@
   <ItemGroup>
     <Compile Include="Assets/Scripts/Player/PlayerShooting.cs" />
     <Compile Include="Assets/Scripts/Game/LivesDisplay.cs" />
-    <Compile Include="Assets/Scripts/Level Borders/LevelBorders.cs" />
     <Compile Include="Assets/Scripts/Enemies/HulkAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/BrainAI.cs" />
     <Compile Include="Assets/Scripts/Game/SoundEffectsPlayer.cs" />
     <Compile Include="Assets/Scripts/Game/RoundCompleteAnimationDestroyer.cs" />
     <Compile Include="Assets/Scripts/Wave Spawning/WaveManager.cs" />
+    <Compile Include="Assets/Scripts/Level/NavMeshManager.cs" />
     <Compile Include="Assets/Scripts/Enemies/GruntAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/ProgAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/QuarkAI.cs" />
     <Compile Include="Assets/Scripts/Entities/BaseEntity.cs" />
+    <Compile Include="Assets/Scripts/Level/LevelBorders.cs" />
     <Compile Include="Assets/Scripts/Wave Spawning/WaveData.cs" />
     <Compile Include="Assets/Scripts/Enemies/TankShellAI.cs" />
     <Compile Include="Assets/Scripts/Game/PointValues.cs" />
@@ -69,9 +70,10 @@
     <Compile Include="Assets/Scripts/Enemies/CruiseMissileAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/EnforcerAI.cs" />
     <Compile Include="Assets/Scripts/Entities/FriendlyEntity.cs" />
+    <Compile Include="Assets/Scripts/Level/MeshNode.cs" />
     <Compile Include="Assets/Scripts/Game/FinalScoreDisplay.cs" />
     <Compile Include="Assets/Scripts/Game/RescueBonusDisplayKiller.cs" />
-    <Compile Include="Assets/Scripts/Level Borders/SpriteColorCycle.cs" />
+    <Compile Include="Assets/Scripts/Level/SpriteColorCycle.cs" />
     <Compile Include="Assets/Scripts/Game/ScoreCarry.cs" />
     <Compile Include="Assets/Scripts/Enemies/SpheroidAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/TankAI.cs" />

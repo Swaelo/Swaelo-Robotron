@@ -13,7 +13,7 @@ public class SpheroidAI : HostileEntity
     //Movement
     private List<Vector3> CornerPositions = new List<Vector3>(); //Corner position targets the spheroids will move between to avoid the player
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
-    private float MoveSpeed = 4.5f; //How fast the spheroid moves around the level
+    private float MoveSpeed = 2.5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
     //Stuck prevention (electrodes placed down can cause the enemies to get stuck, they can also get blocked from the player at times)
     private float TargetProgressTimer = 0f; //How long we have been travelling towards our current target location
@@ -179,8 +179,8 @@ public class SpheroidAI : HostileEntity
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
 
             //Spawn the new enemy in
-            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
-            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+            // GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            // WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
 
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
@@ -387,7 +387,7 @@ public class SpheroidAI : HostileEntity
         Vector3 AvoidPlayer = Vector3.zero;
 
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if(PlayerDistance < 3f)
+        if(PlayerDistance < 1f)
             AvoidPlayer = (transform.position - GameState.Instance.Player.transform.position).normalized * 3f;
         
         return AvoidPlayer;

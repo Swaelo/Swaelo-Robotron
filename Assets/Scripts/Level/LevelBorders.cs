@@ -7,7 +7,6 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class LevelBorders : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class LevelBorders : MonoBehaviour
     [Header("Border Settings")]
     public float BorderThickness = 1f;
 
-    //Bounds of the level, used by AI scripts to constrain movement within the level bounds
+    //Bounds of the level, grabbed by other scripts to ensure their behaviour remains inside the level
     public Vector2 XBounds;
     public Vector2 YBounds;
 
@@ -32,8 +31,13 @@ public class LevelBorders : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        //Setup the level boundaries etc
         SetBounds();
         DefineCornerLocations();
+
+        //Once the level has been setup, get the nav mesh generated
+        NavMeshManager.Instance.GenerateNavMesh();
     }
 
     private void Start()
