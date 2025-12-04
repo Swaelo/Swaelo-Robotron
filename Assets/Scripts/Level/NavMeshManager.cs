@@ -23,6 +23,10 @@ public class NavMeshManager : MonoBehaviour
     //Toggles if the navmesh is visible for debugging purposes
     public bool VisibleNavMesh = false;
 
+    //Set once the nav mesh generation has been completed, level cannot start until this happens
+    public bool NavMeshReady = false;
+
+    //Initialised the navmesh, sets up 2D array of nodes which define the whole navmesh grid to be used for pathfinding
     public void GenerateNavMesh()
     {
         //Find the level size, and use that with the desired mesh resolution to find the actual grid size
@@ -59,7 +63,35 @@ public class NavMeshManager : MonoBehaviour
                     string NodeName = "NavNode " + x + ", " + y;
                     NewNode.InitRenderer(NodeName);
                 }
+
+                //Also, they should know their position in the array
+                NewNode.GridPosition = new Vector2(x, y);
             }
         }
+
+        NavMeshReady = true;
+    }
+
+    //Returns the navmesh in the grid closest to the given world position
+    public MeshNode GetNodeFromWorldPos(Vector3 WorldPos)
+    {
+        //Get the level bounds as we need to clamp the given position inside it
+        Vector2 XBounds = LevelBorders.Instance.XBounds;
+        Vector2 YBounds = LevelBorders.Instance.YBounds;
+
+        //Clamp the world position inside the grid bounds
+        float XClamped = Mathf.Clamp(WorldPos.x, XBounds.x, XBounds.y);
+        float YClamped = Mathf.Clamp(WorldPos.y, YBounds.x, YBounds.y);
+
+        //Convert clamped position into grid coordinates
+        int XIndex = Mathf.FloorToInt((XClamped - XBounds.x) / CellSize);
+        int YIndex = Mathf.FloorToInt((YClamped - YBounds.x) / CellSize);
+
+        //Clamp indices to make sure we don't go out of bounds
+        XIndex = Mathf.Clamp(XIndex, 0, NodeGraph.Count - 1);
+        YIndex = Mathf.Clamp(YIndex, 0, NodeGraph[0].Count - 1);
+
+        //Return the given node graph
+        return NodeGraph[XIndex][YIndex];
     }
 }

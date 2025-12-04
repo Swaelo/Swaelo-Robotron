@@ -30,6 +30,9 @@ public class GameState : MonoBehaviour
     private float DeathTimeoutLeft = 2.5f;  //Time remaining before the current death timeout expires
     public bool InDeathTimeout = false;
 
+    //Try coloring whatever node is closest to the player to test out the world pos to mesh node function
+    private MeshNode ClosestNodeToPlayer = null;
+
     private void Start()
     {
         //Begin the player on the first wave
@@ -69,6 +72,17 @@ public class GameState : MonoBehaviour
                 InDeathTimeout = false;
             }
         }
+
+        //Grab the closest node if we dont already have one
+        if(ClosestNodeToPlayer == null)
+            ClosestNodeToPlayer = NavMeshManager.Instance.GetNodeFromWorldPos(Player.transform.position);
+        
+        //Set the previous node back to blue
+        ClosestNodeToPlayer.SetColor(Color.blue);
+
+        //Grab the new closest and set it to red
+        ClosestNodeToPlayer = NavMeshManager.Instance.GetNodeFromWorldPos(Player.transform.position);
+        ClosestNodeToPlayer.SetColor(Color.red);
     }
 
     //Checks if the game is paused

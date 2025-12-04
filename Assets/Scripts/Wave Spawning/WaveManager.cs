@@ -370,6 +370,10 @@ public class WaveManager : MonoBehaviour
     //Starts the round once the warmup period expires
     private void WaitForRoundStart()
     {
+        //Round cannot start if the navmesh isnt ready yet
+        if(!NavMeshManager.Instance.NavMeshReady)
+            return;
+
         WarmUpLeft -= Time.deltaTime;
         if (WarmUpLeft <= 0.0f)
             WarmingUp = false;

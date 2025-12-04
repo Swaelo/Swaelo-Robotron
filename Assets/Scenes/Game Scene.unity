@@ -241,8 +241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3268aa971212b449d9bc04f7d6d89f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBorders
-  LevelWidth: 8.5
-  LevelHeight: 8.5
+  LevelWidth: 8
+  LevelHeight: 8
   BorderThickness: 0.25
   XBounds: {x: 0, y: 0}
   YBounds: {x: 0, y: 0}
@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NavMeshManager
   VisibleNavMesh: 1
+  NavMeshReady: 0
 --- !u!1 &248332432
 GameObject:
   m_ObjectHideFlags: 0

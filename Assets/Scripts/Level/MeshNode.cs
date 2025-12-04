@@ -11,6 +11,8 @@ public class MeshNode
     public Vector3 NodePos = Vector3.zero;  //This nodes position in the world
     public bool IsWalkable = true;  //Can units walk over this node
 
+    public Vector2 GridPosition = Vector2.zero; //This nodes positions in the 2d array
+
     //Used to make the node visible during gameplay for debugging purposes
     public GameObject RenderObject;
     public void InitRenderer(string Name)
@@ -27,5 +29,13 @@ public class MeshNode
         var Material = new Material(Shader.Find("Unlit/Color"));
         Material.color = Color.blue;
         RenderObject.GetComponent<Renderer>().material = Material;
+
+        //I dont know why this is automatically added but get rid of it
+        Object.Destroy(RenderObject.GetComponent<BoxCollider>());
+    }
+
+    public void SetColor(Color NewColor)
+    {
+        RenderObject.GetComponent<Renderer>().material.color = NewColor;
     }
 }
