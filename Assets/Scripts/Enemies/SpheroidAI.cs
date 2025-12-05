@@ -15,12 +15,10 @@ public class SpheroidAI : HostileEntity
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
     private float MoveSpeed = 2.5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
-    //Stuck prevention (electrodes placed down can cause the enemies to get stuck, they can also get blocked from the player at times)
-    private float TargetProgressTimer = 0f; //How long we have been travelling towards our current target location
-    private float ProgressCheckInterval = 1f; //How often to check our progress towards the current target location
-    private float PreviousDistanceToTarget = 0f; //How close we were to the target last time we checked
-    private bool HasTempWaypoint = false; //Tracks if we are moving towards a temporary waypoint we have created to help prevent getting stuck
-    private Vector3 TempWayPoint; //Temporary target location to move towards when we get stuck
+
+    //Pathfinding
+    private bool HasPath = false;   //Tracks if we currently have a pathway to our target location
+    private List<MeshNode> PathToTarget = new List<MeshNode>(); //List of mesh nodes to navigate through to reach out target location
 
     //Enemy spawning
     public bool InCorner = false;  //Tracks if we are in a safe spot or not
@@ -33,9 +31,8 @@ public class SpheroidAI : HostileEntity
     private Vector3 BaseScale;
     private AudioSource SoundEffectPlayer;
 
-    //Hit until dead
+    //Hits until dead
     private int HitPoints = 3;
-
 
 
     private void Start()
@@ -69,55 +66,31 @@ public class SpheroidAI : HostileEntity
 
     private void SeekCorner()
     {
-        //Get current steering based on other spheroids around me as they move in flocks
-        List<SpheroidAI> OtherSpheroids = WaveManager.Instance.GetSpheroidList();
-        Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
-
-        //Figure out new target location and move towards it
-        Vector3 MovementVelocity = Steering * MoveSpeed;
-        transform.position += MovementVelocity * Time.deltaTime;
-
-        //Check current distance from our target location
-        float TargetDistance = Vector3.Distance(transform.position, HasTempWaypoint ? TempWayPoint : CurrentTarget);
-
-        //Update progress timer if we are still making progress
-        if(TargetDistance <= PreviousDistanceToTarget + 0.1f)
-            TargetProgressTimer += Time.deltaTime;
-        //Otherwise we reset the timer if we are no longer making progress
-        else
-            TargetProgressTimer = 0f;
-
-        //Store the previous distance from our target to compare with in next frame
-        PreviousDistanceToTarget = TargetDistance;
-
-        //If we make no progress for too long we need to assign a temporary waypoint
-        if(TargetProgressTimer > ProgressCheckInterval && !HasTempWaypoint)
+        //If we dont have a pathway to our target, we need to create it
+        if(!HasPath)
         {
-            TempWayPoint = FindTempWaypoint();
-            HasTempWaypoint = true;
-            TargetProgressTimer = 0f;
+            PathToTarget = NavMeshManager.Instance.FindPathway(transform.position, CurrentTarget);
+            HasPath = true;
+
+            //Light up the pathway to see that it worked
+            foreach(MeshNode Node in PathToTarget)
+                Node.SetColor(Color.red);
         }
 
-        //Also make sure we dont get stuck trying to move toward the temp waypoints
-        if(TargetProgressTimer > ProgressCheckInterval && HasTempWaypoint)
-        {
-            TempWayPoint = FindTempWaypoint();
-            TargetProgressTimer = 0f;
-        }
+        // //Get current steering based on other spheroids around me as they move in flocks
+        // List<SpheroidAI> OtherSpheroids = WaveManager.Instance.GetSpheroidList();
+        // Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
 
-        //If we have a temp waypoint, first check if we have reached that location
-        if(HasTempWaypoint)
-        {
-            float TempDistance = Vector3.Distance(transform.position, TempWayPoint);
-            if(TempDistance < 0.1f)
-            {
-                HasTempWaypoint = false;
-                TempWayPoint = Vector3.zero;
-            }
-        }
-        //Otherwise we check for having reached the target corner location
-        else if (TargetDistance <= 2f)
-            InCorner = true;
+        // //Figure out new target location and move towards it
+        // Vector3 MovementVelocity = Steering * MoveSpeed;
+        // transform.position += MovementVelocity * Time.deltaTime;
+
+        // //Check current distance from our target location
+        // float TargetDistance = Vector3.Distance(transform.position, CurrentTarget);
+
+        // //Otherwise we check for having reached the target corner location
+        // if (TargetDistance <= 2f)
+        //     InCorner = true;
     }
 
     //When the spheroid gets stuck on an obstacle, this grabs a temp waypoint for it to use to get out of the way
@@ -399,8 +372,7 @@ public class SpheroidAI : HostileEntity
         Vector3 Flocking = ComputeFlockingVector(Self, OtherSpheroids, 4f, 1f);
 
         //Get steering towards current target location
-        Vector3 Target = HasTempWaypoint ? TempWayPoint : CurrentTarget;
-        Vector3 MoveToCorner = (Target - transform.position).normalized * 2f;
+        Vector3 MoveToCorner = (CurrentTarget - transform.position).normalized * 2f;
 
 
         Vector3 AvoidPlayer = ComputePlayerAvoidance();

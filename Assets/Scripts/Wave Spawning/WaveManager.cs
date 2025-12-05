@@ -45,8 +45,6 @@ public class WaveManager : MonoBehaviour
     public float MinEnemySpawnDistance = 1.5f; //How close together enemies can be spawned from one another
     private List<Vector2> EnemySpawnLocations = new List<Vector2>(); //List of enemy spawn locations to be used when starting a new wave
 
-    //Grabs the current border level size from the level border manager
-
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {

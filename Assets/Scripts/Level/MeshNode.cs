@@ -10,6 +10,10 @@ public class MeshNode
 {
     public Vector3 NodePos = Vector3.zero;  //This nodes position in the world
     public bool IsWalkable = true;  //Can units walk over this node
+    public float GCost = float.MaxValue; //Distance from the start of the pathway
+    public float HCost = 0f;    //Heuristic estimate of cost from current node to goal
+    public float FCost = 0f;    //G+H, total estimated cost
+    public MeshNode Parent = null;  //Pointer to previous node, used for path reconstruction
 
     public Vector2 GridPosition = Vector2.zero; //This nodes positions in the 2d array
 
