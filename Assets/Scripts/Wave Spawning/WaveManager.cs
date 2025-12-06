@@ -45,6 +45,19 @@ public class WaveManager : MonoBehaviour
     public float MinEnemySpawnDistance = 1.5f; //How close together enemies can be spawned from one another
     private List<Vector2> EnemySpawnLocations = new List<Vector2>(); //List of enemy spawn locations to be used when starting a new wave
 
+    private void Update()
+    {
+        //All game logic and AI should be paused at certain times
+        if (GameState.Instance.IsGamePaused())
+            return;
+
+        //During the spawning period, keep spawning in everything until the round is ready to begin
+        if (SpawnPeriodActive)
+            ContinueSpawningProcess();
+        else if (WarmingUp)
+            WaitForRoundStart();
+    }
+
     //Spawns all the enemies in which belong to the given wave number
     public void StartWave(int WaveNumber)
     {
@@ -168,6 +181,9 @@ public class WaveManager : MonoBehaviour
         //Clean up any remaining enemy projectiles
         foreach (GameObject EnemyProjectile in GameObject.FindGameObjectsWithTag("EnemyProjectile"))
             Destroy(EnemyProjectile);
+
+        //Reset the mesh nodes to all be walkable
+        NavMeshManager.Instance.ResetNodes();
     }
 
     //Restarts the current wave with mostly the same amount of enemies that were remaining when the player died
@@ -252,6 +268,18 @@ public class WaveManager : MonoBehaviour
                 case (EntityType.Tank):
                     Entities.Tanks++;
                     break;
+                case (EntityType.Enforcer):
+                    Entities.Enforcers++;
+                    break;
+                case (EntityType.DaddyProg):
+                    Entities.DaddyProgs++;
+                    break;
+                case (EntityType.MummyProg):
+                    Entities.MummyProgs++;
+                    break;
+                case (EntityType.MikeyProg):
+                    Entities.MikeyProgs++;
+                    break;
             }
         }
 
@@ -263,19 +291,6 @@ public class WaveManager : MonoBehaviour
     {
         for (int i = 0; i < Amount; i++)
             EntitiesToSpawn.Add(PrefabSpawner.Instance.GetPrefab(PrefabName));
-    }
-
-    private void Update()
-    {
-        //All game logic and AI should be paused at certain times
-        if (GameState.Instance.IsGamePaused())
-            return;
-
-        //During the spawning period, keep spawning in everything until the round is ready to begin
-        if (SpawnPeriodActive)
-            ContinueSpawningProcess();
-        else if (WarmingUp)
-            WaitForRoundStart();
     }
 
     //Progresses through the stages of getting everything spawned in to start the new round
@@ -302,6 +317,9 @@ public class WaveManager : MonoBehaviour
                 SpawnPeriodActive = false;
                 WarmingUp = true;
                 WarmUpLeft = WarmUpPeriod;
+
+                //Now that all entities have been placed, tell the nav mesh manager to mark any nodes under electrodes as unwalkable
+                NavMeshManager.Instance.MarkElectrodeNodesUnwalkable();
             }
         }
     }
@@ -436,20 +454,21 @@ public class WaveManager : MonoBehaviour
         TargetEntities.Add(NewEnemy);
     }
 
-    //Returns a list of all the spheroid enemies, they need access to each other for their flocking behaviour
-    public List<SpheroidAI> GetSpheroidList()
+    //Returns a list of all entities of a certain type
+    public List<BaseEntity> GetEntityList(EntityType Type)
     {
-        //Start a list to store all the spheroids
-        List<SpheroidAI> SpheroidList = new List<SpheroidAI>();
+        //Start a list to store them all
+        List<BaseEntity> EntityList = new List<BaseEntity>();
 
-        //Go through all the currently active hostile entities
-        foreach(HostileEntity Hostile in TargetEntities)
+        //Loop through all the currently active entities
+        foreach(BaseEntity Entity in ActiveEntities)
         {
-            if(Hostile.gameObject.tag == "Spheroid")
-                SpheroidList.Add(Hostile.GetComponent<SpheroidAI>());
+            //Add them to the list if they are the type we are looking for
+            if(Entity.Type == Type)
+                EntityList.Add(Entity);
         }
 
-        //Return the list of all other spheroids
-        return SpheroidList;
+        //Return the final list
+        return EntityList;
     }
 }

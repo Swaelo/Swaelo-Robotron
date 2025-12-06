@@ -15,7 +15,7 @@ public class NavMeshManager : MonoBehaviour
 
     //Size and resolution of the nav mesh
     private Vector2 GridSize = Vector2.zero;    //Length and width of the nav mesh
-    private float CellSize = 0.5f;   //Size of nodes on the graph
+    private float CellSize = 0.25f;   //Size of nodes on the graph
 
     //Matrix of nodes which made up the navigation mesh
     public List<List<MeshNode>> NodeGraph = new List<List<MeshNode>>();
@@ -32,8 +32,8 @@ public class NavMeshManager : MonoBehaviour
         //Find the level size, and use that with the desired mesh resolution to find the actual grid size
         Vector2 XBounds = LevelBorders.Instance.XBounds;
         Vector2 YBounds = LevelBorders.Instance.YBounds;
-        float LevelWidth = LevelBorders.Instance.LevelWidth;
-        float LevelHeight = LevelBorders.Instance.LevelHeight;
+        float LevelWidth = LevelBorders.Instance.GetUseableLevelWidth();
+        float LevelHeight = LevelBorders.Instance.GetUseableLevelHeight();
         GridSize.x = Mathf.CeilToInt(LevelWidth / CellSize);
         GridSize.y = Mathf.CeilToInt(LevelHeight / CellSize);
 
@@ -48,11 +48,10 @@ public class NavMeshManager : MonoBehaviour
                 //Initialize the column of the grid
                 MeshNode NewNode = new MeshNode();
 
-                //Get the world position of the new node
+                //Set the position of each node at the center of the cell it defines
                 NewNode.NodePos = new Vector3(
-                    XBounds.x + x * CellSize,
-                    YBounds.x + y * CellSize,
-                    0f);
+                    XBounds.x + (x + 0.5f) * CellSize,
+                    YBounds.x + (y + 0.5f) * CellSize, 0f);
 
                 //Add it into the grid
                 NodeGraph[x].Add(NewNode);
@@ -60,8 +59,9 @@ public class NavMeshManager : MonoBehaviour
                 //Make them visible if needed
                 if(VisibleNavMesh)
                 {
+                    //Name and parent it to keep the scene hierarchy clean
                     string NodeName = "NavNode " + x + ", " + y;
-                    NewNode.InitRenderer(NodeName);
+                    NewNode.InitRenderer(NodeName, transform);
                 }
 
                 //Also, they should know their position in the array
@@ -70,6 +70,87 @@ public class NavMeshManager : MonoBehaviour
         }
 
         NavMeshReady = true;
+    }
+
+    //Reset all nodes to walkable
+    public void ResetNodes()
+    {
+        foreach(List<MeshNode> List in NodeGraph)
+        {
+            foreach(MeshNode Node in List)
+            {
+                Node.SetWalkable(true);
+            }
+        }
+    }
+
+    //Sets any nodes underneath electrodes as unwalkable
+    public void MarkElectrodeNodesUnwalkable()
+    {
+        //Electrons make unwalkable areas on the navmesh, grab all the electrons and set the nodes they occupy as not walkable
+        List<BaseEntity> Electrodes = WaveManager.Instance.GetEntityList(EntityType.Electrode);
+        foreach(BaseEntity Electrode in Electrodes)
+            MarkNodesUnderEntity(Electrode, false);
+    }
+
+    //Marks any mesh nodes under the passed entity as not walkable
+    public void MarkNodesUnderEntity(BaseEntity Entity, bool Walkable)
+    {
+        //Get the box collider from this entitys gameobject
+        BoxCollider2D EntityCollider = Entity.transform.GetComponent<BoxCollider2D>();
+        if(EntityCollider == null)
+        {
+            Debug.LogWarning("Entity has no box collider I can find.");
+            return;
+        }
+
+        //Get the bounds of the collider in world space
+        Bounds EntityBounds = EntityCollider.bounds;
+
+        //Loop through all the ndoes in the nav mesh
+        for (int x = 0; x < NodeGraph.Count; x++)
+        {
+            for(int y = 0; y < NodeGraph[x].Count; y++)
+            {
+                //Get each mesh node we will be checking
+                MeshNode Node = NodeGraph[x][y];
+
+                //Calculate the nodes world space bounds
+                Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
+                
+                //Mark the node as unwalkable if the entity bounds intersect
+                if(NodeBounds.Intersects(EntityBounds))
+                    Node.SetWalkable(Walkable);
+            }
+        }
+    }
+
+    //Returns a list of any mesh nodes which are under the given box collider
+    public List<MeshNode> GetNodesUnderBox(BoxCollider2D Box)
+    {
+        //Create a list to store the nodes under the collider
+        List<MeshNode> Nodes = new List<MeshNode>();
+
+        //Get the bounds of the collider in world space
+        Bounds BoxBounds = Box.bounds;
+
+        //Loop through all the nodes in the nav mesh
+        for(int x = 0; x < NodeGraph.Count; x++)
+        {
+            for(int y = 0; y < NodeGraph[x].Count; y++)
+            {
+                //Get the node we will be checking and its bounds
+                MeshNode Node = NodeGraph[x][y];
+                Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
+                
+                //If this node intersects with the given box collider, add it to our list
+                if(NodeBounds.Intersects(BoxBounds))
+                    Nodes.Add(Node);
+            }
+        }
+
+        //Return the final list of nodes
+        return Nodes;
     }
 
     //Returns the MeshNode in the grid closest to the given world position
@@ -149,8 +230,6 @@ public class NavMeshManager : MonoBehaviour
     //Takes two locations and returns a list of mesh nodes which forms a pathway from one location to the other
     public List<MeshNode> FindPathway(Vector3 Start, Vector3 End)
     {
-        Debug.Log("Finding pathway");
-
         //Find the mesh node closest to our start and end locations
         MeshNode PathStart = GetWalkableNodeFromWorldPos(Start);
         MeshNode PathEnd = GetWalkableNodeFromWorldPos(End);

@@ -48,6 +48,8 @@ public class ElectrodeAI : HostileEntity
     //Triggers the electrodes death animation and tells the wave manager this entity has been destroyed
     private void Die()
     {
+        //Have the navmesh manager free up these nodes for enemy movement
+        NavMeshManager.Instance.MarkNodesUnderEntity(this, true);
         //Play sound
         SoundEffectsPlayer.Instance.PlaySound("ElectrodeDie");
         //Start the death animation

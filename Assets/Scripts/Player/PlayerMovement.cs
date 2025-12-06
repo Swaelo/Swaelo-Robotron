@@ -4,6 +4,7 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
+using System.Collections.Generic;
 using UnityEngine;
 
 //Colors available for the players eyes
@@ -32,9 +33,8 @@ public class PlayerMovement : MonoBehaviour
     public Animator[] BodyAnimators;    //Body part animators used to control walking animation
     public Animator[] EyeAnimators; //Used to change the players eye color
 
-    //Physics
-    public BoxCollider2D FrontCollider; //Used for collision detection during front view mode
-    public BoxCollider2D SideCollider;  //Used for collision detection during side view mode
+    //Track nav mesh nodes the player is walking over
+    private List<MeshNode> WalkingNodes = new List<MeshNode>();
 
     private void Awake()
     {
@@ -86,6 +86,21 @@ public class PlayerMovement : MonoBehaviour
         //Calculate movement velocity between frames and store current position for next frames update
         MovementVelocity = transform.position - PreviousPos;
         PreviousPos = transform.position;
+
+        SetMeshNodes();
+    }
+
+    //Keeps track of which mesh nodes the player is walking on, and sets them as unwalkable so enemies pathfinding doesnt travel in that direction
+    private void SetMeshNodes()
+    {
+        //Loop through the current nodes and set them all back to walkable
+        foreach(MeshNode Node in WalkingNodes)
+            Node.SetWalkable(true);
+
+        //Now get the new list of nodes the player is currently walking over and set those as unwalkable
+        WalkingNodes = NavMeshManager.Instance.GetNodesUnderBox(GetComponent<BoxCollider2D>());
+        foreach(MeshNode Node in WalkingNodes)
+            Node.SetWalkable(false);
     }
 
     //Changes the players eye color periodically
@@ -139,8 +154,5 @@ public class PlayerMovement : MonoBehaviour
             Renderer.forceRenderingOff = !UseFrontView;
         foreach (SpriteRenderer Renderer in SideSprites)
             Renderer.forceRenderingOff = UseFrontView;
-        //Toggle colliders
-        FrontCollider.enabled = UseFrontView;
-        SideCollider.enabled = !UseFrontView;
     }
 }

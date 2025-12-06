@@ -19,19 +19,20 @@ public class MeshNode
 
     //Used to make the node visible during gameplay for debugging purposes
     public GameObject RenderObject;
-    public void InitRenderer(string Name)
+    public void InitRenderer(string Name, Transform Parent)
     {
         //Create a game object which makes this node visible
         RenderObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
         RenderObject.name = Name;
+        RenderObject.transform.parent = Parent;
         RenderObject.transform.position = NodePos;
 
         //Scale it down
-        RenderObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        RenderObject.transform.localScale = new Vector3(0.085f, 0.085f, 0.085f);
 
         //Set a color / material to make it visible
         var Material = new Material(Shader.Find("Unlit/Color"));
-        Material.color = Color.blue;
+        Material.color = Color.green;
         RenderObject.GetComponent<Renderer>().material = Material;
 
         //I dont know why this is automatically added but get rid of it
@@ -40,6 +41,13 @@ public class MeshNode
 
     public void SetColor(Color NewColor)
     {
-        RenderObject.GetComponent<Renderer>().material.color = NewColor;
+        if(RenderObject != null)
+            RenderObject.GetComponent<Renderer>().material.color = NewColor;
+    }
+
+    public void SetWalkable(bool Walkable)
+    {
+        IsWalkable = Walkable;
+        SetColor(Walkable ? Color.green : Color.red);
     }
 }

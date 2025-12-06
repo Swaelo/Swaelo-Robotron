@@ -13,7 +13,7 @@ public class SpheroidAI : HostileEntity
     //Movement
     private List<Vector3> CornerPositions = new List<Vector3>(); //Corner position targets the spheroids will move between to avoid the player
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
-    private float MoveSpeed = 2.5f; //How fast the spheroid moves around the level
+    public float MoveSpeed = 5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
 
     //Pathfinding
@@ -30,6 +30,7 @@ public class SpheroidAI : HostileEntity
     private float SpawnAnimationDuration = 2.5f;  //How long it takes to spawn an enemy in
     private Vector3 BaseScale;
     private AudioSource SoundEffectPlayer;
+    public Transform VisualsChild; //Child object which contains the sprite, scales up during summoning without effecting the collider size
 
     //Hits until dead
     private int HitPoints = 3;
@@ -41,7 +42,7 @@ public class SpheroidAI : HostileEntity
         CornerPositions = LevelBorders.Instance.GetCornerPositions();
 
         //Store transformation scale
-        BaseScale = transform.localScale;
+        BaseScale = VisualsChild.localScale;
 
         SoundEffectPlayer = GetComponent<AudioSource>();
 
@@ -74,47 +75,69 @@ public class SpheroidAI : HostileEntity
 
             //Light up the pathway to see that it worked
             foreach(MeshNode Node in PathToTarget)
-                Node.SetColor(Color.red);
+                Node.SetColor(Color.blue);
         }
-
-        // //Get current steering based on other spheroids around me as they move in flocks
-        // List<SpheroidAI> OtherSpheroids = WaveManager.Instance.GetSpheroidList();
-        // Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
-
-        // //Figure out new target location and move towards it
-        // Vector3 MovementVelocity = Steering * MoveSpeed;
-        // transform.position += MovementVelocity * Time.deltaTime;
-
-        // //Check current distance from our target location
-        // float TargetDistance = Vector3.Distance(transform.position, CurrentTarget);
-
-        // //Otherwise we check for having reached the target corner location
-        // if (TargetDistance <= 2f)
-        //     InCorner = true;
-    }
-
-    //When the spheroid gets stuck on an obstacle, this grabs a temp waypoint for it to use to get out of the way
-    private Vector3 FindTempWaypoint()
-    {
-        float DetourRadius = 1.2f;
-
-        //Try 10 times to get a new temp waypoint
-        for(int i = 0; i < 10; i++)
+        else
         {
-            Vector2 Direction = Random.insideUnitCircle.normalized;
-            Vector3 NewPos = transform.position + new Vector3(Direction.x, Direction.y, 0f) * DetourRadius;
-
-            //Make sure this new position is inside the level bounds
-            NewPos = LevelBorders.Instance.ClampPositionInsideBounds(NewPos);
-
-            if(!Physics2D.OverlapCircle(NewPos, 0.2f, 13))
+            //If we get too close to the player we need to find a new pathway to our target
+            float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
+            if(PlayerDistance < 1f)
             {
-                return NewPos;
+                //Set the color of the current pathway nodes back to green as we arent using them now
+                foreach(MeshNode Node in PathToTarget)
+                    Node.SetColor(Color.green);
+
+                //Find a new pathway to the target location and light those up instead
+                PathToTarget = NavMeshManager.Instance.FindPathway(transform.position, CurrentTarget);
+                foreach(MeshNode Node in PathToTarget)
+                    Node.SetColor(Color.blue);
+            }
+
+            //Continue along our pathway of nodes while there are still any to follow
+            if(PathToTarget.Count > 0)
+            {
+                //Get the position of our current node target
+                Vector3 NodeTarget = PathToTarget[0].NodePos;
+                    
+                //Get current steering based on other spheroids around me as they move in flocks
+                List<BaseEntity> OtherSpheroids = WaveManager.Instance.GetEntityList(EntityType.Spheroid);
+                Steering = GetSteering(this, OtherSpheroids, NodeTarget, GameState.Instance.Player.transform.position);
+
+                //Move towards it
+                Vector3 MovementVelocity = Steering * MoveSpeed;
+                transform.position += MovementVelocity * Time.deltaTime;
+
+                //Check out how close we are now to our current node on the pathway
+                float NodeDistance = Vector3.Distance(transform.position, NodeTarget);
+                //Remove that node from the pathway once we reach it
+                if(NodeDistance <= .1f)
+                {
+                    PathToTarget[0].SetColor(Color.green);
+                    PathToTarget.RemoveAt(0);
+                }
+            }
+            //Once the pathway has been completed, we continue moving onto the corner target location
+            else
+            {
+                //Get current steering based on other spheroids around me as they move in flocks
+                List<BaseEntity> OtherSpheroids = WaveManager.Instance.GetEntityList(EntityType.Spheroid);
+                Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
+
+                //Move towards it
+                Vector3 MovementVelocity = Steering * MoveSpeed;
+                transform.position += MovementVelocity * Time.deltaTime;
+
+                //Check current distance from our target location
+                float TargetDistance = Vector3.Distance(transform.position, CurrentTarget);
+
+                //Otherwise we check for having reached the target corner location
+                if (TargetDistance <= 2f)
+                {
+                    InCorner = true;
+                    HasPath = false;
+                }
             }
         }
-
-        //As a fallback, just push sideway from the stuck direction
-        return transform.position + (Vector3)(Random.insideUnitCircle.normalized * DetourRadius);
     }
 
     private void IdleInCorner()
@@ -137,7 +160,7 @@ public class SpheroidAI : HostileEntity
 
             //Scale the growth, small at the start and largest right before completing the spawning
             float TransformScale = Mathf.Lerp(1f, 3f, SpawnProgress);
-            transform.localScale = BaseScale * TransformScale;
+            VisualsChild.localScale = BaseScale * TransformScale;
             //Ramp up the spinning over time too
             float SpinSpeed = Mathf.Lerp(360f * 3f, 360f * 8f, SpawnProgress * SpawnProgress);
             transform.Rotate(0f, 0f, SpinSpeed * Time.deltaTime);
@@ -151,9 +174,9 @@ public class SpheroidAI : HostileEntity
         {
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
 
-            //Spawn the new enemy in
-            // GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
-            // WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
+            // //Spawn the new enemy in
+            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
 
             //Play sound effect
             SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
@@ -180,7 +203,7 @@ public class SpheroidAI : HostileEntity
         TimeInCorner = 0f;
         StartedSpawning = false;
         SpawnAnimationTimer = 0f;
-        transform.localScale = BaseScale;
+        VisualsChild.localScale = BaseScale;
         SoundEffectPlayer.Stop();
     }
 
@@ -270,7 +293,7 @@ public class SpheroidAI : HostileEntity
     }
 
     //Computes steering to apply flocking movement
-    private Vector3 ComputeFlockingVector(SpheroidAI Self, List<SpheroidAI> All, float FlockingRadius, float SeperationRadius)
+    private Vector3 ComputeFlockingVector(SpheroidAI Self, List<BaseEntity> All, float FlockingRadius, float SeperationRadius)
     {
         Vector3 Alignment = Vector3.zero;
         Vector3 Cohesion = Vector3.zero;
@@ -360,25 +383,25 @@ public class SpheroidAI : HostileEntity
         Vector3 AvoidPlayer = Vector3.zero;
 
         float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if(PlayerDistance < 1f)
-            AvoidPlayer = (transform.position - GameState.Instance.Player.transform.position).normalized * 3f;
+        if(PlayerDistance < .5f)
+            AvoidPlayer = (transform.position - GameState.Instance.Player.transform.position).normalized * 2f;
         
         return AvoidPlayer;
     }
 
     //Causes multiple spheroids to flock together
-    Vector3 GetSteering(SpheroidAI Self, List<SpheroidAI> OtherSpheroids, Vector3 CornerTarget, Vector3 PlayerPos)
+    Vector3 GetSteering(SpheroidAI Self, List<BaseEntity> OtherSpheroids, Vector3 CornerTarget, Vector3 PlayerPos)
     {
-        Vector3 Flocking = ComputeFlockingVector(Self, OtherSpheroids, 4f, 1f);
+        Vector3 Flocking = ComputeFlockingVector(Self, OtherSpheroids, 2f, .5f);
 
         //Get steering towards current target location
-        Vector3 MoveToCorner = (CurrentTarget - transform.position).normalized * 2f;
+        Vector3 MoveToCorner = (CornerTarget - transform.position).normalized * 2f;
 
 
         Vector3 AvoidPlayer = ComputePlayerAvoidance();
         Vector3 WallAvoidance = ComputeWallAvoidance(.25f) * 3f;
 
-        Vector3 Steering = Flocking + MoveToCorner + AvoidPlayer + WallAvoidance;
+        Vector3 Steering = MoveToCorner + AvoidPlayer;
 
         Steering = Vector3.ClampMagnitude(Steering, 1f);
         return Steering;

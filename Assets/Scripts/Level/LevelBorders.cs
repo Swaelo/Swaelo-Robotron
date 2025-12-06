@@ -17,6 +17,9 @@ public class LevelBorders : MonoBehaviour
     public float LevelWidth = 15f;
     public float LevelHeight = 8f;
 
+    public float GetUseableLevelWidth() { return LevelWidth - BorderThickness * 2; }
+    public float GetUseableLevelHeight() { return LevelHeight - BorderThickness * 2; }
+
     [Header("Border Settings")]
     public float BorderThickness = 1f;
 
@@ -72,7 +75,7 @@ public class LevelBorders : MonoBehaviour
     private void CreateBorder(string BorderName, Vector2 BorderPos, Vector2 BorderSize)
     {
         //Create the new border and set its location
-        GameObject NewBorder = new GameObject(name);
+        GameObject NewBorder = new GameObject(BorderName);
         NewBorder.transform.parent = transform;
         NewBorder.transform.localPosition = BorderPos;
 
