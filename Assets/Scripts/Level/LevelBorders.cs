@@ -12,6 +12,7 @@ public class LevelBorders : MonoBehaviour
 {
     //Singleton Instance
     public static LevelBorders Instance;
+    private void Awake() { Instance = this; }
 
     [Header("Level Size")]
     public float LevelWidth = 15f;
@@ -31,20 +32,15 @@ public class LevelBorders : MonoBehaviour
     private List<Vector3> CornerPositions;
     public List<Vector3> GetCornerPositions() { return CornerPositions; }
 
-    private void Awake()
+    public void InitLevelBorders()
     {
-        Instance = this;
-
         //Setup the level boundaries etc
         SetBounds();
         DefineCornerLocations();
 
         //Once the level has been setup, get the nav mesh generated
         NavMeshManager.Instance.GenerateNavMesh();
-    }
 
-    private void Start()
-    {
         GenerateBorders();
     }
 
