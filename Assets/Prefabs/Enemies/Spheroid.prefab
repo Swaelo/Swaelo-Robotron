@@ -237,6 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 7
   CurrentTarget: {x: 0, y: 0, z: 0}
+  MoveSpeed: 3.5
   InCorner: 0
   VisualsChild: {fileID: 8325091829699825927}
 --- !u!82 &5293658262180242885

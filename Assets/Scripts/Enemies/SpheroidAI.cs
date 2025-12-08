@@ -13,7 +13,7 @@ public class SpheroidAI : HostileEntity
     //Movement
     private List<Vector3> CornerPositions = new List<Vector3>(); //Corner position targets the spheroids will move between to avoid the player
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
-    public float MoveSpeed = 5f; //How fast the spheroid moves around the level
+    public float MoveSpeed = 2.5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
 
     //Pathfinding

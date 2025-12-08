@@ -68,6 +68,7 @@
     <Compile Include="Assets/Scripts/Enemies/SparkShotAI.cs" />
     <Compile Include="Assets/Scripts/Game/GameState.cs" />
     <Compile Include="Assets/Scripts/Enemies/CruiseMissileAI.cs" />
+    <Compile Include="Assets/Scripts/Utilities/PoissonDiskSampler.cs" />
     <Compile Include="Assets/Scripts/Enemies/EnforcerAI.cs" />
     <Compile Include="Assets/Scripts/Entities/FriendlyEntity.cs" />
     <Compile Include="Assets/Scripts/Level/MeshNode.cs" />

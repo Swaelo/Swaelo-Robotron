@@ -25,7 +25,16 @@ public class GameState : MonoBehaviour
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
     private int MaxRescueMultiplier = 5;    //Maximum rescue multiplier the player is able to reach
     public Text UIScoreDisplay; //UI Text component used to display the players current score counter
+
+    //Game pausing
     private bool GamePaused = false; //Everything is paused whenever this is true
+    private float PauseTimeLeft = 0f;   //How long the game needs to remain being paused for
+    public void PauseGame(float Time)   //Allows the game to be paused for a specified amount of time
+    {
+        PauseTimeLeft = Time;
+        GamePaused = true;
+    }
+
     private float PlayerDeathTimeout = 2.5f;    //How long the game is frozen for when the player dies before the round is restarted
     private float DeathTimeoutLeft = 2.5f;  //Time remaining before the current death timeout expires
     public bool InDeathTimeout = false;
@@ -49,13 +58,15 @@ public class GameState : MonoBehaviour
 
     private void Update()
     {
-        //Toggle the games paused state
-        if (Input.GetKeyDown(KeyCode.P))
-            GamePaused = !GamePaused;
-
         //All game logic and AI should be paused at certain times
-        if (GamePaused || WaveManager.Instance.SpawnPeriodActive)
-            return;
+        if (GamePaused)
+        {
+            PauseTimeLeft -= Time.deltaTime;
+            if(PauseTimeLeft <= 0f)
+                GamePaused = false;
+            else
+                return;
+        }
 
         //Restart the current wave when the death timeout timer expires
         if (InDeathTimeout)
@@ -80,7 +91,7 @@ public class GameState : MonoBehaviour
     //Used from AI scripts and other stuff to check if the game should be running right now
     public bool ShouldAdvanceGame()
     {
-        if (GamePaused || WaveManager.Instance.SpawnPeriodActive || WaveManager.Instance.WarmingUp || InDeathTimeout)
+        if (GamePaused || InDeathTimeout)
             return false;
         return true;
     }

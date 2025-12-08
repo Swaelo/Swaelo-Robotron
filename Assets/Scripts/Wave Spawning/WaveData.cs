@@ -10,20 +10,20 @@ using UnityEngine;
 public struct WaveEntities
 {
     //Counts how many of each type of enemy and human will spawn at the start of some round
-    public int Grunts;
-    public int Electrodes;
-    public int Mommies;
-    public int Daddies;
-    public int Mikeys;
-    public int Hulks;
-    public int Brains;
-    public int Spheroids;
-    public int Quarks;
-    public int Enforcers;
-    public int Tanks;
-    public int DaddyProgs;
-    public int MummyProgs;
-    public int MikeyProgs;
+    public int Grunt;
+    public int Electrode;
+    public int Mummy;
+    public int Daddy;
+    public int Mikey;
+    public int Hulk;
+    public int Brain;
+    public int Spheroid;
+    public int Quark;
+    public int Enforcer;
+    public int Tank;
+    public int DaddyProg;
+    public int MummyProg;
+    public int MikeyProg;
 }
 
 public class WaveData : MonoBehaviour
