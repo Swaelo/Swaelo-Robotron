@@ -63,7 +63,12 @@ public class EnforcerAI : HostileEntity
         {
             DeathAnimationLeft -= Time.deltaTime;
             if (DeathAnimationLeft <= 0.0f)
+            {
+                //Tell the wave manager this enemy has been destroyed
+                WaveManager.Instance.EnemyDead(this);
+                //Destroy itself
                 Destroy(this.gameObject);
+            }
         }
     }
 
@@ -206,8 +211,6 @@ public class EnforcerAI : HostileEntity
         IsAlive = false;
         Destroy(GetComponent<Rigidbody2D>());
         Destroy(GetComponent<BoxCollider2D>());
-        //Tell the wave manager this enemy has been destroyed
-        WaveManager.Instance.EnemyDead(this);
         //Play a sound effect for the enemy dying and award some points to the player for killing it
         SoundEffectsPlayer.Instance.PlaySound("EnforcerDie");
         GameState.Instance.IncreaseScore((int)PointValue.Enforcer);

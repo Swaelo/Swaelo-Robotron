@@ -118,7 +118,11 @@ public class GruntAI : HostileEntity
 
         //Destroy self once the death animation has played out
         if (DeathAnimationRemaining <= 0.0f)
+        {
+            //Tell the state manager this enemy is now dead
+            WaveManager.Instance.EnemyDead(this);
             Destroy(this.gameObject);
+        }   
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -140,9 +144,8 @@ public class GruntAI : HostileEntity
     //Triggers the death animation to be played before destroying the Grunt
     private void Die()
     {
-        //Tell the wave manager this enemy is now dead, and award points for killing it
+        //Award points for killing it
         GameState.Instance.IncreaseScore((int)PointValue.Grunt);
-        WaveManager.Instance.EnemyDead(this);
         //Flag the enemy as dead and start playing its death animation
         IsAlive = false;
         AnimationController.SetBool("IsDead", true);

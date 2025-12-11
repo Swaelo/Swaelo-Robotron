@@ -77,6 +77,8 @@ public class ProgAI : HostileEntity
                 Destroy(AnimationControllers[i].gameObject);
             for (int i = 7; i < 12; i++)
                 Destroy(AnimationControllers[i].gameObject);
+            //Tell the wave manager this target enemy is now dead
+            WaveManager.Instance.EnemyDead(this);
             //Finally, destroy the Prog object itself
             Destroy(gameObject);
         }
@@ -137,8 +139,6 @@ public class ProgAI : HostileEntity
         //Play sound
         SoundEffectsPlayer.Instance.PlaySound("ProgDie");
         GameState.Instance.IncreaseScore((int)PointValue.Prog);
-        //Tell the wave manager this target enemy is now dead
-        WaveManager.Instance.EnemyDead(this);
         IsAlive = false;
         //Start the death animation
         foreach (Animator AnimationController in AnimationControllers)

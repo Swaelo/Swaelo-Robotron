@@ -319,7 +319,12 @@ public class BrainAI : HostileEntity
         //Wait for the animation timer to expire
         DeathAnimationRemaining -= Time.deltaTime;
         if (DeathAnimationRemaining <= 0.0f)
+        {
+            //Tell the wave manager this enemy is now dead
+            WaveManager.Instance.EnemyDead(this);
+            //Destroy myself
             Destroy(this.gameObject);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -347,8 +352,7 @@ public class BrainAI : HostileEntity
         //If the brain is killed white it has a human targetting, but it hasnt started reprogramming yet, allow another brain to go for it
         if(!Reprogramming && HumanTarget != null)
             HumanTarget.GetComponent<FriendlyEntity>().TargettedByBrain = false;
-        //Tell the wave manager this enemy is now dead, and award points to the player for destroying it
-        WaveManager.Instance.EnemyDead(this);
+        //Award points for kill this enemy
         GameState.Instance.IncreaseScore((int)PointValue.Brain);
         //Set the Brain as dead and trigger the death animation
         IsAlive = false;
