@@ -15,18 +15,13 @@ public class WaveManager : MonoBehaviour
     public static WaveManager Instance;
     private void Awake() { Instance = this; }
 
-    //User Interface
-    public Text WaveDisplay; //Used to display the current wave number to the user during gameplay
-    private int CustomNumberOffset = 0;
-
-    //Wave Override
-    public bool WaveStartOverride = false;  //If enabled through inspector the game will instead skip straight to the specified wave number
-    public int CustomWaveStart = 1; //Which wave to skip to when the game begins
-    public bool PlayCustomWave = false; //If set in the inspector, a wave will begin with the enemies set in the CustomWaveData script and loop that, for testing
-
-    //Entities
+    //Entity tracking
     private List<BaseEntity> ActiveEntities = new List<BaseEntity>();   //A list of every entity currently active in the game
     private List<HostileEntity> TargetEntities = new List<HostileEntity>(); //A list of every entity currently active which is a required target that must be killed to complete the round
+
+    //Custom wave start override
+    public int CustomWave = -1;
+    public bool PlayCustomWave = false;
 
     private void Start()
     {
@@ -36,6 +31,9 @@ public class WaveManager : MonoBehaviour
     //Spawns all the enemies in for the new wave
     public void StartWave(int WaveNumber)
     {
+        if(PlayCustomWave)
+            WaveNumber = CustomWave;
+
         //Pause the game for a short time
         GameState.Instance.PauseGame(1.5f);
 
@@ -277,6 +275,9 @@ public class WaveManager : MonoBehaviour
             //Progress onto the next round now since all the target enemies have been destroyed
             CleanWave();
             GameState.Instance.CurrentWave++;
+            //After passing round 40, loop back to round 21
+            if(GameState.Instance.CurrentWave > 40)
+                GameState.Instance.CurrentWave = 21;
             StartWave(GameState.Instance.CurrentWave);
             SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
             Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);

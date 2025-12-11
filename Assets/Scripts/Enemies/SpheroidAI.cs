@@ -30,7 +30,6 @@ public class SpheroidAI : HostileEntity
     private float SpawnAnimationDuration = 2.5f;  //How long it takes to spawn an enemy in
     private Vector3 BaseScale;
     private AudioSource SoundEffectPlayer;
-    public Transform VisualsChild; //Child object which contains the sprite, scales up during summoning without effecting the collider size
 
     //Hits until dead
     private int HitPoints = 3;
@@ -42,7 +41,7 @@ public class SpheroidAI : HostileEntity
         CornerPositions = LevelBorders.Instance.GetCornerPositions();
 
         //Store transformation scale
-        BaseScale = VisualsChild.localScale;
+        BaseScale = transform.localScale;
 
         SoundEffectPlayer = GetComponent<AudioSource>();
 
@@ -160,7 +159,7 @@ public class SpheroidAI : HostileEntity
 
             //Scale the growth, small at the start and largest right before completing the spawning
             float TransformScale = Mathf.Lerp(1f, 3f, SpawnProgress);
-            VisualsChild.localScale = BaseScale * TransformScale;
+            transform.localScale = BaseScale * TransformScale;
             //Ramp up the spinning over time too
             float SpinSpeed = Mathf.Lerp(360f * 3f, 360f * 8f, SpawnProgress * SpawnProgress);
             transform.Rotate(0f, 0f, SpinSpeed * Time.deltaTime);
@@ -203,7 +202,7 @@ public class SpheroidAI : HostileEntity
         TimeInCorner = 0f;
         StartedSpawning = false;
         SpawnAnimationTimer = 0f;
-        VisualsChild.localScale = BaseScale;
+        transform.localScale = BaseScale;
         SoundEffectPlayer.Stop();
     }
 

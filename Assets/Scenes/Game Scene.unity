@@ -18938,6 +18938,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
+      propertyPath: WaveEnemies.Array.size
+      value: 41
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
       propertyPath: WaveEnemies.Array.data[1].Hulk
       value: 5
       objectReference: {fileID: 0}
@@ -19195,6 +19200,11 @@ PrefabInstance:
         type: 3}
       propertyPath: WaveEnemies.Array.data[3].Mummy
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Hulk
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -20058,6 +20068,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Brain
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Daddy
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Grunt
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Mikey
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Mummy
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Quark
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
       propertyPath: WaveEnemies.Array.data[1].Spheroid
       value: 1
       objectReference: {fileID: 0}
@@ -20263,6 +20303,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Spheroid
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
       propertyPath: WaveEnemies.Array.data[4].Electrode
       value: 20
       objectReference: {fileID: 0}
@@ -20406,6 +20451,11 @@ PrefabInstance:
       propertyPath: WaveEnemies.Array.data[39].Electrode
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: WaveEnemies.Array.data[40].Electrode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5359822721058506921, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: Player
@@ -20425,6 +20475,11 @@ PrefabInstance:
         type: 3}
       propertyPath: DisableWaveProgression
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
+        type: 3}
+      propertyPath: CustomWave
+      value: 41
       objectReference: {fileID: 0}
     - target: {fileID: 6023773649834991095, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
