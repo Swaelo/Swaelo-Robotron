@@ -19,6 +19,11 @@ public class WaveManager : MonoBehaviour
     private List<BaseEntity> ActiveEntities = new List<BaseEntity>();   //A list of every entity currently active in the game
     private List<HostileEntity> TargetEntities = new List<HostileEntity>(); //A list of every entity currently active which is a required target that must be killed to complete the round
 
+    //Gives the player a few seconds to breathe at the end of a wave
+    private float WaveEndRestInterval = 1.5f; //How long the player gets to rest before the next wave begins
+    private float WaveEndRestRemaining; //How long left until the wave end rest is over
+    private bool WaveEndResting = false;    //Tracks when we are resting before starting the next wave
+
     //Custom wave start override
     public int CustomWave = -1;
     public bool PlayCustomWave = false;
@@ -26,6 +31,12 @@ public class WaveManager : MonoBehaviour
     private void Start()
     {
         LevelBorders.Instance.InitLevelBorders();
+    }
+
+    private void Update()
+    {
+        if(WaveEndResting)
+            WaveEndRest();
     }
 
     //Spawns all the enemies in for the new wave
@@ -206,7 +217,7 @@ public class WaveManager : MonoBehaviour
     //Returns a list of random spawn locations to place down the entities onto
     private List<Vector2> GetSpawnLocations(int LocationCount)
     {
-        //Need to constrain all locations inside the level borders
+        //Need to constrain all locations inside the level borders 
         Vector2 XBounds = LevelBorders.Instance.XBounds;
         Vector2 YBounds = LevelBorders.Instance.YBounds;
 
@@ -257,10 +268,6 @@ public class WaveManager : MonoBehaviour
     //Whenever friendly or hostile entities are killed, they alert the WaveManager through this function
     public void EnemyDead(HostileEntity Enemy)
     {
-        //Totally ignore this if wave progression has been disabled
-        if (GameState.Instance.DisableWaveProgression)
-            return;
-
         //Remove the entity from the ActiveEntities list
         ActiveEntities.Remove(Enemy);
 
@@ -272,6 +279,19 @@ public class WaveManager : MonoBehaviour
         //Whenever a target enemy is destroyed, check to see if they were the last one left
         if (IsTarget && TargetEntities.Count == 0)
         {
+            //Allow the player time to rest before we start up the next round
+            WaveEndResting = true;
+            WaveEndRestRemaining = WaveEndRestInterval;
+        }
+    }
+
+    //Allows the player time to breathe at the end of wave before the next wave begins
+    private void WaveEndRest()
+    {
+        WaveEndRestRemaining -= Time.deltaTime;
+        if(WaveEndRestRemaining <= 0f)
+        {
+            WaveEndResting = false;
             //Progress onto the next round now since all the target enemies have been destroyed
             CleanWave();
             GameState.Instance.CurrentWave++;
@@ -283,6 +303,7 @@ public class WaveManager : MonoBehaviour
             Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
         }
     }
+
     public void HumanDead(BaseEntity Human, bool KilledByEnemy = false)
     {
         //Remove them from the ActiveEntities list

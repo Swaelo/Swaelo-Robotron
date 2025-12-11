@@ -21,7 +21,6 @@ public class GameState : MonoBehaviour
     private int NextFreeLife = 25000;   //Current score milestone the player needs to reach to recieve their next free life
     private int FreeLifeInterval = 25000;   //Added onto the NextFreeLife milestone once it has been reached to set the next free life milestone
     public int CurrentWave;    //What wave the player is currently on
-    public bool DisableWaveProgression = false; //Waves will not begin or progress while this is enabled (for debugging purposes)
     public int RescueMultiplier = 1;    //Increased by 1 every time a human is rescued, reset back to 1 at the start of every round
     private int MaxRescueMultiplier = 5;    //Maximum rescue multiplier the player is able to reach
     public Text UIScoreDisplay; //UI Text component used to display the players current score counter
@@ -48,12 +47,9 @@ public class GameState : MonoBehaviour
         CurrentWave = 1;
 
         //Spawn in everything for this wave, if wave progression is enabled
-        if(!DisableWaveProgression)
-        {
-            SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
-            Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
-            WaveManager.Instance.StartWave(CurrentWave);
-        }
+        SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
+        Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
+        WaveManager.Instance.StartWave(CurrentWave);
     }
 
     private void Update()
