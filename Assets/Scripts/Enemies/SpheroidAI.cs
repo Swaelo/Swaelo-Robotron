@@ -54,7 +54,10 @@ public class SpheroidAI : HostileEntity
     {
         //AI needs to be put on hold at times defined by the gamestate manager
         if(!GameState.Instance.ShouldAdvanceGame())
+        {
+            SoundEffectPlayer.Stop();
             return;
+        }
 
         //If we aren't in a corner, move towards our current corner target location
         if(!InCorner)
