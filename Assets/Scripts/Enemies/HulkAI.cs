@@ -28,7 +28,7 @@ public class HulkAI : HostileEntity
     private float NextTargetUpdate = 3.5f;  //How long until the Hulks next target position update
     private float TargetUpdateMinimumDistance = 3.5f;   //Distance between current target pos and player pos required to force trigger a new target location to be acquired
     private bool SeekingX = true;   //Which axis the Hulk is currently focused on travelling to move toward its target location
-    private float ProjectilePushback = 0.75f;   //How far the Hulks are pushed back when hit by the players projectiles
+    private float ProjectilePushback = 2.0f;   //How far the Hulks are pushed back when hit by the players projectiles
     private Vector3 PreviousPos;    //Used to measure the Hulks distance travelled between frames
     private float FollowRequestCooldown = 0.25f; //How often the Hulk can instruct another Hulk to follow it
     private float FollowRequestAvailable = 0f;  //How long until the Hulk is allowed to instruct others to follow it again
