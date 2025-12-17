@@ -74,6 +74,7 @@ public class LevelBorders : MonoBehaviour
         GameObject NewBorder = new GameObject(BorderName);
         NewBorder.transform.parent = transform;
         NewBorder.transform.localPosition = BorderPos;
+        NewBorder.transform.tag = "Wall";
 
         //Add the 2D box collider component
         BoxCollider2D BorderCollider = NewBorder.AddComponent<BoxCollider2D>();
