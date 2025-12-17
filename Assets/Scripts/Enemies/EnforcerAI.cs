@@ -37,7 +37,7 @@ public class EnforcerAI : HostileEntity
     private float ShotCooldown = 0.25f; //Time between shots during a volley
     private float NextShot; //Time until the next shot in the current volley is fired
     private int ShotsLeft;  //How many more shots can be fired in the current volley
-    private Vector2 VolleyLength = new Vector2(1, 5);   //Number of shots fired per volley falls within this range
+    private Vector2 VolleyLength = new Vector2(1, 3);   //Number of shots fired per volley falls within this range
     private bool FiringVolley = false;  //Tracks when the Enforcer is actively in the process of firing a volley of shots
     private Vector2 AimOffsetRange = new Vector2(0.75f, 1.85f); //Position at which projectiles are fired is offset from the players location by random amount in this range
     private Vector2 ShotSpeedRange = new Vector2(0.5f, 10f); //Speed at which projectiles are fired is directly proportional to the players distance, falls somewhere within this 
