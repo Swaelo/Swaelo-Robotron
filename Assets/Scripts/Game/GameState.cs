@@ -47,8 +47,8 @@ public class GameState : MonoBehaviour
         CurrentWave = 1;
 
         //Spawn in everything for this wave, if wave progression is enabled
-        SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
-        Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
+        SoundEffectsPlayer.Instance.PlaySound("GameStart");
+        //Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
         WaveManager.Instance.StartWave(CurrentWave);
     }
 

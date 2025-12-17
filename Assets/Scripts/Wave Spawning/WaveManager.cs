@@ -5,7 +5,6 @@
 // ================================================================================================================================
 
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -42,6 +41,7 @@ public class WaveManager : MonoBehaviour
     //Spawns all the enemies in for the new wave
     public void StartWave(int WaveNumber)
     {
+        //Override wave number if custom flag is set
         if(PlayCustomWave)
             WaveNumber = CustomWave;
 
@@ -298,8 +298,13 @@ public class WaveManager : MonoBehaviour
             //After passing round 40, loop back to round 21
             if(GameState.Instance.CurrentWave > 40)
                 GameState.Instance.CurrentWave = 21;
+            //Spawn in entities for the new wave
             StartWave(GameState.Instance.CurrentWave);
-            SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
+            //Play startup sound based on current wave type
+            if(GameState.Instance.CurrentWave % 10 == 5)    //Brains are every 5th wave
+                SoundEffectsPlayer.Instance.PlaySound("BrainWaveStart");
+            else
+                SoundEffectsPlayer.Instance.PlaySound("RoundComplete");
             Instantiate(PrefabSpawner.Instance.GetPrefab("RoundCompleteAnimation"), Vector3.zero, Quaternion.identity);
         }
     }

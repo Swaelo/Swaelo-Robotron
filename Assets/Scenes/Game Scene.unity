@@ -20454,7 +20454,7 @@ PrefabInstance:
     - target: {fileID: 317061470227577251, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
       propertyPath: WaveEnemies.Array.data[40].Electrode
-      value: 0
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 5359822721058506921, guid: d74d42b07e179f64eb5fc8361b52d68b,
         type: 3}
@@ -20726,6 +20726,8 @@ MonoBehaviour:
     SoundClip: {fileID: 8300000, guid: b7538bcda4e339346bb5c6e68b83dcf0, type: 3}
   - Name: SpheroidSpawnComplete
     SoundClip: {fileID: 8300000, guid: a57a6375f78f6406b8385c460832dd22, type: 3}
+  - Name: BrainWaveStart
+    SoundClip: {fileID: 8300000, guid: 4e1539cab54e246f08bef091248b3e52, type: 3}
 --- !u!114 &317061469471482047
 MonoBehaviour:
   m_ObjectHideFlags: 0
