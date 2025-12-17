@@ -158,7 +158,7 @@ public class SpheroidAI : HostileEntity
             float SpawnProgress = Mathf.Clamp01(SpawnAnimationTimer / SpawnAnimationDuration);
 
             //Scale the growth, small at the start and largest right before completing the spawning
-            float TransformScale = Mathf.Lerp(1f, 3f, SpawnProgress);
+            float TransformScale = Mathf.Lerp(1f, 2f, SpawnProgress);
             transform.localScale = BaseScale * TransformScale;
             //Ramp up the spinning over time too
             float SpinSpeed = Mathf.Lerp(360f * 3f, 360f * 8f, SpawnProgress * SpawnProgress);
