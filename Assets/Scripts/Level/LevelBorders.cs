@@ -57,11 +57,11 @@ public class LevelBorders : MonoBehaviour
         float halfWidth = LevelWidth / 2f;
         float halfHeight = LevelHeight / 2f;
         
-        TopWall = CreateBorder("Top Wall",
+        BottomWall = CreateBorder("Bottom Wall",
             new Vector2(0, -halfHeight),
             new Vector2(LevelWidth + BorderThickness, BorderThickness));
 
-        BottomWall = CreateBorder("Bottom Wall",
+        TopWall = CreateBorder("Top Wall",
             new Vector2(0, halfHeight),
             new Vector2(LevelWidth + BorderThickness, BorderThickness));
 
@@ -148,6 +148,9 @@ public class LevelBorders : MonoBehaviour
     //Set the walls as unwalkable on the navmesh
     public void MarkWallsUnwalkable()
     {
-        
+        NavMeshManager.Instance.MarkNodesUnderBox(TopWall.GetComponent<BoxCollider2D>(), false);
+        NavMeshManager.Instance.MarkNodesUnderBox(RightWall.GetComponent<BoxCollider2D>(), false);
+        NavMeshManager.Instance.MarkNodesUnderBox(BottomWall.GetComponent<BoxCollider2D>(), false);
+        NavMeshManager.Instance.MarkNodesUnderBox(LeftWall.GetComponent<BoxCollider2D>(), false);
     }
 }

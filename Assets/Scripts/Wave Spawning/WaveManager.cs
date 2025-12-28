@@ -95,6 +95,9 @@ public class WaveManager : MonoBehaviour
 
         //Have any electrodes that were spawned in, mark their mesh nodes as unwalkable
         NavMeshManager.Instance.MarkElectrodeNodesUnwalkable();
+
+        //Mark the level boundaries as unwalkable
+        LevelBorders.Instance.MarkWallsUnwalkable();
     }
 
     //Cleans up anything remaining in the current wave, allowing everything to be replaced and start over again
@@ -173,6 +176,9 @@ public class WaveManager : MonoBehaviour
 
         //Mark mesh nodes under electrodes unwalkable
         NavMeshManager.Instance.MarkElectrodeNodesUnwalkable();
+
+        //Mark the level boundaries as unwalkable
+        LevelBorders.Instance.MarkWallsUnwalkable();
     }
 
     private WaveEntities GetRestartEntities()

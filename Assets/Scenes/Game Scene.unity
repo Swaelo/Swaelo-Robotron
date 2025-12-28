@@ -221,7 +221,6 @@ GameObject:
   m_Component:
   - component: {fileID: 187810393}
   - component: {fileID: 187810392}
-  - component: {fileID: 187810394}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -246,6 +245,10 @@ MonoBehaviour:
   BorderThickness: 0.5
   XBounds: {x: 0, y: 0}
   YBounds: {x: 0, y: 0}
+  TopWall: {fileID: 0}
+  RightWall: {fileID: 0}
+  BottomWall: {fileID: 0}
+  LeftWall: {fileID: 0}
 --- !u!4 &187810393
 Transform:
   m_ObjectHideFlags: 0
@@ -258,25 +261,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 285354558}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &187810394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 187810391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6b00bc4f90da4efd9f24bcd05749b24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NavMeshManager
-  GridSize: {x: 50, y: 50}
-  CellSize: 0.25
-  VisibleNavMesh: 1
-  NavMeshReady: 0
 --- !u!1 &248332432
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +324,54 @@ MonoBehaviour:
   - {fileID: 382690528}
   - {fileID: 1633848567}
   - {fileID: 1874198963}
+--- !u!1 &285354557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 285354558}
+  - component: {fileID: 285354559}
+  m_Layer: 0
+  m_Name: NavMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &285354558
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285354557}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 187810393}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &285354559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285354557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b00bc4f90da4efd9f24bcd05749b24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavMeshManager
+  GridSize: {x: 50, y: 50}
+  CellSize: 0.5
+  VisibleNavMesh: 1
+  NavMeshReady: 0
 --- !u!1 &382690528
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,7 +789,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 6260544339253127724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1147276365
 GameObject:
@@ -21117,6 +21153,7 @@ Transform:
   - {fileID: 8153907358514530304}
   - {fileID: 6260544339422964216}
   - {fileID: 8153907360037324851}
+  - {fileID: 983762531}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6260544339253127725
@@ -21720,7 +21757,6 @@ SceneRoots:
   - {fileID: 1447967349}
   - {fileID: 488457742}
   - {fileID: 187810393}
-  - {fileID: 983762531}
   - {fileID: 1895758207}
   - {fileID: 749209847}
   - {fileID: 1147276367}

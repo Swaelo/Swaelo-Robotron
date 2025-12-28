@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class NavMeshManager : MonoBehaviour
 {
-    public static NavMeshManager Instance; //Singleton instance
+    public static NavMeshManager Instance = null; //Singleton instance
     private void Awake() { Instance = this; }
 
     //Size and resolution of the nav mesh
@@ -27,12 +27,20 @@ public class NavMeshManager : MonoBehaviour
     //Set once the nav mesh generation has been completed, level cannot start until this happens
     public bool NavMeshReady = false;
 
+    //Properties of the position, size of the navmesh
+    float MeshWidth = 0f;
+    float MeshHeight = 0f;
+    float HalfMeshWidth = 0f;
+    float HalfMeshHeight = 0f;
+
     //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
     public void NewGenerateNavMesh()
     {
         //Find the size of the nav mesh and find the spawning offsets so the center is at 0,0
-        float MeshWidth = GridSize.x * CellSize;
-        float MeshHeight = GridSize.y * CellSize;
+        MeshWidth = GridSize.x * CellSize;
+        HalfMeshWidth = MeshWidth * 0.5f;
+        MeshHeight = GridSize.y * CellSize;
+        HalfMeshHeight = MeshHeight * 0.5f;
         float XOffset = -MeshWidth * .5f;
         float YOffset = -MeshHeight * .5f;
 
@@ -47,7 +55,8 @@ public class NavMeshManager : MonoBehaviour
                 //Initialize each mesh node in the column
                 MeshNode NewNode = new MeshNode();
                 //Set its position
-                Vector3 NodePos = new Vector3(XOffset + MeshX * CellSize,
+                Vector3 NodePos = new Vector3(
+                XOffset + MeshX * CellSize,
                 YOffset + MeshY * CellSize, 0f);
                 Vector2 GridPos = new Vector2(MeshX, MeshY);
                 NewNode.SetPosition(NodePos, GridPos);
@@ -157,6 +166,55 @@ public class NavMeshManager : MonoBehaviour
                 //Mark the node as unwalkable if the entity bounds intersect
                 if(NodeBounds.Intersects(EntityBounds))
                     Node.SetWalkable(Walkable);
+            }
+        }
+    }
+
+    //Sets the walkability toggle for nodes on the nav mesh grid
+    public void MarkNodesUnderBox(BoxCollider2D Box, bool Walkable)
+    {
+        //Get the bounds of the collider
+        Bounds BoxBounds = Box.bounds;
+
+        //Calculate the total navmesh world extents
+        Vector2 NavMeshMin = new Vector2(-HalfMeshWidth, -HalfMeshHeight);
+        Vector2 NavMeshMax = new Vector2(HalfMeshWidth, HalfMeshHeight);
+
+        //Overlapping rect in world space
+        float OverlapMinX = Mathf.Max(Box.bounds.min.x, NavMeshMin.x);
+        float OverlapMinY = Mathf.Max(Box.bounds.min.y, NavMeshMin.y);
+        float OverlapMaxX = Mathf.Min(Box.bounds.max.x, NavMeshMax.x);
+        float OverlapMaxY = Mathf.Min(Box.bounds.max.y, NavMeshMax.y);
+        
+        //If there is no overlap with the navmesh at all, exit out
+        if(OverlapMinX >= OverlapMaxX || OverlapMinY >= OverlapMaxY)
+            return;
+
+        //Convert to grid indices
+        //Since node (x,y) covers [x*CellSize - HalfMeshWidth, (x+1)*CellSize - HalfMeshWidth]
+        //We add HalfMeshWidth/Height to shift into positive space before dividing
+        int MinGridX = Mathf.FloorToInt((OverlapMinX + HalfMeshWidth) / CellSize);
+        int MinGridY = Mathf.FloorToInt((OverlapMinY + HalfMeshHeight) / CellSize);
+        int MaxGridX = Mathf.FloorToInt((OverlapMaxX + HalfMeshWidth - 0.0001f) / CellSize);
+        int MaxGridY = Mathf.FloorToInt((OverlapMaxY + HalfMeshHeight - 0.0001f) / CellSize);
+
+        //Clamp to grid bounds
+        MinGridX = Mathf.Max(0, MinGridX);
+        MinGridY = Mathf.Max(0, MinGridY);
+        MaxGridX = Mathf.Min((int)GridSize.x - 1, MaxGridX);
+        MaxGridY = Mathf.Min((int)GridSize.y - 1, MaxGridY);
+
+        //Safety check in case clamping inverted the range
+        if(MinGridX > MaxGridX || MinGridY > MaxGridY)
+            return;
+
+        //Now mark the nodes
+        for(int MeshX = MinGridX; MeshX <= MaxGridX; MeshX++)
+        {
+            for(int MeshY = MinGridY; MeshY <= MaxGridY; MeshY++)
+            {
+                MeshNode Node = NodeGraph[MeshX][MeshY];
+                Node.SetWalkable(Walkable);
             }
         }
     }
