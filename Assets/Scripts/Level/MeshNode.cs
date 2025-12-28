@@ -15,10 +15,11 @@ public class MeshNode
     public float FCost = 0f;    //G+H, total estimated cost
     public MeshNode Parent = null;  //Pointer to previous node, used for path reconstruction
 
-    public Vector2 GridPosition = Vector2.zero; //This nodes positions in the 2d array
+    public Vector2 GridPosition = Vector2.zero; //This nodes positions in the navmesh 2d array
 
     //Used to make the node visible during gameplay for debugging purposes
     public GameObject RenderObject;
+
     public void InitRenderer(string Name, Transform Parent)
     {
         //Create a game object which makes this node visible
@@ -49,5 +50,12 @@ public class MeshNode
     {
         IsWalkable = Walkable;
         SetColor(Walkable ? Color.green : Color.red);
+    }
+
+    //Nav mesh will give us our information when it generates the nodes
+    public void SetPosition(Vector3 WorldPos, Vector2 GridPos)
+    {
+        NodePos = WorldPos;
+        GridPosition = GridPos;
     }
 }

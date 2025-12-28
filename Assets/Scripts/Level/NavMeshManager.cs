@@ -6,6 +6,7 @@
 // ================================================================================================================================
 
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class NavMeshManager : MonoBehaviour
@@ -14,8 +15,8 @@ public class NavMeshManager : MonoBehaviour
     private void Awake() { Instance = this; }
 
     //Size and resolution of the nav mesh
-    private Vector2 GridSize = Vector2.zero;    //Length and width of the nav mesh
-    private float CellSize = 0.25f;   //Size of nodes on the graph
+    public Vector2 GridSize = Vector2.zero;    //Length and width of the nav mesh
+    public float CellSize = 0.25f;   //Size of nodes on the graph
 
     //Matrix of nodes which made up the navigation mesh
     public List<List<MeshNode>> NodeGraph = new List<List<MeshNode>>();
@@ -25,6 +26,41 @@ public class NavMeshManager : MonoBehaviour
 
     //Set once the nav mesh generation has been completed, level cannot start until this happens
     public bool NavMeshReady = false;
+
+    //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
+    public void NewGenerateNavMesh()
+    {
+        //Find the size of the nav mesh and find the spawning offsets so the center is at 0,0
+        float MeshWidth = GridSize.x * CellSize;
+        float MeshHeight = GridSize.y * CellSize;
+        float XOffset = -MeshWidth * .5f;
+        float YOffset = -MeshHeight * .5f;
+
+        //Setup 2d array of mesh nodes for the navmesh
+        for(int MeshX = 0; MeshX < GridSize.x; MeshX++)
+        {
+            //Initialize each row of the nav mesh
+            NodeGraph.Add(new List<MeshNode>());
+
+            for(float MeshY = 0f; MeshY < GridSize.y; MeshY++)
+            {
+                //Initialize each mesh node in the column
+                MeshNode NewNode = new MeshNode();
+                //Set its position
+                Vector3 NodePos = new Vector3(XOffset + MeshX * CellSize,
+                YOffset + MeshY * CellSize, 0f);
+                Vector2 GridPos = new Vector2(MeshX, MeshY);
+                NewNode.SetPosition(NodePos, GridPos);
+                //Add it to the 2d array
+                NodeGraph[MeshX].Add(NewNode);
+
+                //Set it to visible if needed
+                if(VisibleNavMesh)
+                    NewNode.InitRenderer("NavMeshNode: " + MeshX + ", " + MeshY, transform);
+            }
+        }
+        NavMeshReady = true;
+    }
 
     //Initialised the navmesh, sets up 2D array of nodes which define the whole navmesh grid to be used for pathfinding
     public void GenerateNavMesh()
@@ -45,7 +81,7 @@ public class NavMeshManager : MonoBehaviour
 
             for(int y = 0; y < GridSize.y; y++)
             {
-                //Initialize the column of the grid
+                //Initialize the node in this column of the grid
                 MeshNode NewNode = new MeshNode();
 
                 //Set the position of each node at the center of the cell it defines

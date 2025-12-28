@@ -32,6 +32,12 @@ public class LevelBorders : MonoBehaviour
     private List<Vector3> CornerPositions;
     public List<Vector3> GetCornerPositions() { return CornerPositions; }
 
+    //Store the corner objects after they are spawned in so they can be access later
+    public GameObject TopWall = null;
+    public GameObject RightWall = null;
+    public GameObject BottomWall = null;
+    public GameObject LeftWall = null;
+
     public void InitLevelBorders()
     {
         //Setup the level boundaries etc
@@ -39,7 +45,7 @@ public class LevelBorders : MonoBehaviour
         DefineCornerLocations();
 
         //Once the level has been setup, get the nav mesh generated
-        NavMeshManager.Instance.GenerateNavMesh();
+        NavMeshManager.Instance.NewGenerateNavMesh();
 
         GenerateBorders();
     }
@@ -51,24 +57,24 @@ public class LevelBorders : MonoBehaviour
         float halfWidth = LevelWidth / 2f;
         float halfHeight = LevelHeight / 2f;
         
-        CreateBorder("TopBorder",
+        TopWall = CreateBorder("Top Wall",
             new Vector2(0, -halfHeight),
             new Vector2(LevelWidth + BorderThickness, BorderThickness));
 
-        CreateBorder("BottomBorder",
+        BottomWall = CreateBorder("Bottom Wall",
             new Vector2(0, halfHeight),
             new Vector2(LevelWidth + BorderThickness, BorderThickness));
 
-        CreateBorder("LeftBorder",
+        LeftWall = CreateBorder("Left Wall",
             new Vector2(-halfWidth, 0),
             new Vector2(BorderThickness, LevelHeight + BorderThickness));
 
-        CreateBorder("RightBorder",
+        RightWall = CreateBorder("Right Wall",
             new Vector2(halfWidth, 0),
             new Vector2(BorderThickness, LevelHeight + BorderThickness));
     }
 
-    private void CreateBorder(string BorderName, Vector2 BorderPos, Vector2 BorderSize)
+    private GameObject CreateBorder(string BorderName, Vector2 BorderPos, Vector2 BorderSize)
     {
         //Create the new border and set its location
         GameObject NewBorder = new GameObject(BorderName);
@@ -96,6 +102,8 @@ public class LevelBorders : MonoBehaviour
         //Add the seizure trigger
         SpriteColorCycle ColorCycle = NewBorder.AddComponent<SpriteColorCycle>();
         ColorCycle.ColorSpeed = .5f;
+
+        return NewBorder;
     }
 
     //Define the level bounds which will be grabbed from this script by AI scripts
@@ -135,5 +143,11 @@ public class LevelBorders : MonoBehaviour
         CornerPositions.Add(BottomRight);
         CornerPositions.Add(BottomLeft);
         CornerPositions.Add(TopLeft);
+    }
+
+    //Set the walls as unwalkable on the navmesh
+    public void MarkWallsUnwalkable()
+    {
+        
     }
 }
