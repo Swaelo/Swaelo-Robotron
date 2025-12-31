@@ -60,9 +60,6 @@ public class GameState : MonoBehaviour
 
     private void Update()
     {
-        if(HaltSpawning)
-            return;
-
         //All game logic and AI should be paused at certain times
         if (GamePaused)
         {

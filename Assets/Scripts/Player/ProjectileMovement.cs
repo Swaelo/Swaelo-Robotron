@@ -52,9 +52,9 @@ public class ProjectileMovement : MonoBehaviour
 
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
+        // //All game logic and AI should be paused at certain times
+        // if (!GameState.Instance.ShouldAdvanceGame())
+        //     return;
 
         if (DirectionSet)
         {

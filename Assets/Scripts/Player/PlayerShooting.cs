@@ -29,9 +29,9 @@ public class PlayerShooting : MonoBehaviour
     
     private void Update()
     {
-        //All game logic and AI should be paused at certain times
-        if (!GameState.Instance.ShouldAdvanceGame())
-            return;
+        // //All game logic and AI should be paused at certain times
+        // if (!GameState.Instance.ShouldAdvanceGame())
+        //     return;
 
         //Decrement the shot cooldown
         ShotCooldownRemaining -= Time.deltaTime;

@@ -6,7 +6,6 @@
 // ================================================================================================================================
 
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class NavMeshManager : MonoBehaviour
@@ -36,15 +35,21 @@ public class NavMeshManager : MonoBehaviour
     //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
     public void GenerateNavMesh()
     {
-        //Find the size of the nav mesh and find the spawning offsets so the center is at 0,0
+        //Reset / clear any existing mesh before we try generating again
+        NavMeshReady = false;
+        NodeGraph.Clear();
+
+        //Calculate grid dimentions
         MeshWidth = GridSize.x * CellSize;
         HalfMeshWidth = MeshWidth * 0.5f;
         MeshHeight = GridSize.y * CellSize;
         HalfMeshHeight = MeshHeight * 0.5f;
-        float XOffset = -MeshWidth * .5f;
-        float YOffset = -MeshHeight * .5f;
 
-        //Setup 2d array of mesh nodes for the navmesh
+        //Grid is centered around (0,0). These are the world-space mins (bottom-left corner of the grid)
+        float XOffset = -HalfMeshWidth;
+        float YOffset = -HalfMeshHeight;
+
+        //Build the grid
         for(int MeshX = 0; MeshX < GridSize.x; MeshX++)
         {
             //Initialize each row of the nav mesh
@@ -54,13 +59,17 @@ public class NavMeshManager : MonoBehaviour
             {
                 //Initialize each mesh node in the column
                 MeshNode NewNode = new MeshNode();
-                //Set its position
-                Vector3 NodePos = new Vector3(
-                XOffset + MeshX * CellSize,
-                YOffset + MeshY * CellSize, 0f);
+
+                //Place nodes at the center of each cell
+                float WorldX = XOffset + (MeshX + 0.5f) * CellSize;
+                float WorldY = YOffset + (MeshY + 0.5f) * CellSize;
+                Vector3 NodePos = new Vector3(WorldX, WorldY, 0f);
+
+                //Set its world position
                 Vector2 GridPos = new Vector2(MeshX, MeshY);
                 NewNode.SetPosition(NodePos, GridPos);
-                //Add it to the 2d array
+
+                //Add it to the grid
                 NodeGraph[MeshX].Add(NewNode);
 
                 //Set it to visible if needed
@@ -209,23 +218,22 @@ public class NavMeshManager : MonoBehaviour
     //Returns the MeshNode in the grid closest to the given world position
     public MeshNode GetNodeFromWorldPos(Vector3 WorldPos)
     {
-        //Get the level bounds as we need to clamp the given position inside it
-        Vector2 XBounds = LevelBorders.Instance.XBounds;
-        Vector2 YBounds = LevelBorders.Instance.YBounds;
+        //Break out if the navmesh doesnt exist for some reason
+        if(NodeGraph == null || NodeGraph.Count == 0 || NodeGraph[0].Count == 0)
+            return null;
 
-        //Clamp the world position inside the grid bounds
-        float XClamped = Mathf.Clamp(WorldPos.x, XBounds.x, XBounds.y);
-        float YClamped = Mathf.Clamp(WorldPos.y, YBounds.x, YBounds.y);
+        //Calculate offset as navmesh is centered in the middle of the game world
+        float XOffset = -MeshWidth * 0.5f;
+        float YOffset = -MeshHeight * 0.5f;
 
-        //Convert clamped position into grid coordinates
-        int XIndex = Mathf.FloorToInt((XClamped - XBounds.x) / CellSize);
-        int YIndex = Mathf.FloorToInt((YClamped - YBounds.x) / CellSize);
+        //Convert world -> grid indices (shift into positive space first)
+        int XIndex = Mathf.FloorToInt((WorldPos.x - XOffset) / CellSize);
+        int YIndex = Mathf.FloorToInt((WorldPos.y - YOffset) / CellSize);
 
-        //Clamp indices to make sure we don't go out of bounds
-        XIndex = Mathf.Clamp(XIndex, 0, NodeGraph.Count - 1);
-        YIndex = Mathf.Clamp(YIndex, 0, NodeGraph[0].Count - 1);
+        //Clamp to array bounds
+        XIndex = Mathf.Clamp(XIndex, 0, NodeGraph.Count -1);
+        YIndex = Mathf.Clamp(YIndex, 0, NodeGraph[0].Count -1);
 
-        //Return the given node graph
         return NodeGraph[XIndex][YIndex];
     }
 
@@ -376,7 +384,7 @@ public class NavMeshManager : MonoBehaviour
             ClosedList.Add(NextNode);
 
             //Check all of the nodes neighbours
-            List<MeshNode> Neighbours = GetNeighbours(NextNode);
+            List<MeshNode> Neighbours = GetNeighbours(NextNode, false);
             foreach(MeshNode Neighbour in Neighbours)
             {
                 //Skip it if its already in the closed list, or its not able to be walked upon
@@ -406,7 +414,7 @@ public class NavMeshManager : MonoBehaviour
     }
 
     //Returns a list of the given nodes neighbours
-    private List<MeshNode> GetNeighbours(MeshNode Node)
+    private List<MeshNode> GetNeighbours(MeshNode Node, bool IncludeDiagonal)
     {
         //Start a list to contain this nodes neighbours
         List<MeshNode> Neighbours = new List<MeshNode>();
@@ -422,6 +430,10 @@ public class NavMeshManager : MonoBehaviour
             {
                 //Skip the node itself
                 if(DirectionX == 0 && DirectionY == 0)
+                    continue;
+
+                //If diagonals are not allowed, skip any offset that changes both axes
+                if(!IncludeDiagonal && DirectionX != 0 && DirectionY != 0)
                     continue;
 
                 //Get the grid pos of the potential neighbour
@@ -512,7 +524,7 @@ public class NavMeshManager : MonoBehaviour
                 return true;
             
             //This isnt the path, add all its neighbours so we can search them instead
-            foreach(MeshNode Neighbour in GetNeighbours(CurrentNode))
+            foreach(MeshNode Neighbour in GetNeighbours(CurrentNode, false))
             {
                 //Only add walkable neighbours that we haven't checked yet
                 if(Neighbour.IsWalkable && !NodesVisited.Contains(Neighbour))
