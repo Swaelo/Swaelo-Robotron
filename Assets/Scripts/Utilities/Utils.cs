@@ -1,16 +1,27 @@
 // ================================================================================================================================
-// File:        PoissonDiskSampler.cs
-// Description:	ChatGPT showed me how to write this, its too complicated for me to learn how it works, maybe one day
-// But basicly, it generated a list of randomly distributed points, that are never too close to each other, with a natural
-// looking distribution, I use this to spawn entities into the level at the start of a new wave
+// File:        Utils.cs
+// Description:	Contains various useful functions
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
 using UnityEngine;
 using System.Collections.Generic;
 
-public static class PoissonDiskSampler
+public static class Utils
 {
+    //Returns the world location where the mouse cursor is current hovering over
+    public static Vector3 GetMouseWorldPos()
+    {
+        //Break out if we cant find the camera
+        if(Camera.main == null)
+        {
+            Debug.Log("cannot find camera");
+            return Vector3.zero;
+        }
+
+        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+
     // Generates a set of points within a rectangle (XBounds, YBounds) with minimum distance 'radius'
     public static List<Vector2> GeneratePoints(float radius, Vector2 XBounds, Vector2 YBounds, int k = 30)
     {

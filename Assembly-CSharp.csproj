@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Player/PlayerShooting.cs" />
+    <Compile Include="Assets/Scripts/Terminal/NavMeshCommands.cs" />
     <Compile Include="Assets/Scripts/Enemies/HulkAI.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/MenuButtonFunctions.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/RoundCompleteAnimationDestroyer.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Assets/Scripts/Level/NavMeshManager.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/ScoreCarry.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/FinalScoreDisplay.cs" />
+    <Compile Include="Assets/Scripts/Terminal/SpawningCommands.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/SoundEffectsPlayer.cs" />
     <Compile Include="Assets/Scripts/Enemies/TankAI.cs" />
     <Compile Include="Assets/Scripts/Humans/ProgSpriteTrailFollower.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/LivesDisplay.cs" />
     <Compile Include="Assets/Scripts/Player/CameraZoom.cs" />
     <Compile Include="Assets/Scripts/Player/ProjectileMovement.cs" />
+    <Compile Include="Assets/Scripts/System/Utilities.cs" />
     <Compile Include="Assets/Scripts/Enemies/BrainAI.cs" />
     <Compile Include="Assets/Scripts/Terminal.cs" />
     <Compile Include="Assets/Scripts/Wave Spawning/WaveManager.cs" />
@@ -76,8 +79,8 @@
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/GameState.cs" />
     <Compile Include="Assets/Scripts/Enemies/SparkShotAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/CruiseMissileAI.cs" />
-    <Compile Include="Assets/Scripts/Utilities/PoissonDiskSampler.cs" />
     <Compile Include="Assets/Scripts/Enemies/EnforcerAI.cs" />
+    <Compile Include="Assets/Scripts/Utilities/Utils.cs" />
     <Compile Include="Assets/Scripts/Entities/FriendlyEntity.cs" />
     <Compile Include="Assets/Scripts/Level/MeshNode.cs" />
     <Compile Include="Assets/Scripts/Player/CameraFollow.cs" />

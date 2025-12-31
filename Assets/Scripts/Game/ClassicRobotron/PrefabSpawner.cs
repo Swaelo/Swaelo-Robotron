@@ -57,4 +57,19 @@ public class PrefabSpawner : MonoBehaviour
             ElectrodeType == 3 ? "C" : "D");
         return GetPrefab(PrefabName);
     }
+
+    //Executed from the terminal for debugging, takes in entity name and a number, tries to spawn in that amount around the player
+    public void SpawnEntities(string EntityName, int EntityCount)
+    {
+        //Make sure this entity type exists
+        GameObject Prefab = GetPrefab(EntityName);
+        if(Prefab == null)
+        {
+            //Let the user know if this isnt valid
+            Game.Instance.Terminal.Print("Entity type " + EntityName + " was not found to exist by the prefab spawner.");
+            return;
+        }
+
+
+    }
 }

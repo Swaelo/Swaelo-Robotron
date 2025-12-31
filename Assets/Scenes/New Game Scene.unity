@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000080535516}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &285354557
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 8.581329, y: 0, z: 9.654083, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -670,8 +670,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 591714094}
   m_HandleRect: {fileID: 591714093}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.7858982
+  m_Value: 0.9999982
+  m_Size: 0.8877454
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1456,7 +1456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.74509805}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1599,8 +1599,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 964022339}
   m_HandleRect: {fileID: 964022338}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1727,10 +1727,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
+  m_fontSize: 44.25
   m_fontSizeBase: 14
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -1789,6 +1789,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1639234399}
   - component: {fileID: 1639234400}
+  - component: {fileID: 1639234401}
+  - component: {fileID: 1639234402}
   m_Layer: 5
   m_Name: Terminal
   m_TagString: Untagged
@@ -1831,7 +1833,31 @@ MonoBehaviour:
   TerminalPanel: {fileID: 2069784335}
   InputField: {fileID: 795077589}
   OutputText: {fileID: 366788870}
-  MaxLines: 8
+  MaxLines: 64
+--- !u!114 &1639234401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639234398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e2d6ffae9bb24a679a61f8b34af371c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawningCommands
+--- !u!114 &1639234402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639234398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8fb2aa764d34d44a4a4faf672c9be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavMeshCommands
 --- !u!1 &1737552357
 GameObject:
   m_ObjectHideFlags: 0
@@ -21595,6 +21621,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
   NavMesh: {fileID: 0}
   Player: {fileID: 0}
+  Prefabs: {fileID: 0}
+  Terminal: {fileID: 0}
 --- !u!4 &6260544339253127724
 Transform:
   m_ObjectHideFlags: 0

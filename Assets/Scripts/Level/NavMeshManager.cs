@@ -6,6 +6,9 @@
 // ================================================================================================================================
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Collections;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class NavMeshManager : MonoBehaviour
@@ -31,6 +34,30 @@ public class NavMeshManager : MonoBehaviour
     float MeshHeight = 0f;
     float HalfMeshWidth = 0f;
     float HalfMeshHeight = 0f;
+
+    public void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            //Grab a bunch of possible spawn locations near this spot and light them up
+            Vector3 MousePos = Utils.GetMouseWorldPos();
+            List<MeshNode> TargetNodes = FindSpawnLocations(MousePos, 10, 0.5f, 5f);
+            Game.Instance.Terminal.Print("Was able to find " + TargetNodes.Count + " neighbours.");
+            foreach(MeshNode Target in TargetNodes)
+                Target.SetColor(Color.white);
+        }
+        if(Input.GetMouseButton(1))
+        {
+            //Hold RMB to mark nodes unwalkable
+            Vector3 MousePos = Utils.GetMouseWorldPos();
+            MeshNode MouseNode = GetNodeFromWorldPos(MousePos);
+            MouseNode.SetWalkable(false);
+            //Also mark all its neighbours as unwalkable
+            List<MeshNode> Neighbours = GetNeighbours(MouseNode);
+            foreach(MeshNode Neighbour in Neighbours)
+                Neighbour.SetWalkable(true);
+        }
+    }
 
     //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
     public void GenerateNavMesh()
@@ -81,13 +108,13 @@ public class NavMeshManager : MonoBehaviour
     }
 
     //Reset all nodes to walkable
-    public void ResetNodes()
+    public void SetAllNodesWalkable(bool Walkable)
     {
         foreach(List<MeshNode> List in NodeGraph)
         {
             foreach(MeshNode Node in List)
             {
-                Node.SetWalkable(true);
+                Node.SetWalkable(Walkable);
             }
         }
     }
@@ -108,7 +135,7 @@ public class NavMeshManager : MonoBehaviour
         BoxCollider2D EntityCollider = Entity.transform.GetComponent<BoxCollider2D>();
         if(EntityCollider == null)
         {
-            Debug.LogWarning("Entity has no box collider I can find.");
+            Game.Instance.Terminal.Print("Entity has no box collider I can find.");
             return;
         }
 
@@ -240,19 +267,21 @@ public class NavMeshManager : MonoBehaviour
     //Returns the walkable MeshNode in the grid closest to the given world position
     public MeshNode GetWalkableNodeFromWorldPos(Vector3 WorldPos)
     {
-        //Clamp the world position inside the level bounds
-        Vector2 XBounds = LevelBorders.Instance.XBounds;
-        Vector2 YBounds = LevelBorders.Instance.YBounds;
-        float XClamped = Mathf.Clamp(WorldPos.x, XBounds.x, XBounds.y);
-        float YClamped = Mathf.Clamp(WorldPos.y, YBounds.x, YBounds.y);
+        //Break out if the navmesh doesnt exist for some reason
+        if(NodeGraph == null || NodeGraph.Count == 0 || NodeGraph[0].Count == 0)
+            return null;
 
-        //Convert clamped position into grid coordinates
-        int XIndex = Mathf.FloorToInt((XClamped - XBounds.x) / CellSize);
-        int YIndex = Mathf.FloorToInt((YClamped - YBounds.x) / CellSize);
+        //Calculate offset as navmesh is centered in the middle of the game world
+        float XOffset = -MeshWidth * 0.5f;
+        float YOffset = -MeshHeight * 0.5f;
 
-        //Clamp indices so we dont go out of bounds
-        XIndex = Mathf.Clamp(XIndex, 0, NodeGraph.Count - 1);
-        YIndex = Mathf.Clamp(YIndex, 0, NodeGraph[0].Count - 1);
+        //Convert world -> grid indices (shift into positive space first)
+        int XIndex = Mathf.FloorToInt((WorldPos.x - XOffset) / CellSize);
+        int YIndex = Mathf.FloorToInt((WorldPos.y - YOffset) / CellSize);
+
+        //Clamp to array bounds
+        XIndex = Mathf.Clamp(XIndex, 0, NodeGraph.Count -1);
+        YIndex = Mathf.Clamp(YIndex, 0, NodeGraph[0].Count -1);
 
         //If the node is already walkable, return it
         if(NodeGraph[XIndex][YIndex].IsWalkable)
@@ -414,7 +443,7 @@ public class NavMeshManager : MonoBehaviour
     }
 
     //Returns a list of the given nodes neighbours
-    private List<MeshNode> GetNeighbours(MeshNode Node, bool IncludeDiagonal)
+    private List<MeshNode> GetNeighbours(MeshNode Node, bool IncludeDiagonal = false)
     {
         //Start a list to contain this nodes neighbours
         List<MeshNode> Neighbours = new List<MeshNode>();
@@ -537,5 +566,304 @@ public class NavMeshManager : MonoBehaviour
 
         //Not pathway could be found
         return false;
+    }
+
+    //Returns a list of vector3 positions that match the following conditions
+    //1. Each location must have a walkable NavMesh node underneath it
+    //2. Each location lies within the mix/max distance from the target location
+    //3. Each location must be reachable over the navmesh from the target location
+    //4. The locations are spread in a circle evening around the target location
+    //5. Final list is ordered by angle from the player, so they appear in a circle order when being spawned in
+    public List<MeshNode> FindSpawnLocations(Vector3 TargetLocation, int LocationCount, float MinDistance = .5f, float MaxDistance = 5f)
+    {
+        //Lost of found locations
+        List<MeshNode> SpawnLocations = new List<MeshNode>();
+
+        //Figure out how many more locations we need to find
+        int LocationsNeeded() { return LocationCount - SpawnLocations.Count; }
+
+        //Return an empty list if we have been asked for 0 locations for some reasoin
+        if(LocationCount == 0)
+            return SpawnLocations;
+            
+        //Return an empty list if the navmesh isn't currently setup
+        if(NodeGraph == null || NodeGraph.Count == 0 || NodeGraph[0].Count == 0)
+            return SpawnLocations;
+
+        //Ensure the min/max positions are valid
+        MinDistance = Mathf.Max(0f, MinDistance);
+        MaxDistance = Mathf.Max(MinDistance, MaxDistance);
+
+        //Start from the closest walkable node near out target position
+        MeshNode TargetNode = GetWalkableNodeFromWorldPos(TargetLocation);
+        //Run out if one can't be found or if we ended up somehow finding an unwalkable one
+        if(TargetNode == null || !TargetNode.IsWalkable)
+            return SpawnLocations;
+        
+        //Track used nodes so we dont select the same ones twice
+        HashSet<MeshNode> UsedNodes = new HashSet<MeshNode>();
+
+        //Search along a ring between min and max distance
+        float MidDistance = (MinDistance + MaxDistance) * 0.5f; //Middle of the allowed distance band
+        float RingHalfWidth = (MaxDistance - MinDistance) * 0.5f; //Half-width of the ring
+
+        //Set up angles and steps for walking through and searching for positions around the ring
+        float AngleStep = 360f / LocationCount; //How many degrees we want to have between each location to place them in a nice ring
+        float AngleSearchStepDegrees = 8f;  //How far to rotate when the exactle angle we are trying is blocked
+        int RadialSteps = 24; //How many radial samples to take across the ring thickness
+        float RadialStepSize = (RingHalfWidth * 2f) / Mathf.Max(1, RadialSteps - 1); //Distance between each radial sample
+
+        //First pass, try to place spawn points evenly around the target
+        for(int SpawnCounter = 0; SpawnCounter < LocationCount; SpawnCounter++)
+        {
+            //Find a node for each location
+            float DesiredAngle = SpawnCounter * AngleStep;
+            MeshNode Candidate = FindCandidateForAngle(DesiredAngle);
+
+            //Add it to the list if its found to be valid
+            if(Candidate != null)
+            {
+                UsedNodes.Add(Candidate);
+                SpawnLocations.Add(Candidate);
+            }
+        }
+        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after first pass, with " + LocationsNeeded() + " remaining.");
+
+        //Second pass, scan outward in a square/spiral around the target node in grid space
+        if(SpawnLocations.Count < LocationCount)
+        {
+            //Get the grid limits we will start searching through instead
+            int MaxGridRadius = Mathf.Max((int)GridSize.x, (int)GridSize.y);
+            int TargetX = (int)TargetNode.GridPosition.x;
+            int TargetY = (int)TargetNode.GridPosition.y;
+
+            void TryAddingNode(int GridX, int GridY)
+            {
+                //Exit out if we don't need to find anymore
+                if(LocationsNeeded() <= 0)
+                    return;
+                
+                //Dont try searching outside the grid
+                if(GridX < 0 || GridX >= (int)GridSize.x)
+                    return;
+                if(GridY < 0 || GridY >= (int)GridSize.y)
+                    return;
+
+                //Find a candidate, exit out if its invalid
+                MeshNode Candidate = NodeGraph[GridX][GridY];
+                if(!IsValidCandidate(Candidate))
+                    return;
+
+                //Otherwise we add it to our list
+                UsedNodes.Add(Candidate);
+                SpawnLocations.Add(Candidate);
+            }
+
+            //Walk square rings expanding outward from the target node
+            for(int Radius = 1; Radius <= MaxGridRadius && LocationsNeeded() > 0; Radius++)
+            {
+                //Top and bottom edges
+                for(int DegreesX = -Radius; DegreesX <= Radius && LocationsNeeded() > 0; DegreesX++)
+                {
+                    TryAddingNode(TargetX + DegreesX, TargetY + Radius);
+                    TryAddingNode(TargetX + DegreesX, TargetY - Radius);
+                }
+
+                //Left and right edges
+                for(int DirectionY = -Radius + 1; DirectionY <= Radius && LocationsNeeded() > 0; DirectionY++)
+                {
+                    TryAddingNode(TargetX - Radius, TargetY + DirectionY);
+                    TryAddingNode(TargetX + Radius, TargetY + DirectionY);
+                }
+            }
+        }
+
+        //Print out how many spots have been found so far
+        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 2nd pass, with " + LocationsNeeded() + " remaining.");
+
+        //Third pass, expand max distance outward in steps and try again
+        float OriginalMax = MaxDistance;
+        float ExpandStep = 0.75f; //How far we will move outwards after each step
+        float ExpandCap = OriginalMax + 15f;
+
+        //Keep searching until we find some more locations
+        while(LocationsNeeded() > 0 && MaxDistance < ExpandCap)
+        {
+            //Increase the search radius
+            MaxDistance += ExpandStep;
+
+            //Update ring parameters that depend on MaxDistance
+            MinDistance = (MinDistance + MaxDistance) * 0.5f;
+            RingHalfWidth = (MaxDistance - MinDistance) * 0.5f;
+            RadialStepSize = (RingHalfWidth * 2f) / Mathf.Max(1, RadialSteps - 1);
+
+            //Check the locations in these directions with the new distance limitations
+            for(int FarCheck = 0; FarCheck < LocationCount && LocationsNeeded() > 0; FarCheck++)
+            {
+                float DesiredAngle = FarCheck * AngleStep;
+                MeshNode Candidate = FindCandidateForAngle(DesiredAngle, false, true);
+
+                //Add this if its valid
+                if(Candidate != null)
+                    SpawnLocations.Add(Candidate);
+            }
+        }
+
+        //Print out how many locations have been found
+        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 3rd pass, with " + LocationsNeeded() + " remaining.");
+
+        //Fourth pass, allow duplicate locations
+        if(SpawnLocations.Count < LocationCount)
+        {
+            //Try again, allowing duplicates but still respecting distance band + reachability
+            for(int NonUniqueCheck = 0; NonUniqueCheck < LocationCount && LocationsNeeded() > 0; NonUniqueCheck++)
+            {
+                //Find a new desired node at the new angle, ignoring uniqueness constraints
+                float DesiredAngle = NonUniqueCheck * AngleStep;
+                MeshNode Candidate = FindCandidateForAngle(DesiredAngle, false, true);
+
+                //Ignore any invalid / non found nodes
+                if(Candidate != null)
+                {
+                    //Don't add to UsedNodes because we're explicitly allowing duplicates
+                    SpawnLocations.Add(Candidate);
+                }
+            }
+        }
+
+        //Print out how many locations have been found
+        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 4th pass, with " + LocationsNeeded() + " remaining.");
+
+        //Fifth pass, ignore distance limitations
+        if(LocationsNeeded() > 0)
+        {
+            //Do a global scan for any walkable+reachable nodes (ignoring distance)
+            List<MeshNode> GlobalCandidates = new List<MeshNode>();
+            for(int NodeX = 0; NodeX < NodeGraph.Count; NodeX++)
+            {
+                for(int NodeY = 0; NodeY < NodeGraph[NodeX].Count; NodeY++)
+                {
+                    //Check every node without limitations
+                    MeshNode GlobalNode = NodeGraph[NodeX][NodeY];
+                    if(IsValidCandidate(GlobalNode, false, false))
+                        GlobalCandidates.Add(GlobalNode);
+                }
+            }
+
+            //Sort them by distance to prefer all the closer nodes
+            GlobalCandidates.Sort((NodeA, NodeB) =>
+                Vector3.Distance(NodeA.NodePos, TargetLocation).CompareTo(Vector3.Distance(NodeB.NodePos, TargetLocation)));
+
+            //If any have been found, add as many of them onto the list as possible until its full or we run out
+            int CandidateCount = 0;
+            while(LocationsNeeded() > 0 && GlobalCandidates.Count > 0)
+            {
+                SpawnLocations.Add(GlobalCandidates[CandidateCount % GlobalCandidates.Count]);
+                CandidateCount++;
+            }
+            
+        }
+
+        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 5th pass, with " + LocationsNeeded() + " remaining.");
+
+        //Final pass, duplicate the target node until the list is full
+        while(SpawnLocations.Count < LocationCount)
+            SpawnLocations.Add(TargetNode);
+
+        //Sort the spawn positions by angle around the target location
+        SpawnLocations.Sort((SpawnA, SpawnB) =>
+        {
+            Vector3 SpawnAPos = SpawnA.NodePos;
+            Vector3 SpawnBPos = SpawnB.NodePos;
+            float AngleA = Mathf.Atan2(SpawnAPos.y - TargetLocation.y, SpawnAPos.x - TargetLocation.x);
+            float AngleB = Mathf.Atan2(SpawnBPos.y - TargetLocation.y, SpawnBPos.x - TargetLocation.x);
+            return AngleA.CompareTo(AngleB);
+        });
+
+        //Ensure we never exceed the request amount of requested locations
+        if(SpawnLocations.Count > LocationCount)
+            SpawnLocations.RemoveRange(LocationCount, SpawnLocations.Count - LocationCount);
+
+        // return Results;
+        return SpawnLocations;
+
+        //Checks whether a mesh node can be used as a spawn location
+        bool IsValidCandidate(MeshNode Candidate, bool EnforceUniqueLocations = true, bool EnforceDistanceParameters = true)
+        {
+            //Must exist
+            if(Candidate == null)
+                return false;
+            
+            //Must be walkable
+            if(!Candidate.IsWalkable)
+                return false;
+
+            //Must not already be used
+            if(EnforceUniqueLocations && UsedNodes.Contains(Candidate))
+                return false;
+
+            //Must be within distance bounds
+            if(EnforceDistanceParameters)
+            {
+                float Distance = Vector3.Distance(Candidate.NodePos, TargetLocation);
+                if(Distance < MinDistance || Distance > MaxDistance)
+                    return false;
+            }
+
+            //Must be reachable from the taget over the navmesh
+            if(!IsReachable(TargetNode, Candidate))
+                return false;
+
+            //All tests have passed, this node is valid
+            return true;
+        }
+
+        //Attempts to find a valid node near a desired angle by:
+            //Rotating slightly left/right if blocked
+            //Sampling inward/outward across the ring thicness
+        MeshNode FindCandidateForAngle(float DesiredAngleDegrees, bool EnforceUniqueLocations = true, bool EnforceDistanceParameters = true)
+        {
+            //Maximum number of angular offest to try (up to half a circle)
+            int MaxAngleSteps = Mathf.Max(1, Mathf.CeilToInt(180f / Mathf.Max(0.1f, AngleSearchStepDegrees)));
+
+            //Angular search: 0, +step, -step, +2step, -2step, ...
+            for(int AngleStep = 0; AngleStep < MaxAngleSteps; AngleStep++)
+            {
+                //Get the search step we are currently going to use
+                int SignedIndex =
+                    (AngleStep == 0) ? 0 :
+                    ((AngleStep % 2 == 1) ? (AngleStep + 1) / 2 : -AngleStep / 2);
+
+                //Get the new angle we are going to check for and its direction vector
+                float AngleOffset = SignedIndex * AngleSearchStepDegrees;
+                float AngleRad = (DesiredAngleDegrees + AngleOffset) * Mathf.Deg2Rad;
+                Vector2 Direction = new Vector2(Mathf.Cos(AngleRad), Mathf.Sin(AngleRad));
+
+                //Radial search: Start at mid-distance, then move inward/outward
+                //0, +1, -1, +2, -2, ...
+                for(int RadialStep = 0; RadialStep < RadialSteps; RadialStep++)
+                {
+                    //Get the search step we are currently going to use
+                    int SingedRadian =
+                        (RadialStep == 0) ? 0 :
+                        ((RadialStep % 2 == 1) ? (RadialStep + 1) / 2 : -RadialStep / 2);
+
+                    //Get the distance in the direction but clamp it in range
+                    float Distance = MidDistance + SingedRadian * RadialStepSize;
+                    Distance = Mathf.Clamp(Distance, MinDistance, MaxDistance);
+
+                    //Find a new position in this direction and find the walkable node
+                    Vector3 CheckPos = TargetLocation + (Vector3)(Direction * Distance);
+                    MeshNode Candidate = GetWalkableNodeFromWorldPos(CheckPos);
+
+                    //If it satifies all conditions, use it
+                    if(IsValidCandidate(Candidate, EnforceUniqueLocations, EnforceDistanceParameters))
+                        return Candidate;
+                }
+            }
+
+            //Node valid node found for this angle
+            return null;
+        }
     }
 }

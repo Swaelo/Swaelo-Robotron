@@ -15,6 +15,8 @@ public class Game : MonoBehaviour
     //Other components to use
     public NavMeshManager NavMesh;
     public GameObject Player;
+    public PrefabSpawner Prefabs;
+    public CommandTerminal Terminal;
 
     public void Start() { StartGame(); }
 
@@ -24,6 +26,8 @@ public class Game : MonoBehaviour
         //Get reference to all the important classes and systems use to manage the game
         NavMesh = NavMeshManager.Instance;
         Player = GameObject.Find("Player");
+        Prefabs = PrefabSpawner.Instance;
+        Terminal = CommandTerminal.Instance;
 
         //Initialise them all to get the game world setup
         NavMesh.GenerateNavMesh();

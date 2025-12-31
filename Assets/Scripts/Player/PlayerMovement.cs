@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         MovementVelocity = transform.position - PreviousPos;
         PreviousPos = transform.position;
 
-        SetMeshNodes();
+       // SetMeshNodes();
     }
 
     //Keeps track of which mesh nodes the player is walking on, and sets them as unwalkable so enemies pathfinding doesnt travel in that direction

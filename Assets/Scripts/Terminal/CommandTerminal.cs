@@ -15,6 +15,10 @@ public class CommandTerminal : MonoBehaviour
     //Singleton instance for easy global access
     public static CommandTerminal Instance = null;
 
+    //Groups of commands that need to be registered in
+    private SpawningCommands Spawning;
+    private NavMeshCommands NavMesh;
+
     [Header("UI")]
     [SerializeField] private GameObject TerminalPanel;  //Root panel that contains the entire console UI elements
     [SerializeField] private TMP_InputField InputField; //Input field where the user can type in commands
@@ -48,14 +52,15 @@ public class CommandTerminal : MonoBehaviour
             TerminalPanel.SetActive(false);
 
         //Setup all commands that can be executed through the terminal
-        DefineCommands();
+        DefineBaseCommands();
+        DefineGroupCommands();
 
         //Listen for the input field submit event (Enter key)
         InputField.onSubmit.AddListener(SubmitCommand);
     }
 
     //Defines all commands that can be used in the terminal
-    private void DefineCommands()
+    private void DefineBaseCommands()
     {
         //Lists all available commands, or details for a specific command
         RegisterNewCommand("help", "Lists commands or: help <command>", Arguments =>
@@ -98,6 +103,18 @@ public class CommandTerminal : MonoBehaviour
 
             Print($"{FoundObject.name} pos = {FoundObject.transform.position}");
         });
+    }
+
+    //Executes registration of any groups of commands that have been defined
+    private void DefineGroupCommands()
+    {
+        //Entity spawning
+        Spawning = GetComponent<SpawningCommands>();
+        Spawning.RegisterCommands(this);
+
+        //Navmesh management
+        NavMesh = GetComponent<NavMeshCommands>();
+        NavMesh.RegisterCommands(this);
     }
 
     private void Update()
@@ -233,7 +250,7 @@ public class CommandTerminal : MonoBehaviour
     }
 
     //Prints a line to the console output
-    private void Print(string Line)
+    public void Print(string Line)
     {
         //Add the new text into the list
         OutputLines.Enqueue(Line);

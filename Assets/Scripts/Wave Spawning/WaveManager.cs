@@ -119,7 +119,7 @@ public class WaveManager : MonoBehaviour
             Destroy(EnemyProjectile);
 
         //Reset the mesh nodes to all be walkable
-        NavMeshManager.Instance.ResetNodes();
+        NavMeshManager.Instance.SetAllNodesWalkable(true);
     }
 
     //Restarts the current wave with mostly the same amount of enemies that were remaining when the player died
@@ -228,7 +228,7 @@ public class WaveManager : MonoBehaviour
         Vector2 YBounds = LevelBorders.Instance.YBounds;
 
         //Get a list of spawn locations that can be used
-        List<Vector2> CandidateLocations = PoissonDiskSampler.GeneratePoints(0.5f, XBounds, YBounds);
+        List<Vector2> CandidateLocations = Utils.GeneratePoints(0.5f, XBounds, YBounds);
 
         //Shuffle the list
         CandidateLocations = ShuffleList(CandidateLocations);
