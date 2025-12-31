@@ -34,7 +34,7 @@ public class NavMeshManager : MonoBehaviour
     float HalfMeshHeight = 0f;
 
     //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
-    public void NewGenerateNavMesh()
+    public void GenerateNavMesh()
     {
         //Find the size of the nav mesh and find the spawning offsets so the center is at 0,0
         MeshWidth = GridSize.x * CellSize;
@@ -68,52 +68,6 @@ public class NavMeshManager : MonoBehaviour
                     NewNode.InitRenderer("NavMeshNode: " + MeshX + ", " + MeshY, transform);
             }
         }
-        NavMeshReady = true;
-    }
-
-    //Initialised the navmesh, sets up 2D array of nodes which define the whole navmesh grid to be used for pathfinding
-    public void GenerateNavMesh()
-    {
-        //Find the level size, and use that with the desired mesh resolution to find the actual grid size
-        Vector2 XBounds = LevelBorders.Instance.XBounds;
-        Vector2 YBounds = LevelBorders.Instance.YBounds;
-        float LevelWidth = LevelBorders.Instance.GetUseableLevelWidth();
-        float LevelHeight = LevelBorders.Instance.GetUseableLevelHeight();
-        GridSize.x = Mathf.CeilToInt(LevelWidth / CellSize);
-        GridSize.y = Mathf.CeilToInt(LevelHeight / CellSize);
-
-        //Generate a grid of mesh nodes which will make up our nav mesh
-        for(int x = 0; x < GridSize.x; x++)
-        {
-            //Initialize the row of the grid
-            NodeGraph.Add(new List<MeshNode>());
-
-            for(int y = 0; y < GridSize.y; y++)
-            {
-                //Initialize the node in this column of the grid
-                MeshNode NewNode = new MeshNode();
-
-                //Set the position of each node at the center of the cell it defines
-                NewNode.NodePos = new Vector3(
-                    XBounds.x + (x + 0.5f) * CellSize,
-                    YBounds.x + (y + 0.5f) * CellSize, 0f);
-
-                //Add it into the grid
-                NodeGraph[x].Add(NewNode);
-
-                //Make them visible if needed
-                if(VisibleNavMesh)
-                {
-                    //Name and parent it to keep the scene hierarchy clean
-                    string NodeName = "NavNode " + x + ", " + y;
-                    NewNode.InitRenderer(NodeName, transform);
-                }
-
-                //Also, they should know their position in the array
-                NewNode.GridPosition = new Vector2(x, y);
-            }
-        }
-
         NavMeshReady = true;
     }
 
@@ -176,15 +130,20 @@ public class NavMeshManager : MonoBehaviour
         //Get the bounds of the collider
         Bounds BoxBounds = Box.bounds;
 
+        //Expand the box outwards to catch edge nodes + safety margin
+        float BufferSize = CellSize * 0.75f;
+        BoxBounds.min -= new Vector3(BufferSize, BufferSize, 0f);
+        BoxBounds.max += new Vector3(BufferSize, BufferSize, 0f);
+
         //Calculate the total navmesh world extents
         Vector2 NavMeshMin = new Vector2(-HalfMeshWidth, -HalfMeshHeight);
         Vector2 NavMeshMax = new Vector2(HalfMeshWidth, HalfMeshHeight);
 
         //Overlapping rect in world space
-        float OverlapMinX = Mathf.Max(Box.bounds.min.x, NavMeshMin.x);
-        float OverlapMinY = Mathf.Max(Box.bounds.min.y, NavMeshMin.y);
-        float OverlapMaxX = Mathf.Min(Box.bounds.max.x, NavMeshMax.x);
-        float OverlapMaxY = Mathf.Min(Box.bounds.max.y, NavMeshMax.y);
+        float OverlapMinX = Mathf.Max(BoxBounds.min.x, NavMeshMin.x);
+        float OverlapMinY = Mathf.Max(BoxBounds.min.y, NavMeshMin.y);
+        float OverlapMaxX = Mathf.Min(BoxBounds.max.x, NavMeshMax.x);
+        float OverlapMaxY = Mathf.Min(BoxBounds.max.y, NavMeshMax.y);
         
         //If there is no overlap with the navmesh at all, exit out
         if(OverlapMinX >= OverlapMaxX || OverlapMinY >= OverlapMaxY)
@@ -319,6 +278,70 @@ public class NavMeshManager : MonoBehaviour
 
         //As a fallback, we return the original node, even if its not walkable
         return NodeGraph[XIndex][YIndex];
+    }
+
+    //Finds a pathway from the start to end while treating nodes near the player as unwalkable
+    public List<MeshNode> FindPathwayAvoidingPlayer(Vector3 StartPos, Vector3 EndPos, float AvoidanceRadius = 2f)
+    {
+        //Get the start and end nodes
+        MeshNode StartNode = GetWalkableNodeFromWorldPos(StartPos);
+        MeshNode EndNode = GetWalkableNodeFromWorldPos(EndPos);
+
+        //Return empty if no pathway is possible
+        if(!StartNode.IsWalkable || !EndNode.IsWalkable)
+            return new List<MeshNode>();
+
+        //Find all the players information
+        Vector3 PlayerPos = GameState.Instance.Player.transform.position;
+        MeshNode PlayerNode = GetNodeFromWorldPos(PlayerPos);
+        int PlayerGridX = (int)PlayerNode.GridPosition.x;
+        int PlayerGridY = (int)PlayerNode.GridPosition.y;
+
+        //Calculate an avoidance area around the player
+        int SearchRadius = Mathf.CeilToInt((AvoidanceRadius * 1.5f) / CellSize);
+
+        //We will temporarily mark nodes near the player as unwalkable, we need to store their states so we can set them back to normal after we are finish
+        Dictionary<MeshNode, bool> OriginalStates = new Dictionary<MeshNode, bool>();
+
+        //Mark nearby nodes as unwalkable (skipping start and target nodes to ensure valid endpoints)
+        for(int NodeX = -SearchRadius; NodeX <= SearchRadius; NodeX++)
+        {
+            for(int NodeY = -SearchRadius; NodeY <= SearchRadius; NodeY++)
+            {
+                //Get the nodes position
+                int NodePosX = PlayerGridX + NodeX;
+                int NodePosY = PlayerGridY + NodeY;
+
+                //Make sure they are valid nodes
+                if(NodePosX >= 0 && NodePosX < (int)GridSize.x && NodePosY >= 0 && NodePosY < (int)GridSize.y)
+                {
+                    //Grab this node
+                    MeshNode Node = NodeGraph[NodePosX][NodePosY];
+
+                    //Skip the target / target nodes
+                    if(Node == StartNode || Node == EndNode)
+                        continue;
+
+                    //Check if this node lies within the unwalkable area
+                    if (Vector3.Distance(Node.NodePos, PlayerPos) <= AvoidanceRadius)
+                    {
+                        //This node is too close to the player
+                        //Store its original position and mark it was unwalkable
+                        OriginalStates[Node] = Node.IsWalkable;
+                        Node.SetWalkable(false);
+                    }
+                }
+            }
+        }
+
+        //Now all nodes near the player have been marked unwalkable, lets find a path to our hiding spot
+        List<MeshNode> NodePathway = FindPathway(StartPos, EndPos);
+
+        //Restore original states of all nodes
+        foreach(var Node in OriginalStates)
+            Node.Key.SetWalkable(Node.Value);
+
+        return NodePathway;
     }
 
     //Takes two locations and returns a list of mesh nodes which forms a pathway from one location to the other
@@ -463,5 +486,44 @@ public class NavMeshManager : MonoBehaviour
         if(DirectionX > DirectionY)
             return 14 * DirectionY + 10 * (DirectionX - DirectionY);
         return 14 * DirectionX + 10 * (DirectionY - DirectionX);
+    }
+
+    //Checks if there is a walkable path from the start node to the target node
+    public bool IsReachable(MeshNode Start, MeshNode End)
+    {
+        //Early out cases
+        if(Start == null || End == null) return false;
+        if(!Start.IsWalkable || !End.IsWalkable) return false;
+        if(Start == End) return true;
+
+        //Get through to find a path
+        HashSet<MeshNode> NodesVisited = new HashSet<MeshNode>();
+        Queue<MeshNode> NodeQueue = new Queue<MeshNode>();
+        NodeQueue.Enqueue(Start);
+        NodesVisited.Add(Start);
+
+        while(NodeQueue.Count > 0)
+        {
+            //Get the next node to check along the pathway
+            MeshNode CurrentNode = NodeQueue.Dequeue();
+
+            //Check if we have found a path to the location
+            if(CurrentNode == End)
+                return true;
+            
+            //This isnt the path, add all its neighbours so we can search them instead
+            foreach(MeshNode Neighbour in GetNeighbours(CurrentNode))
+            {
+                //Only add walkable neighbours that we haven't checked yet
+                if(Neighbour.IsWalkable && !NodesVisited.Contains(Neighbour))
+                {
+                    NodesVisited.Add(Neighbour);
+                    NodeQueue.Enqueue(Neighbour);
+                }
+            }
+        }
+
+        //Not pathway could be found
+        return false;
     }
 }

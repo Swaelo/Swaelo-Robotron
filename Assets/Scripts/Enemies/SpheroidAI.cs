@@ -10,8 +10,14 @@ using UnityEngine;
 
 public class SpheroidAI : HostileEntity
 {
+    //Engine components
+    private NavMeshManager NavMesh = null;
+    private WaveManager Waves = null;
+    private GameState Game = null;
+    private PrefabSpawner Spawner = null;
+    public SoundEffectsPlayer Sounds = null;
+
     //Movement
-    private List<Vector3> CornerPositions = new List<Vector3>(); //Corner position targets the spheroids will move between to avoid the player
     public Vector3 CurrentTarget;  //Current corner position the spheroid is seeking towards
     public float MoveSpeed = 2.5f; //How fast the spheroid moves around the level
     private Vector3 Steering = Vector3.zero; //Current direction the spheroid is steering in
@@ -20,25 +26,27 @@ public class SpheroidAI : HostileEntity
     private bool HasPath = false;   //Tracks if we currently have a pathway to our target location
     private List<MeshNode> PathToTarget = new List<MeshNode>(); //List of mesh nodes to navigate through to reach out target location
 
-    //Enemy spawning
-    public bool InCorner = false;  //Tracks if we are in a safe spot or not
-    private float TimeInCorner = 0f;    //Track how long we have been sitting in the corner in a safe spot
-    private float TimeToStartSpawning = 1f; //How long we need to wait in the corner before we start spawning a new enemy
-    private float TimeToFinishSpawning = 3.5f; //How long we need to wait in the corner before we finish spawning a new enemy
-    private bool StartedSpawning = false;
-    private float SpawnAnimationTimer = 0f; //How long we have been in the process to spawn a new enemy in
-    private float SpawnAnimationDuration = 2.5f;  //How long it takes to spawn an enemy in
-    private Vector3 BaseScale;
-    private AudioSource SoundEffectPlayer;
+    private Vector3 BaseScale;  //The original transform scale of the enemy
+    private AudioSource SoundEffectPlayer;  //For playing sound effects
+
+    //New enemy spawning
+    public bool InHiding = false; //Tracks if we are in a safe spot or not
+    private float TimeHiding = 0f;  //Track how long we have been hiding in a safe spot
+    private bool SpawningEnemy = false; //Tracks when the spheroid has started spawning an enemy in its safe spot
+    private float EnemySpawnStartLimit = 3f; //How long we need to wait in the safe spot before we can start spawning an enemy
+    private float EnemySpawnDuration = 3.5f; //How long it takes to channel the spawning of a new enemy
+    private float EnemySpawnTimer = 0f; //Tracks how long into the spawn process we are
 
     //Hits until dead
     private int HitPoints = 3;
 
-
     private void Start()
     {
-        //Grab the corner locations from the level borders manager
-        CornerPositions = LevelBorders.Instance.GetCornerPositions();
+        NavMesh = NavMeshManager.Instance;
+        Waves = WaveManager.Instance;
+        Game = GameState.Instance;
+        Spawner = PrefabSpawner.Instance;
+        Sounds = SoundEffectsPlayer.Instance;
 
         //Store transformation scale
         BaseScale = transform.localScale;
@@ -46,185 +54,184 @@ public class SpheroidAI : HostileEntity
         SoundEffectPlayer = GetComponent<AudioSource>();
 
         //Select the closest corner to start moving toward
-        CurrentTarget = GetClosestCornerPos();
-        OffsetCornerTargetPos(1.5f);
+        CurrentTarget = FindHidingSpot();
     }
 
     private void Update()
     {
         //AI needs to be put on hold at times defined by the gamestate manager
-        if(!GameState.Instance.ShouldAdvanceGame())
+        if(!Game.ShouldAdvanceGame())
         {
             SoundEffectPlayer.Stop();
             return;
         }
 
-        //If we aren't in a corner, move towards our current corner target location
-        if(!InCorner)
-            SeekCorner();
-        //If we are in a corner, we can try to summon enemies while we are hiding there
-        else
-            IdleInCorner();
+        // //If we aren't hiding in a safe spot, move towards it
+        // if(!InHiding)
+        //     SeekSafeSpot();
+        // //Once we reach a safe spot, we can try to summon enemies while we are in hiding
+        // else
+        //     Hide();
     }
 
-    private void SeekCorner()
+    //Moves towards our current safe spot target location
+    private void SeekSafeSpot()
     {
-        //If we dont have a pathway to our target, we need to create it
+        //If we dont have a pathway to our safe spot, we need to find one
         if(!HasPath)
         {
-            PathToTarget = NavMeshManager.Instance.FindPathway(transform.position, CurrentTarget);
+            CurrentTarget = FindHidingSpot();
+            PathToTarget = NavMesh.FindPathway(transform.position, CurrentTarget);
+
+            Debug.Log("Path to target is " + PathToTarget.Count + " nodes long");
+
+            //If no path is found, just stay put and skip movement this frame
+            if(PathToTarget.Count == 0)
+            {
+                Debug.Log("end of pathway has been reached");
+                HasPath = false;
+                return;
+            }
+
             HasPath = true;
 
-            //Light up the pathway to see that it worked
+            //Light up the pathway for debugging
             foreach(MeshNode Node in PathToTarget)
                 Node.SetColor(Color.blue);
         }
+        //If we already have a pathway then we will follow that
         else
         {
-            //If we get too close to the player we need to find a new pathway to our target
-            float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-            if(PlayerDistance < 1f)
+            //If we get too near the player, find a new pathway which goes around them
+            //AvoidPlayer();
+
+            //Set the current target location we will be moving to, based on if we still have pathway nodes to follow or not
+            bool PathFinished = PathToTarget.Count > 0;
+            Vector3 TargetLocation = PathFinished ? PathToTarget[0].NodePos : CurrentTarget;
+
+            //Get current steering for the flocking behaviour with other spheroids
+            List<BaseEntity> OtherSpheroids = Waves.GetEntityList(EntityType.Spheroid);
+            Steering = GetSteering(this, OtherSpheroids, TargetLocation, Game.Player.transform.position);
+
+            //Move towards our current location with this steering also applied
+            Vector3 MovementVelocity = Steering * MoveSpeed;
+            Vector3 PreviousPosition = transform.position;
+            transform.position += MovementVelocity * Time.deltaTime;
+
+            Debug.Log("Moving from " + PreviousPosition + " to " + transform.position);
+
+            //If were still following a pathway, knock the front node off the list once we get close enough to it
+            if(!PathFinished && Vector3.Distance(transform.position, TargetLocation) <= .1f)
             {
-                //Set the color of the current pathway nodes back to green as we arent using them now
-                foreach(MeshNode Node in PathToTarget)
-                    Node.SetColor(Color.green);
+                Debug.Log("path node reached");
 
-                //Find a new pathway to the target location and light those up instead
-                PathToTarget = NavMeshManager.Instance.FindPathway(transform.position, CurrentTarget);
-                foreach(MeshNode Node in PathToTarget)
-                    Node.SetColor(Color.blue);
-            }
-
-            //Continue along our pathway of nodes while there are still any to follow
-            if(PathToTarget.Count > 0)
-            {
-                //Get the position of our current node target
-                Vector3 NodeTarget = PathToTarget[0].NodePos;
-                    
-                //Get current steering based on other spheroids around me as they move in flocks
-                List<BaseEntity> OtherSpheroids = WaveManager.Instance.GetEntityList(EntityType.Spheroid);
-                Steering = GetSteering(this, OtherSpheroids, NodeTarget, GameState.Instance.Player.transform.position);
-
-                //Move towards it
-                Vector3 MovementVelocity = Steering * MoveSpeed;
-                transform.position += MovementVelocity * Time.deltaTime;
-
-                //Check out how close we are now to our current node on the pathway
-                float NodeDistance = Vector3.Distance(transform.position, NodeTarget);
-                //Remove that node from the pathway once we reach it
-                if(NodeDistance <= .1f)
-                {
-                    PathToTarget[0].SetColor(Color.green);
-                    PathToTarget.RemoveAt(0);
-                }
-            }
-            //Once the pathway has been completed, we continue moving onto the corner target location
-            else
-            {
-                //Get current steering based on other spheroids around me as they move in flocks
-                List<BaseEntity> OtherSpheroids = WaveManager.Instance.GetEntityList(EntityType.Spheroid);
-                Steering = GetSteering(this, OtherSpheroids, CurrentTarget, GameState.Instance.Player.transform.position);
-
-                //Move towards it
-                Vector3 MovementVelocity = Steering * MoveSpeed;
-                transform.position += MovementVelocity * Time.deltaTime;
-
-                //Check current distance from our target location
-                float TargetDistance = Vector3.Distance(transform.position, CurrentTarget);
-
-                //Otherwise we check for having reached the target corner location
-                if (TargetDistance <= 2f)
-                {
-                    InCorner = true;
+                PathToTarget[0].SetColor(Color.green);
+                PathToTarget.RemoveAt(0);
+                if(PathToTarget.Count == 0)
                     HasPath = false;
-                }
+            }
+
+            //If the pathway has completed check if we have reached the final target location
+            if(!HasPath && Vector3.Distance(transform.position, CurrentTarget) <= 2f)
+            {
+                InHiding = true;
+                HasPath = false;
             }
         }
     }
 
-    private void IdleInCorner()
+    //Reconstructs a new pathway to our target location to avoid the player if we get too close to them
+    private void AvoidPlayer(float AvoidanceDistance = 1f)
     {
-        //Time how long we have been hiding in the corner for
-        TimeInCorner += Time.deltaTime;
-
-        //Start spawning a new enemy once we have been hiding in the corner for long enough
-        if(TimeInCorner >= TimeToStartSpawning && !StartedSpawning)
+        //Check how close we are to the player character
+        float PlayerDistance = Vector3.Distance(transform.position, Game.Player.transform.position);
+        if(PlayerDistance < AvoidanceDistance)
         {
-            StartedSpawning = true;
+            Debug.Log("too close to player, running away");
+
+            //Once we get too close to the player, clear our current pathway
+            foreach(MeshNode Node in PathToTarget)
+                Node.SetColor(Color.green);
+
+            //Find a new pathway to the hiding spot which avoids going near the player
+            PathToTarget = NavMesh.FindPathwayAvoidingPlayer(transform.position, CurrentTarget);
+        }
+    }
+
+    //Finds a reachable location away from the player character as the target for a hiding spot
+    private Vector3 FindHidingSpot()
+    {
+        Vector3 HidingSpot = Vector3.zero;
+
+        //Find variables we need access to for the search
+        Vector3 EnemyPos = transform.position;
+        Vector3 PlayerPos = Game.Player.transform.position;
+        float MinPlayerDistance = 1.5f;
+        float MaxSearchRadius = 10f;
+        int MaxSearchAttempts = 50;
+        
+        //Find the direction we need to move to travel away from the player
+        Vector3 AwayFromPlayerDirection = (EnemyPos - PlayerPos).normalized;
+
+        //Iterate over and compare viable hiding spots
+        float BestHidingScore = float.MinValue;
+        Vector3 BestHidingCandidate = Vector3.zero;
+        bool HidingSpotFound = false;
+
+        
+
+        return HidingSpot;
+    }
+
+    //Hides in the hiding spot and tries to summon enemies
+    private void Hide()
+    {
+        //Track how long we have been in hiding for
+        TimeHiding += Time.deltaTime;
+
+        //We can start spawning a new enemy once we have been hiding in the corner for long enough
+        if(TimeHiding >= EnemySpawnStartLimit && !SpawningEnemy)
+        {
+            //Begin the spawning process
+            SpawningEnemy = true;
             SoundEffectPlayer.Play();
         }
 
-        if(StartedSpawning && TimeInCorner < TimeToFinishSpawning)
+        //Continue the spawning process until it completed
+        if(SpawningEnemy && TimeHiding < EnemySpawnDuration)
         {
-            SpawnAnimationTimer += Time.deltaTime;
-            //Get progress from 1 to 0 of the current spawn duration
-            float SpawnProgress = Mathf.Clamp01(SpawnAnimationTimer / SpawnAnimationDuration);
+            //Progress the timer and get a current progression percentage
+            EnemySpawnTimer += Time.deltaTime;
+            float SpawnProgress = Mathf.Clamp01(EnemySpawnTimer / EnemySpawnDuration);
 
-            //Scale the growth, small at the start and largest right before completing the spawning
+            //Scale the transform to apply growth over the course of the summoning duration
             float TransformScale = Mathf.Lerp(1f, 2f, SpawnProgress);
             transform.localScale = BaseScale * TransformScale;
-            //Ramp up the spinning over time too
+            //Ramp up the rotation over time
             float SpinSpeed = Mathf.Lerp(360f * 3f, 360f * 8f, SpawnProgress * SpawnProgress);
             transform.Rotate(0f, 0f, SpinSpeed * Time.deltaTime);
-
-            //Rise in pitch the summoning sound effect
+            //Rise the pitch of the summoning sound
             SoundEffectPlayer.pitch = Mathf.Lerp(1f, 2f, SpawnProgress);
         }
 
-        //Spawn in a new enemy once we have stayed spawning for long enough, then move to a new corner
-        if(TimeInCorner >= TimeToFinishSpawning)
+        //Once we have stayed in hiding for long enough, spawn an enemy and head to a new hiding spot
+        if(TimeHiding >= EnemySpawnDuration)
         {
+            //Spawn the new enemy in
             Vector3 SpawnLocation = GetEnforcerSpawnLocation();
+            GameObject Enforcer = Instantiate(Spawner.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
+            Waves.AddNewEnemy(Enforcer.GetComponent<HostileEntity>());
+            Sounds.PlaySound("SpheroidSpawningComplete");
 
-            // //Spawn the new enemy in
-            GameObject NewEnforcer = Instantiate(PrefabSpawner.Instance.GetPrefab("Enforcer"), SpawnLocation, Quaternion.identity);
-            WaveManager.Instance.AddNewEnemy(NewEnforcer.GetComponent<HostileEntity>());
-
-            //Play sound effect
-            SoundEffectsPlayer.Instance.PlaySound("SpheroidSpawnComplete");
-            
-
-            MoveToAnotherCorner();
+            //Move to another location
+            FindHidingSpot();
             return;
         }
 
-        //Travel to a different corner if the player gets too close to this one
-        float PlayerDistance = Vector3.Distance(transform.position, GameState.Instance.Player.transform.position);
-        if (PlayerDistance <= 3f)
-            MoveToAnotherCorner();
-    }
-
-    //Causes the spheroid to pick a new corner to start hiding in and start moving there straight away
-    private void MoveToAnotherCorner()
-    {
-        //Target a random other corner which isnt our current target
-        CurrentTarget = GetRandomOtherCornerPos();
-        OffsetCornerTargetPos(1.5f);
-        //Disable the InCorner flag and timer, and start moving toward the new corner target
-        InCorner = false;
-        TimeInCorner = 0f;
-        StartedSpawning = false;
-        SpawnAnimationTimer = 0f;
-        transform.localScale = BaseScale;
-        SoundEffectPlayer.Stop();
-    }
-
-    private Vector3 GetClosestCornerPos()
-    {
-        Vector3 ClosestCornerPos = CornerPositions[0];
-        float CornerPosDistance = Vector3.Distance(transform.position, ClosestCornerPos);
-
-        for(int i = 1; i < 3; i++)
-        {
-            float CornerPosCompare = Vector3.Distance(transform.position, CornerPositions[i]);
-            if (CornerPosCompare < CornerPosDistance)
-            {
-                ClosestCornerPos = CornerPositions[i];
-                CornerPosDistance = CornerPosCompare;
-            }
-        }
-
-        return ClosestCornerPos;
+        //Find a new hiding spot if the player comes to close to us while we are still spawning
+        float PlayerDistance = Vector3.Distance(transform.position, Game.Player.transform.position);
+        if(PlayerDistance <= 2.5f)
+            FindHidingSpot();
     }
 
     //Returns a random location near the Spheroid where an Enforcer may be spawned in at
@@ -250,43 +257,6 @@ public class SpheroidAI : HostileEntity
 
         //Return the new location
         return SpawnLocation;
-    }
-    
-    //Returns a random corner position which isnt the one we are closest to
-    private Vector3 GetRandomOtherCornerPos()
-    {
-        //Find the index of the closest corner
-        int ClosestCornerIndex = 0;
-        float ClosestCornerDistance = Vector3.Distance(transform.position, CornerPositions[0]);
-
-        for(int i = 1; i < CornerPositions.Count; i++)
-        {
-            float CornerDistance = Vector3.Distance(transform.position, CornerPositions[i]);
-            if(CornerDistance < ClosestCornerDistance)
-            {
-                ClosestCornerDistance = CornerDistance;
-                ClosestCornerIndex = i;
-            }
-        }
-
-        //Build a list excluding that index
-        List<Vector3> CornerOptions = new List<Vector3>();
-
-        for(int i = 0; i < CornerPositions.Count; i++)
-        {
-            if(i != ClosestCornerIndex)
-                CornerOptions.Add(CornerPositions[i]);
-        }
-
-        //Return a random one from the remaining corners
-        return CornerOptions[Random.Range(0, CornerOptions.Count)];
-    }
-
-    //Returns a target location to move towards somewhere near the current corner target
-    private void OffsetCornerTargetPos(float Radius)
-    {
-        Vector2 CornerOffset = Random.insideUnitCircle * Radius;
-        CurrentTarget += new Vector3(CornerOffset.x, CornerOffset.y, 0f);
     }
 
     private Vector3 GetVelocity()

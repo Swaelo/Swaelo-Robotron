@@ -45,7 +45,7 @@ public class LevelBorders : MonoBehaviour
         DefineCornerLocations();
 
         //Once the level has been setup, get the nav mesh generated
-        NavMeshManager.Instance.NewGenerateNavMesh();
+        NavMeshManager.Instance.GenerateNavMesh();
 
         GenerateBorders();
     }

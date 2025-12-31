@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
 {
+    //Pauses save spawning for debugging
+    public bool HaltSpawning = false;
+
     //Singleton Instance
     public static GameState Instance;
     private void Awake() { Instance = this; }
@@ -40,6 +43,9 @@ public class GameState : MonoBehaviour
 
     private void Start()
     {
+        if(HaltSpawning)
+            return;
+
         //Begin the player on the first wave
         Score = 0;
         ExtraLives = 2;
@@ -54,6 +60,9 @@ public class GameState : MonoBehaviour
 
     private void Update()
     {
+        if(HaltSpawning)
+            return;
+
         //All game logic and AI should be paused at certain times
         if (GamePaused)
         {
