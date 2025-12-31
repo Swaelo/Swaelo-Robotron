@@ -67,7 +67,6 @@
     <Compile Include="Assets/Scripts/Player/ProjectileMovement.cs" />
     <Compile Include="Assets/Scripts/System/Utilities.cs" />
     <Compile Include="Assets/Scripts/Enemies/BrainAI.cs" />
-    <Compile Include="Assets/Scripts/Terminal.cs" />
     <Compile Include="Assets/Scripts/Wave Spawning/WaveManager.cs" />
     <Compile Include="Assets/Scripts/Enemies/GruntAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/ProgAI.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Assets/Scripts/Entities/FriendlyEntity.cs" />
     <Compile Include="Assets/Scripts/Level/MeshNode.cs" />
     <Compile Include="Assets/Scripts/Player/CameraFollow.cs" />
-    <Compile Include="Assets/Scripts/Terminal/CommandTerminal.cs" />
     <Compile Include="Assets/Scripts/Level/SpriteColorCycle.cs" />
     <Compile Include="Assets/Scripts/Enemies/SpheroidAI.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/PointValues.cs" />
@@ -93,6 +91,7 @@
     <Compile Include="Assets/Scripts/Enemies/CruiseMissileTrailFollower.cs" />
     <Compile Include="Assets/Scripts/Enemies/ElectrodeAI.cs" />
     <Compile Include="Assets/Scripts/Game/Game.cs" />
+    <Compile Include="Assets/Scripts/Terminal/T.cs" />
     <Compile Include="Assets/Scripts/Entities/HostileEntity.cs" />
   </ItemGroup>
   <ItemGroup>

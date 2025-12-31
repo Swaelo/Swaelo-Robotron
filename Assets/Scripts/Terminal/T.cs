@@ -10,10 +10,11 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class CommandTerminal : MonoBehaviour
+public class T : MonoBehaviour
 {
     //Singleton instance for easy global access
-    public static CommandTerminal Instance = null;
+    public static T Instance { get; private set; }
+    public static void Log(string Message) { T.Instance.Print(Message); }
 
     //Groups of commands that need to be registered in
     private SpawningCommands Spawning;
@@ -46,10 +47,6 @@ public class CommandTerminal : MonoBehaviour
     {
         //Store reference to self for global access
         Instance = this;
-
-        //Ensure the console starts hidden
-        if(TerminalPanel)
-            TerminalPanel.SetActive(false);
 
         //Setup all commands that can be executed through the terminal
         DefineBaseCommands();

@@ -4,6 +4,7 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PrefabSpawner : MonoBehaviour
@@ -61,15 +62,19 @@ public class PrefabSpawner : MonoBehaviour
     //Executed from the terminal for debugging, takes in entity name and a number, tries to spawn in that amount around the player
     public void SpawnEntities(string EntityName, int EntityCount)
     {
+        //Uppercase the first letter of the entity name to ensure it matches what is defined in the inspector for the prefab spawner
+        EntityName = char.ToUpper(EntityName[0]) + EntityName.Substring(1);
+
         //Make sure this entity type exists
         GameObject Prefab = GetPrefab(EntityName);
         if(Prefab == null)
         {
             //Let the user know if this isnt valid
-            Game.Instance.Terminal.Print("Entity type " + EntityName + " was not found to exist by the prefab spawner.");
+            T.Log("Entity type " + EntityName + " was not found to exist by the prefab spawner.");
             return;
         }
 
-
+        //Get a series of locations around the player to spawn the enemies in
+        
     }
 }

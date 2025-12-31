@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using Unity.Collections;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -42,11 +43,21 @@ public class NavMeshManager : MonoBehaviour
             //Grab a bunch of possible spawn locations near this spot and light them up
             Vector3 MousePos = Utils.GetMouseWorldPos();
             List<MeshNode> TargetNodes = FindSpawnLocations(MousePos, 10, 0.5f, 5f);
-            Game.Instance.Terminal.Print("Was able to find " + TargetNodes.Count + " neighbours.");
             foreach(MeshNode Target in TargetNodes)
                 Target.SetColor(Color.white);
         }
         if(Input.GetMouseButton(1))
+        {
+            //Hold RMB to mark nodes unwalkable
+            Vector3 MousePos = Utils.GetMouseWorldPos();
+            MeshNode MouseNode = GetNodeFromWorldPos(MousePos);
+            MouseNode.SetWalkable(false);
+            //Also mark all its neighbours as unwalkable
+            List<MeshNode> Neighbours = GetNeighbours(MouseNode);
+            foreach(MeshNode Neighbour in Neighbours)
+                Neighbour.SetWalkable(false);
+        }
+        if(Input.GetMouseButton(2))
         {
             //Hold RMB to mark nodes unwalkable
             Vector3 MousePos = Utils.GetMouseWorldPos();
@@ -104,19 +115,18 @@ public class NavMeshManager : MonoBehaviour
                     NewNode.InitRenderer("NavMeshNode: " + MeshX + ", " + MeshY, transform);
             }
         }
+
+        //Assign component ID to split navmesh into navigatable sections
+
+
         NavMeshReady = true;
     }
 
     //Reset all nodes to walkable
     public void SetAllNodesWalkable(bool Walkable)
     {
-        foreach(List<MeshNode> List in NodeGraph)
-        {
-            foreach(MeshNode Node in List)
-            {
-                Node.SetWalkable(Walkable);
-            }
-        }
+        foreach(MeshNode Node in GetAllNodes())
+            Node.SetWalkable(Walkable);
     }
 
     //Sets any nodes underneath electrodes as unwalkable
@@ -135,28 +145,21 @@ public class NavMeshManager : MonoBehaviour
         BoxCollider2D EntityCollider = Entity.transform.GetComponent<BoxCollider2D>();
         if(EntityCollider == null)
         {
-            Game.Instance.Terminal.Print("Entity has no box collider I can find.");
+            T.Log("Entity has no box collider I can find.");
             return;
         }
 
         //Get the bounds of the collider in world space
         Bounds EntityBounds = EntityCollider.bounds;
 
-        //Loop through all the ndoes in the nav mesh
-        for (int x = 0; x < NodeGraph.Count; x++)
+        //Loop through all the nodes to find which ones are under the entity
+        foreach(MeshNode Node in GetAllNodes())
         {
-            for(int y = 0; y < NodeGraph[x].Count; y++)
-            {
-                //Get each mesh node we will be checking
-                MeshNode Node = NodeGraph[x][y];
-
-                //Calculate the nodes world space bounds
-                Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
-                
-                //Mark the node as unwalkable if the entity bounds intersect
-                if(NodeBounds.Intersects(EntityBounds))
-                    Node.SetWalkable(Walkable);
-            }
+            //Calculate the nodes world space bounds
+            Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
+            //Mark it as unwalkable it the entity bounds intersect
+            if(NodeBounds.Intersects(EntityBounds))
+                Node.SetWalkable(Walkable);
         }
     }
 
@@ -224,18 +227,14 @@ public class NavMeshManager : MonoBehaviour
         Bounds BoxBounds = Box.bounds;
 
         //Loop through all the nodes in the nav mesh
-        for(int x = 0; x < NodeGraph.Count; x++)
+        foreach(MeshNode Node in GetAllNodes())
         {
-            for(int y = 0; y < NodeGraph[x].Count; y++)
-            {
-                //Get the node we will be checking and its bounds
-                MeshNode Node = NodeGraph[x][y];
-                Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
-                
-                //If this node intersects with the given box collider, add it to our list
-                if(NodeBounds.Intersects(BoxBounds))
-                    Nodes.Add(Node);
-            }
+            //Check its bounds
+            Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
+            
+            //If this node intersects with the given box collider, add it to our list
+            if(NodeBounds.Intersects(BoxBounds))
+                Nodes.Add(Node);
         }
 
         //Return the final list of nodes
@@ -264,9 +263,82 @@ public class NavMeshManager : MonoBehaviour
         return NodeGraph[XIndex][YIndex];
     }
 
+    //Returns the first walkable node encountered in this ring-walk order
+    public MeshNode GetNearestWalkableNode(Vector3 TargetPos, float MaxRadius = 5f)
+    {
+        //Get the node closest to our target location, this is our search center
+        MeshNode TargetNode = GetNodeFromWorldPos(TargetPos);
+
+        //If this starting node is already walkable, we're done
+        if(TargetNode.IsWalkable)
+            return TargetNode;
+        
+        //Quick out if node starting node could be found
+        if(TargetNode == null)
+        {
+            T.Log("GetNearestWalkableNode could not find a starting node from " + TargetPos);
+            return null;
+        }
+
+        //Cache the integer grid coordinates of the target node for quicker math
+        int NodeX = (int)TargetNode.GridPosition.x;
+        int NodeY = (int)TargetNode.GridPosition.y;
+
+        //Expand an outward ring to search for a walkable node
+        //Each radius form a square ring around the TargetNode, bigger each iteration
+        for (int Radius = 1; Radius <= MaxRadius; Radius++)
+        {
+            //Check the top and bottom edges along this ring
+            for(int RingX = -Radius; RingX <= Radius; RingX++)
+            {
+                //Coordinates to search along this time
+                int CheckX = NodeX + RingX;
+                int YTop = NodeY + Radius;
+                int YBot = NodeY - Radius;
+
+                //Bounds check X, if its outside the grid skip both top and bottom checks
+                if(CheckX >= 0 && CheckX < (int)GridSize.x)
+                {
+                    //Check the top edge cell if top is in bounds
+                    if(YTop >= 0 && YTop < (int)GridSize.y && NodeGraph[CheckX][YTop].IsWalkable)
+                        return NodeGraph[CheckX][YTop];
+
+                    //Check the bottom edge cell if yBot is in bounds
+                    if(YBot >= 0 && YBot < (int)GridSize.y && NodeGraph[CheckX][YBot].IsWalkable)
+                        return NodeGraph[CheckX][YBot];
+                }
+            }
+
+            //Check the left and right edges for this ring
+            for (int RingY = -Radius + 1; RingY <= Radius - 1; RingY++)
+            {
+                //Coordinates to check along this time
+                int CheckY = NodeY + RingY;
+                int XLeft = NodeX - Radius;
+                int XRight = NodeX + Radius;
+
+                //If y is outside bounds, skip both left and right checks
+                if(CheckY >= 0 && CheckY < (int)GridSize.y)
+                {
+                    //Check the left edge cell
+                    if(XLeft >= 0 && XLeft < (int)GridSize.x && NodeGraph[XLeft][CheckY].IsWalkable)
+                        return NodeGraph[XLeft][CheckY];
+                    //Check the right edge cell
+                    if(XRight >= 0 && XRight < (int)GridSize.x && NodeGraph[XRight][CheckY].IsWalkable)
+                        return NodeGraph[XRight][CheckY];
+                }
+            }
+            //If we reach here, this entire ring radius has no walkable nodes, continue on to the next one
+        }
+        //If this has completely failed and we couldn't find any node, we will try instead the more expensive and powerful version of this function
+        return GetWalkableNodeFromWorldPos(TargetPos);
+    }
+
     //Returns the walkable MeshNode in the grid closest to the given world position
     public MeshNode GetWalkableNodeFromWorldPos(Vector3 WorldPos)
     {
+        T.Log("Initial walkable node search failed.");
+
         //Break out if the navmesh doesnt exist for some reason
         if(NodeGraph == null || NodeGraph.Count == 0 || NodeGraph[0].Count == 0)
             return null;
@@ -321,8 +393,8 @@ public class NavMeshManager : MonoBehaviour
     public List<MeshNode> FindPathwayAvoidingPlayer(Vector3 StartPos, Vector3 EndPos, float AvoidanceRadius = 2f)
     {
         //Get the start and end nodes
-        MeshNode StartNode = GetWalkableNodeFromWorldPos(StartPos);
-        MeshNode EndNode = GetWalkableNodeFromWorldPos(EndPos);
+        MeshNode StartNode = GetNearestWalkableNode(StartPos);
+        MeshNode EndNode = GetNearestWalkableNode(EndPos);
 
         //Return empty if no pathway is possible
         if(!StartNode.IsWalkable || !EndNode.IsWalkable)
@@ -385,8 +457,8 @@ public class NavMeshManager : MonoBehaviour
     public List<MeshNode> FindPathway(Vector3 Start, Vector3 End)
     {
         //Find the mesh node closest to our start and end locations
-        MeshNode PathStart = GetWalkableNodeFromWorldPos(Start);
-        MeshNode PathEnd = GetWalkableNodeFromWorldPos(End);
+        MeshNode PathStart = GetNearestWalkableNode(Start);
+        MeshNode PathEnd = GetNearestWalkableNode(End);
 
         //Initialise the open and closed lists
         List<MeshNode> OpenList = new List<MeshNode>(); //Nodes that still need to be evaluated
@@ -569,14 +641,14 @@ public class NavMeshManager : MonoBehaviour
     }
 
     //Returns a list of vector3 positions that match the following conditions
-    //1. Each location must have a walkable NavMesh node underneath it
-    //2. Each location lies within the mix/max distance from the target location
-    //3. Each location must be reachable over the navmesh from the target location
-    //4. The locations are spread in a circle evening around the target location
-    //5. Final list is ordered by angle from the player, so they appear in a circle order when being spawned in
+    //1. Each postition must be walkable on the navmesh
+    //2. Each postition lies within the mix/max distance from the target location
+    //3. Each postition must be reachable over the navmesh from the target location
+    //4. The locations are attempted to be spread around the target location evenly in a circle
+    //5. Final list is ordered by angle from the target location, so they appear in a circle order when being spawned in
     public List<MeshNode> FindSpawnLocations(Vector3 TargetLocation, int LocationCount, float MinDistance = .5f, float MaxDistance = 5f)
     {
-        //Lost of found locations
+        //List of found locations on the nav mesh
         List<MeshNode> SpawnLocations = new List<MeshNode>();
 
         //Figure out how many more locations we need to find
@@ -594,9 +666,19 @@ public class NavMeshManager : MonoBehaviour
         MinDistance = Mathf.Max(0f, MinDistance);
         MaxDistance = Mathf.Max(MinDistance, MaxDistance);
 
-        //Start from the closest walkable node near out target position
-        MeshNode TargetNode = GetWalkableNodeFromWorldPos(TargetLocation);
-        //Run out if one can't be found or if we ended up somehow finding an unwalkable one
+        //Enforce a minimum band thickness in world units
+        //This will help prevent radial samples collapsing on the same nodes
+        float MinBand = CellSize * 2f;
+        if (MaxDistance - MinDistance < MinBand)
+        {
+            float Middle = (MinDistance + MaxDistance) * 0.5f;
+            MinDistance = Mathf.Max(0f, Middle - MinBand * 0.5f);
+            MaxDistance = Middle + MinBand * 0.5f;
+        }
+
+        //Start from the closest walkable node near our target position
+        MeshNode TargetNode = GetNearestWalkableNode(TargetLocation);
+        //If the target position is in an unreachable location just exit out and return an empty list
         if(TargetNode == null || !TargetNode.IsWalkable)
             return SpawnLocations;
         
@@ -609,10 +691,12 @@ public class NavMeshManager : MonoBehaviour
 
         //Set up angles and steps for walking through and searching for positions around the ring
         float AngleStep = 360f / LocationCount; //How many degrees we want to have between each location to place them in a nice ring
-        float AngleSearchStepDegrees = 8f;  //How far to rotate when the exactle angle we are trying is blocked
+        float AngleSearchStepDegrees = 12f;  //How far to rotate when the exactle angle we are trying is blocked
         int RadialSteps = 24; //How many radial samples to take across the ring thickness
         float RadialStepSize = (RingHalfWidth * 2f) / Mathf.Max(1, RadialSteps - 1); //Distance between each radial sample
 
+        //=============
+        //===FIRST PASS
         //First pass, try to place spawn points evenly around the target
         for(int SpawnCounter = 0; SpawnCounter < LocationCount; SpawnCounter++)
         {
@@ -627,8 +711,9 @@ public class NavMeshManager : MonoBehaviour
                 SpawnLocations.Add(Candidate);
             }
         }
-        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after first pass, with " + LocationsNeeded() + " remaining.");
 
+        //=============
+        //==SECOND PASS
         //Second pass, scan outward in a square/spiral around the target node in grid space
         if(SpawnLocations.Count < LocationCount)
         {
@@ -678,11 +763,11 @@ public class NavMeshManager : MonoBehaviour
             }
         }
 
-        //Print out how many spots have been found so far
-        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 2nd pass, with " + LocationsNeeded() + " remaining.");
-
+        //=============
+        //===THIRD PASS
         //Third pass, expand max distance outward in steps and try again
         float OriginalMax = MaxDistance;
+        float OriginalMin = MinDistance;
         float ExpandStep = 0.75f; //How far we will move outwards after each step
         float ExpandCap = OriginalMax + 15f;
 
@@ -691,11 +776,13 @@ public class NavMeshManager : MonoBehaviour
         {
             //Increase the search radius
             MaxDistance += ExpandStep;
+            MinDistance = OriginalMin;
 
-            //Update ring parameters that depend on MaxDistance
+            //Setup search ring size parameters
+            float BandSize = MaxDistance - MinDistance;
             MinDistance = (MinDistance + MaxDistance) * 0.5f;
-            RingHalfWidth = (MaxDistance - MinDistance) * 0.5f;
-            RadialStepSize = (RingHalfWidth * 2f) / Mathf.Max(1, RadialSteps - 1);
+            RingHalfWidth = BandSize / Mathf.Max(1, RadialSteps - 1);
+            RadialStepSize = BandSize / Mathf.Max(1, RadialSteps - 1);
 
             //Check the locations in these directions with the new distance limitations
             for(int FarCheck = 0; FarCheck < LocationCount && LocationsNeeded() > 0; FarCheck++)
@@ -709,9 +796,8 @@ public class NavMeshManager : MonoBehaviour
             }
         }
 
-        //Print out how many locations have been found
-        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 3rd pass, with " + LocationsNeeded() + " remaining.");
-
+        //=============
+        //==FOURTH PASS
         //Fourth pass, allow duplicate locations
         if(SpawnLocations.Count < LocationCount)
         {
@@ -731,9 +817,8 @@ public class NavMeshManager : MonoBehaviour
             }
         }
 
-        //Print out how many locations have been found
-        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 4th pass, with " + LocationsNeeded() + " remaining.");
-
+        //=============
+        //===FIFTH PASS
         //Fifth pass, ignore distance limitations
         if(LocationsNeeded() > 0)
         {
@@ -764,8 +849,8 @@ public class NavMeshManager : MonoBehaviour
             
         }
 
-        Game.Instance.Terminal.Print(SpawnLocations.Count + " counted after 5th pass, with " + LocationsNeeded() + " remaining.");
-
+        //=============
+        //===FINAL PASS
         //Final pass, duplicate the target node until the list is full
         while(SpawnLocations.Count < LocationCount)
             SpawnLocations.Add(TargetNode);
@@ -784,7 +869,7 @@ public class NavMeshManager : MonoBehaviour
         if(SpawnLocations.Count > LocationCount)
             SpawnLocations.RemoveRange(LocationCount, SpawnLocations.Count - LocationCount);
 
-        // return Results;
+        //Return the finalised list
         return SpawnLocations;
 
         //Checks whether a mesh node can be used as a spawn location
@@ -824,7 +909,7 @@ public class NavMeshManager : MonoBehaviour
         MeshNode FindCandidateForAngle(float DesiredAngleDegrees, bool EnforceUniqueLocations = true, bool EnforceDistanceParameters = true)
         {
             //Maximum number of angular offest to try (up to half a circle)
-            int MaxAngleSteps = Mathf.Max(1, Mathf.CeilToInt(180f / Mathf.Max(0.1f, AngleSearchStepDegrees)));
+            int MaxAngleSteps = 8; //Mathf.Max(1, Mathf.CeilToInt(180f / Mathf.Max(0.1f, AngleSearchStepDegrees)));
 
             //Angular search: 0, +step, -step, +2step, -2step, ...
             for(int AngleStep = 0; AngleStep < MaxAngleSteps; AngleStep++)
@@ -854,7 +939,7 @@ public class NavMeshManager : MonoBehaviour
 
                     //Find a new position in this direction and find the walkable node
                     Vector3 CheckPos = TargetLocation + (Vector3)(Direction * Distance);
-                    MeshNode Candidate = GetWalkableNodeFromWorldPos(CheckPos);
+                    MeshNode Candidate = GetNearestWalkableNode(CheckPos);
 
                     //If it satifies all conditions, use it
                     if(IsValidCandidate(Candidate, EnforceUniqueLocations, EnforceDistanceParameters))
@@ -862,8 +947,16 @@ public class NavMeshManager : MonoBehaviour
                 }
             }
 
-            //Node valid node found for this angle
+            //No valid node found for this angle
             return null;
         }
+    }
+
+    //Returns a flattened view of the navmesh, to prevent having to do nested for loops and iterate through both dimensions of the array
+    private IEnumerable<MeshNode> GetAllNodes()
+    {
+        for(int NodeX = 0; NodeX < NodeGraph.Count; NodeX++)
+            for(int NodeY = 0; NodeY < NodeGraph[NodeX].Count; NodeY++)
+                yield return NodeGraph[NodeX][NodeY];
     }
 }

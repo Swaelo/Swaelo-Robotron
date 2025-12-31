@@ -9,7 +9,7 @@ using UnityEngine.DedicatedServer;
 
 public class NavMeshCommands : MonoBehaviour
 {
-    public void RegisterCommands(CommandTerminal Terminal)
+    public void RegisterCommands(T Terminal)
     {
         //Sets all the nodes on the navmesh as walkable or not
         Terminal.RegisterNewCommand("SetNavMesh", "Sets all nodes on the navmesh to walkable", Arguments =>

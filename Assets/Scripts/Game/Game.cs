@@ -16,7 +16,6 @@ public class Game : MonoBehaviour
     public NavMeshManager NavMesh;
     public GameObject Player;
     public PrefabSpawner Prefabs;
-    public CommandTerminal Terminal;
 
     public void Start() { StartGame(); }
 
@@ -27,7 +26,6 @@ public class Game : MonoBehaviour
         NavMesh = NavMeshManager.Instance;
         Player = GameObject.Find("Player");
         Prefabs = PrefabSpawner.Instance;
-        Terminal = CommandTerminal.Instance;
 
         //Initialise them all to get the game world setup
         NavMesh.GenerateNavMesh();

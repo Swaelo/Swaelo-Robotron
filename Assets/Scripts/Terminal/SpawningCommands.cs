@@ -9,7 +9,7 @@ using UnityEngine;
 public class SpawningCommands : MonoBehaviour
 {
     //Registers all the commands for spawning
-    public void RegisterCommands(CommandTerminal Terminal)
+    public void RegisterCommands(T Terminal)
     {
         // //Give you the list of enemy names that can be spawned into the game
         Terminal.RegisterNewCommand("SpawnList", "Outputs a list of entity types that can be spawned in through the terminal", Arguments =>
