@@ -37,7 +37,7 @@ public class NavMeshCommands : MonoBehaviour
             Terminal.Print("All nodes in the navmesh have set their walkable status to " + MeshStateInput + ".");
 
             Terminal.Print("All nodes in the navmesh have been reset back to walkable status.");
-            Game.Instance.NavMesh.SetAllNodesWalkable(MeshState);
+            Game.I.NavMesh.SetAllNodesWalkable(MeshState);
         });
     }
 }

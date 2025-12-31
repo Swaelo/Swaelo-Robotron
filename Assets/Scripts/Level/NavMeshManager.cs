@@ -42,7 +42,7 @@ public class NavMeshManager : MonoBehaviour
         {
             //Grab a bunch of possible spawn locations near this spot and light them up
             Vector3 MousePos = Utils.GetMouseWorldPos();
-            List<MeshNode> TargetNodes = FindSpawnLocations(MousePos, 10, 0.5f, 5f);
+            List<MeshNode> TargetNodes = FindSpawnNodes(MousePos, 10, 0.5f, 5f);
             foreach(MeshNode Target in TargetNodes)
                 Target.SetColor(Color.white);
         }
@@ -640,13 +640,26 @@ public class NavMeshManager : MonoBehaviour
         return false;
     }
 
-    //Returns a list of vector3 positions that match the following conditions
+    //Returns a list of Vector3 locations surrounding the target location
+    public List<Vector3> GetRingPositions(Vector3 RingMiddle, int PositionCount, float MinDistance = .5f, float MaxDistance = 5f)
+    {
+        //Find a list of mesh nodes in here
+        List<MeshNode> RingNodes = FindSpawnNodes(RingMiddle, PositionCount, MinDistance, MaxDistance);
+
+        //Create a list of vectors to hold their positions instead, then return that
+        List<Vector3> RingPositions = new List<Vector3>();
+        foreach(MeshNode Node in RingNodes)
+            RingPositions.Add(Node.NodePos);
+        return RingPositions;
+    }
+
+    //Returns a list of MeshNodes that match the following conditions
     //1. Each postition must be walkable on the navmesh
     //2. Each postition lies within the mix/max distance from the target location
     //3. Each postition must be reachable over the navmesh from the target location
     //4. The locations are attempted to be spread around the target location evenly in a circle
     //5. Final list is ordered by angle from the target location, so they appear in a circle order when being spawned in
-    public List<MeshNode> FindSpawnLocations(Vector3 TargetLocation, int LocationCount, float MinDistance = .5f, float MaxDistance = 5f)
+    private List<MeshNode> FindSpawnNodes(Vector3 TargetLocation, int LocationCount, float MinDistance = .5f, float MaxDistance = 5f)
     {
         //List of found locations on the nav mesh
         List<MeshNode> SpawnLocations = new List<MeshNode>();

@@ -13,7 +13,7 @@ public class SpheroidAI : HostileEntity
     //Engine components
     private NavMeshManager NavMesh = null;
     private WaveManager Waves = null;
-    private GameState Game = null;
+    private GameState State = null;
     private PrefabSpawner Spawner = null;
     public SoundEffectsPlayer Sounds = null;
 
@@ -44,7 +44,7 @@ public class SpheroidAI : HostileEntity
     {
         NavMesh = NavMeshManager.Instance;
         Waves = WaveManager.Instance;
-        Game = GameState.Instance;
+        State = GameState.Instance;
         Spawner = PrefabSpawner.Instance;
         Sounds = SoundEffectsPlayer.Instance;
 
@@ -60,7 +60,7 @@ public class SpheroidAI : HostileEntity
     private void Update()
     {
         //AI needs to be put on hold at times defined by the gamestate manager
-        if(!Game.ShouldAdvanceGame())
+        if(!State.ShouldAdvanceGame())
         {
             SoundEffectPlayer.Stop();
             return;
@@ -111,7 +111,7 @@ public class SpheroidAI : HostileEntity
 
             //Get current steering for the flocking behaviour with other spheroids
             List<BaseEntity> OtherSpheroids = Waves.GetEntityList(EntityType.Spheroid);
-            Steering = GetSteering(this, OtherSpheroids, TargetLocation, Game.Player.transform.position);
+            Steering = GetSteering(this, OtherSpheroids, TargetLocation, State.Player.transform.position);
 
             //Move towards our current location with this steering also applied
             Vector3 MovementVelocity = Steering * MoveSpeed;
@@ -144,7 +144,7 @@ public class SpheroidAI : HostileEntity
     private void AvoidPlayer(float AvoidanceDistance = 1f)
     {
         //Check how close we are to the player character
-        float PlayerDistance = Vector3.Distance(transform.position, Game.Player.transform.position);
+        float PlayerDistance = Vector3.Distance(transform.position, State.Player.transform.position);
         if(PlayerDistance < AvoidanceDistance)
         {
             Debug.Log("too close to player, running away");
@@ -165,7 +165,7 @@ public class SpheroidAI : HostileEntity
 
         //Find variables we need access to for the search
         Vector3 EnemyPos = transform.position;
-        Vector3 PlayerPos = Game.Player.transform.position;
+        Vector3 PlayerPos = Game.I.Player.transform.position;
         float MinPlayerDistance = 1.5f;
         float MaxSearchRadius = 10f;
         int MaxSearchAttempts = 50;
@@ -229,7 +229,7 @@ public class SpheroidAI : HostileEntity
         }
 
         //Find a new hiding spot if the player comes to close to us while we are still spawning
-        float PlayerDistance = Vector3.Distance(transform.position, Game.Player.transform.position);
+        float PlayerDistance = Vector3.Distance(transform.position, State.Player.transform.position);
         if(PlayerDistance <= 2.5f)
             FindHidingSpot();
     }

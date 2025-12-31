@@ -75,6 +75,14 @@ public class PrefabSpawner : MonoBehaviour
         }
 
         //Get a series of locations around the player to spawn the enemies in
-        
+        List<Vector3> SpawnLocations = Game.I.NavMesh.GetRingPositions(Game.I.Player.transform.position, EntityCount, 1.5f, 7.5f);
+
+        //Spawn them all in
+        for(int SpawnCounter = 0; SpawnCounter < EntityCount; SpawnCounter++)
+        {
+            GameObject NewSpawn = Instantiate(Prefab, SpawnLocations[SpawnCounter], Quaternion.identity);
+            //Spawn the new entity in at its new location
+            //GameObject NewSpawn = Instantiate(WaveSpawns[i], SpawnLocations[i], Quaternion.identity);
+        }
     }
 }

@@ -4,6 +4,7 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawningCommands : MonoBehaviour
@@ -45,9 +46,10 @@ public class SpawningCommands : MonoBehaviour
 
             //Print to the console what we are trying to do
             string EntityType = Arguments[0];
-            
-            Terminal.Print("Attempting to spawn in " + SpawnCount + EntityType);
-            Game.Instance.Prefabs.SpawnEntities(EntityType, SpawnCount);
+            T.Log("Spawning in " + SpawnCount + EntityType);
+
+            //Grab the entity and a list of locations to spawn them in, surrounding the player
+            Game.I.Prefabs.SpawnEntities(EntityType, SpawnCount);
         });
     }
 }
