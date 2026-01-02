@@ -4,6 +4,7 @@
 // Author:	    Harley Laurie https://www.github.com/Swaelo/
 // ================================================================================================================================
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,30 +60,33 @@ public class PrefabSpawner : MonoBehaviour
         return GetPrefab(PrefabName);
     }
 
-    //Executed from the terminal for debugging, takes in entity name and a number, tries to spawn in that amount around the player
+    //Spawns enemies in a ring around the target location
     public void SpawnEntities(string EntityName, int EntityCount)
     {
-        //Uppercase the first letter of the entity name to ensure it matches what is defined in the inspector for the prefab spawner
-        EntityName = char.ToUpper(EntityName[0]) + EntityName.Substring(1);
-
         //Make sure this entity type exists
-        GameObject Prefab = GetPrefab(EntityName);
-        if(Prefab == null)
+        GameObject Entity = GetPrefab(EntityName);
+        if(Entity == null)
         {
-            //Let the user know if this isnt valid
-            T.Log("Entity type " + EntityName + " was not found to exist by the prefab spawner.");
+            T.Log("Entity type " + EntityName + " does not exist, <SpawnList> to see what is available.");
             return;
         }
 
-        //Get a series of locations around the player to spawn the enemies in
-        List<Vector3> SpawnLocations = Game.I.NavMesh.GetRingPositions(Game.I.Player.transform.position, EntityCount, 1.5f, 7.5f);
+        //Get the locations where all the entities will be spawned
+        List<Vector3> EntitySpawnLocations = Game.I.NavMesh.GetRingPositions(
+            Game.I.Player.transform.position, EntityCount, 1.5f, 7.5f);
+            
+        //Spawn them every 0.1 seconds
+        StartCoroutine(SpawnEntitiesRoutine(Entity, EntitySpawnLocations, 0.025f));
+    }
 
-        //Spawn them all in
-        for(int SpawnCounter = 0; SpawnCounter < EntityCount; SpawnCounter++)
+    //Coroutine that spawns entities over time
+    private IEnumerator SpawnEntitiesRoutine(
+        GameObject EntityPrefab, List<Vector3> SpawnLocations, float SpawnRate)
+    {
+        foreach(Vector3 SpawnLocation in SpawnLocations)
         {
-            GameObject NewSpawn = Instantiate(Prefab, SpawnLocations[SpawnCounter], Quaternion.identity);
-            //Spawn the new entity in at its new location
-            //GameObject NewSpawn = Instantiate(WaveSpawns[i], SpawnLocations[i], Quaternion.identity);
+            Instantiate(EntityPrefab, SpawnLocation, Quaternion.identity);
+            yield return new WaitForSeconds(SpawnRate);
         }
     }
 }
