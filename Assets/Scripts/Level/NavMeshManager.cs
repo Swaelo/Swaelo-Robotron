@@ -6,10 +6,6 @@
 // ================================================================================================================================
 
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
-using Unity.Collections;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class NavMeshManager : MonoBehaviour
@@ -36,39 +32,8 @@ public class NavMeshManager : MonoBehaviour
     float HalfMeshWidth = 0f;
     float HalfMeshHeight = 0f;
 
-    public void Update()
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            //Grab a bunch of possible spawn locations near this spot and light them up
-            Vector3 MousePos = Utils.GetMouseWorldPos();
-            List<MeshNode> TargetNodes = FindSpawnNodes(MousePos, 10, 0.5f, 5f);
-            foreach(MeshNode Target in TargetNodes)
-                Target.SetColor(Color.white);
-        }
-        if(Input.GetMouseButton(1))
-        {
-            //Hold RMB to mark nodes unwalkable
-            Vector3 MousePos = Utils.GetMouseWorldPos();
-            MeshNode MouseNode = GetNodeFromWorldPos(MousePos);
-            MouseNode.SetWalkable(false);
-            //Also mark all its neighbours as unwalkable
-            List<MeshNode> Neighbours = GetNeighbours(MouseNode);
-            foreach(MeshNode Neighbour in Neighbours)
-                Neighbour.SetWalkable(false);
-        }
-        if(Input.GetMouseButton(2))
-        {
-            //Hold RMB to mark nodes unwalkable
-            Vector3 MousePos = Utils.GetMouseWorldPos();
-            MeshNode MouseNode = GetNodeFromWorldPos(MousePos);
-            MouseNode.SetWalkable(false);
-            //Also mark all its neighbours as unwalkable
-            List<MeshNode> Neighbours = GetNeighbours(MouseNode);
-            foreach(MeshNode Neighbour in Neighbours)
-                Neighbour.SetWalkable(true);
-        }
-    }
+    //Parent of all level geometry objects which needs to be marked on the navmesh
+    public GameObject LevelGeometry = null;
 
     //Setups up the navmesh, doesnt pay attention to the size of the level bounds, allowing the playable area to be expanded outside the original bounds
     public void GenerateNavMesh()
@@ -116,10 +81,23 @@ public class NavMeshManager : MonoBehaviour
             }
         }
 
-        //Assign component ID to split navmesh into navigatable sections
-
+        //Mark all nodes under level geometry as unwalkable
+        MarkGeometryUnwalkable();
 
         NavMeshReady = true;
+    }
+
+    //Sets all nodes underneath any level geometry as unwalkable
+    private void MarkGeometryUnwalkable()
+    {
+        //Exit out if we have no level geometry to iterate over
+        if(LevelGeometry == null)
+            return;
+
+        //Grab all the colliders and mark them all unwalkable
+        BoxCollider2D[] LevelColliders = LevelGeometry.GetComponentsInChildren<BoxCollider2D>();
+        foreach(BoxCollider2D Collider in LevelColliders)
+            MarkNodesUnderBox(Collider, false);
     }
 
     //Reset all nodes to walkable
@@ -163,82 +141,58 @@ public class NavMeshManager : MonoBehaviour
         }
     }
 
-    //Sets the walkability toggle for nodes on the nav mesh grid
+    //Toggles the walkability of any navmesh nodes under the given box collider object
     public void MarkNodesUnderBox(BoxCollider2D Box, bool Walkable)
     {
-        //Get the bounds of the collider
+        //Get the AABB bounds of the box, used to quickly figure out which nodes on the navmesh to check
+        //instead of having to scan the entire grid
         Bounds BoxBounds = Box.bounds;
 
-        //Expand the box outwards to catch edge nodes + safety margin
-        float BufferSize = CellSize * 0.75f;
-        BoxBounds.min -= new Vector3(BufferSize, BufferSize, 0f);
-        BoxBounds.max += new Vector3(BufferSize, BufferSize, 0f);
+        //Expand the bounds slightly so we still catch nodes that lie very close to the edges
+        float ColliderBuffer = CellSize * 0.75f;
+        BoxBounds.Expand(new Vector3(ColliderBuffer * 2f, ColliderBuffer * 2f, 0f));
 
-        //Calculate the total navmesh world extents
-        Vector2 NavMeshMin = new Vector2(-HalfMeshWidth, -HalfMeshHeight);
-        Vector2 NavMeshMax = new Vector2(HalfMeshWidth, HalfMeshHeight);
+        //Define the navmesh world extends
+        Vector2 NavMin = new Vector2(-HalfMeshWidth, -HalfMeshHeight);
+        Vector2 NavMax = new Vector2(HalfMeshWidth, HalfMeshHeight);
 
-        //Overlapping rect in world space
-        float OverlapMinX = Mathf.Max(BoxBounds.min.x, NavMeshMin.x);
-        float OverlapMinY = Mathf.Max(BoxBounds.min.y, NavMeshMin.y);
-        float OverlapMaxX = Mathf.Min(BoxBounds.max.x, NavMeshMax.x);
-        float OverlapMaxY = Mathf.Min(BoxBounds.max.y, NavMeshMax.y);
-        
-        //If there is no overlap with the navmesh at all, exit out
+        //Compute the overlapping region between the collider bounds and the navmesh world area
+        float OverlapMinX = Mathf.Max(BoxBounds.min.x, NavMin.x);
+        float OverlapMinY = Mathf.Max(BoxBounds.min.y, NavMin.y);
+        float OverlapMaxX = Mathf.Min(BoxBounds.max.x, NavMax.x);
+        float OverlapMaxY = Mathf.Min(BoxBounds.max.y, NavMax.y);
+
+        //If there is no overlap at all nothing needs to be done
         if(OverlapMinX >= OverlapMaxX || OverlapMinY >= OverlapMaxY)
             return;
 
-        //Convert to grid indices
-        //Since node (x,y) covers [x*CellSize - HalfMeshWidth, (x+1)*CellSize - HalfMeshWidth]
-        //We add HalfMeshWidth/Height to shift into positive space before dividing
-        int MinGridX = Mathf.FloorToInt((OverlapMinX + HalfMeshWidth) / CellSize);
-        int MinGridY = Mathf.FloorToInt((OverlapMinY + HalfMeshHeight) / CellSize);
-        int MaxGridX = Mathf.FloorToInt((OverlapMaxX + HalfMeshWidth - 0.0001f) / CellSize);
-        int MaxGridY = Mathf.FloorToInt((OverlapMaxY + HalfMeshHeight - 0.0001f) / CellSize);
+        //Convert world-space overlap coordinates into grid indices
+        int MinX = Mathf.FloorToInt((OverlapMinX + HalfMeshWidth) / CellSize);
+        int MinY = Mathf.FloorToInt((OverlapMinY + HalfMeshHeight) / CellSize);
+        int MaxX = Mathf.FloorToInt((OverlapMaxX + HalfMeshWidth - 0.0001f) / CellSize);
+        int MaxY = Mathf.FloorToInt((OverlapMaxY + HalfMeshHeight - 0.0001f) / CellSize);
 
-        //Clamp to grid bounds
-        MinGridX = Mathf.Max(0, MinGridX);
-        MinGridY = Mathf.Max(0, MinGridY);
-        MaxGridX = Mathf.Min((int)GridSize.x - 1, MaxGridX);
-        MaxGridY = Mathf.Min((int)GridSize.y - 1, MaxGridY);
+        //Clamp indices to ensure they stay within navmesh array bounds
+        MinX = Mathf.Clamp(MinX, 0, (int)GridSize.x -1);
+        MinY = Mathf.Clamp(MinY, 0, (int)GridSize.y - 1);
+        MaxX = Mathf.Clamp(MaxX, 0, (int)GridSize.x - 1);
+        MaxY = Mathf.Clamp(MaxY, 0, (int)GridSize.y - 1);
 
         //Safety check in case clamping inverted the range
-        if(MinGridX > MaxGridX || MinGridY > MaxGridY)
+        if(MinX > MaxX || MinY > MaxY)
             return;
-
-        //Now mark the nodes
-        for(int MeshX = MinGridX; MeshX <= MaxGridX; MeshX++)
+        
+        //Iterate over candidate nodes
+        for(int CheckX = MinX; CheckX <= MaxX; CheckX++)
         {
-            for(int MeshY = MinGridY; MeshY <= MaxGridY; MeshY++)
+            for(int CheckY = MinY; CheckY <= MaxY; CheckY++)
             {
-                MeshNode Node = NodeGraph[MeshX][MeshY];
-                Node.SetWalkable(Walkable);
+                //Check if the center of each mesh cell lies within the box collider
+                MeshNode CheckNode = NodeGraph[CheckX][CheckY];
+                if(Box.OverlapPoint(CheckNode.NodePos))
+                    CheckNode.SetWalkable(Walkable);
             }
         }
-    }
-
-    //Returns a list of any mesh nodes which are under the given box collider
-    public List<MeshNode> GetNodesUnderBox(BoxCollider2D Box)
-    {
-        //Create a list to store the nodes under the collider
-        List<MeshNode> Nodes = new List<MeshNode>();
-
-        //Get the bounds of the collider in world space
-        Bounds BoxBounds = Box.bounds;
-
-        //Loop through all the nodes in the nav mesh
-        foreach(MeshNode Node in GetAllNodes())
-        {
-            //Check its bounds
-            Bounds NodeBounds = new Bounds(Node.NodePos, new Vector3(CellSize * 2, CellSize * 2, 0f));
-            
-            //If this node intersects with the given box collider, add it to our list
-            if(NodeBounds.Intersects(BoxBounds))
-                Nodes.Add(Node);
-        }
-
-        //Return the final list of nodes
-        return Nodes;
     }
 
     //Returns the MeshNode in the grid closest to the given world position

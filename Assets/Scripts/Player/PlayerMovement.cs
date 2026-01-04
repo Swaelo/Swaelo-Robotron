@@ -98,9 +98,7 @@ public class PlayerMovement : MonoBehaviour
             Node.SetWalkable(true);
 
         //Now get the new list of nodes the player is currently walking over and set those as unwalkable
-        WalkingNodes = NavMeshManager.Instance.GetNodesUnderBox(GetComponent<BoxCollider2D>());
-        foreach(MeshNode Node in WalkingNodes)
-            Node.SetWalkable(false);
+        Game.I.NavMesh.MarkNodesUnderBox(GetComponent<BoxCollider2D>(), false);
     }
 
     //Changes the players eye color periodically
