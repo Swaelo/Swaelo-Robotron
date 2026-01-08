@@ -44,10 +44,7 @@ public class GruntAI : HostileEntity
     {
         //Seek player while alive
         if (IsAlive)
-        {
-            if(GameState.Instance.ShouldAdvanceGame())
             SeekPlayer();
-        }
         //Play out death animation then destroy self while dead
         else
             PlayDeath();
