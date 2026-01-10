@@ -20,6 +20,9 @@ public class T : MonoBehaviour
     private SpawningCommands Spawning;
     private NavMeshCommands NavMesh;
 
+    private bool InputActive = false;    //Tracks if the input field is current active
+    public static bool IsActive() { return T.Instance.InputActive; }
+
     [Header("UI")]
     [SerializeField] private GameObject TerminalPanel;  //Root panel that contains the entire console UI elements
     [SerializeField] private TMP_InputField InputField; //Input field where the user can type in commands
@@ -54,6 +57,54 @@ public class T : MonoBehaviour
 
         //Listen for the input field submit event (Enter key)
         InputField.onSubmit.AddListener(SubmitCommand);
+        
+    }
+
+    private void Update()
+    {
+        //Toggle interactivity of the input field based on user input
+        ToggleInput();
+    }
+
+    //Controls toggling of the input field
+    private void ToggleInput()
+    {
+        //Enable the input field by pressing the back quote key
+        if(!InputActive && Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            StartInput();
+            return;
+        }
+
+        //Clear and disable the input field by pressing escape
+        if(InputActive && Input.GetKeyDown(KeyCode.Escape))
+        {
+            StopInput();
+            ClearInput();
+            return;
+        }
+    }
+
+    //Enables the input field and sets it focus to you can start typing in it
+    private void StopInput()
+    {
+        InputActive = false;
+        InputField.interactable = false;
+        InputField.DeactivateInputField();
+    }
+    
+    //Exits and clears the input field
+    private void StartInput()
+    {
+        InputActive = true;
+        InputField.interactable = true;
+        InputField.ActivateInputField();
+    }
+
+    //Clears the current content of the input field
+    private void ClearInput()
+    {
+        InputField.text = "";
     }
 
     //Defines all commands that can be used in the terminal
@@ -114,17 +165,6 @@ public class T : MonoBehaviour
         NavMesh.RegisterCommands(this);
     }
 
-    private void Update()
-    {
-        //Toggle console visibility with `
-        if(Input.GetKeyDown(KeyCode.BackQuote))
-            Toggle();
-
-        //If console is open, force focus back into the input field
-        if(TerminalPanel && TerminalPanel.activeSelf && !InputField.isFocused)
-            InputField.ActivateInputField();
-    }
-
     //Registers a new console command, can be called from other scripts
     public void RegisterNewCommand(string ChatFunction, string HelpString, Action<string[]> FunctionHandler)
     {
@@ -133,24 +173,6 @@ public class T : MonoBehaviour
             HelpText = HelpString,
             Handler = FunctionHandler
         };
-    }
-
-    //Toggles the console UI on or off
-    public void Toggle()
-    {
-        //Exit out if the terminal doesnt exist for some reason
-        if (!TerminalPanel) return;
-
-        //Toggle its current state
-        var NewState = !TerminalPanel.activeSelf;
-        TerminalPanel.SetActive(NewState);
-
-        //When opening, clear input and focus into it
-        if(NewState)
-        {
-            InputField.text = "";
-            InputField.ActivateInputField();
-        }
     }
 
     //Submits input when the user presses the Enter key
@@ -165,9 +187,9 @@ public class T : MonoBehaviour
         //Execute the command
         Execute(Input);
 
-        //Clear input and keep focus for next command
-        InputField.text = "";
-        InputField.ActivateInputField();
+        //Clear input and disable the input
+        ClearInput();
+        StopInput();
     }
 
     //Parses and executes a raw command string

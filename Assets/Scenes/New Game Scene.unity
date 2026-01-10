@@ -809,8 +809,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 591714094}
   m_HandleRect: {fileID: 591714093}
   m_Direction: 2
-  m_Value: 0.9999972
-  m_Size: 0.8540393
+  m_Value: 0.99999315
+  m_Size: 0.97032714
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1212,7 +1212,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 795077590}
   m_TextViewport: {fileID: 2052376993}
   m_TextComponent: {fileID: 1539997384}
@@ -1273,7 +1273,7 @@ MonoBehaviour:
   m_LineLimit: 0
   isAlert: 0
   m_InputValidator: {fileID: 0}
-  m_ShouldActivateOnSelect: 1
+  m_ShouldActivateOnSelect: 0
 --- !u!114 &795077590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1876,8 +1876,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 964022339}
   m_HandleRect: {fileID: 964022338}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2004,7 +2004,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.2
+  m_fontSize: 66.4
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2107,6 +2107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b68e9541e9b45aa9b8981fdfe08c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CommandTerminal
+  InputActive: 0
   TerminalPanel: {fileID: 2069784335}
   InputField: {fileID: 795077589}
   OutputText: {fileID: 366788870}

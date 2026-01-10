@@ -30,4 +30,15 @@ public class Game : MonoBehaviour
         //Initialise them all to get the game world setup
         NavMesh.GenerateNavMesh();
     }
+
+    //Checks if we should currently be allowing input to control the player character
+    public bool ShouldControlPlayer()
+    {
+        //Cannot control when currently typing something into the console log / chat window
+        if(T.IsActive())
+            return false;
+
+        //All checks passed, player can be controlled now
+        return true;
+    }
 }
