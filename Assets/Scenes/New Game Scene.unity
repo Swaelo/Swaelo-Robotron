@@ -889,8 +889,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769db96f622bd4169acbda3097c9d632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DungeonManager
-  Builder: {fileID: 705987210}
   RoomPrefabs: {fileID: 705987211}
+  DungeonSeed: 0
 --- !u!4 &705987209
 Transform:
   m_ObjectHideFlags: 0
@@ -1396,7 +1396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3af713d339d453ea6cf1f731317c10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraZoom
-  ZoomSpeed: 65
+  ZoomSpeed: 200
   MinOrtho: 2
   MaxOrtho: 10
 --- !u!114 &983762533
