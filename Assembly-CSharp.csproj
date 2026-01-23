@@ -42,7 +42,7 @@
     <UnityVersion>6000.2.12f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="/Users/swaelo/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.0/Analyzers/Microsoft.Unity.Analyzers.dll" />
+    <Analyzer Include="/Users/swaelo/.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.1/Analyzers/Microsoft.Unity.Analyzers.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.12f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.12f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.2.12f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
@@ -56,6 +56,7 @@
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/PrefabSpawner.cs" />
     <Compile Include="Assets/Scripts/Level/NavMeshManager.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/ScoreCarry.cs" />
+    <Compile Include="Assets/Scripts/System/PrefabCatalog.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/FinalScoreDisplay.cs" />
     <Compile Include="Assets/Scripts/Terminal/SpawningCommands.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/SoundEffectsPlayer.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets/Scripts/Wave Spawning/WaveData.cs" />
     <Compile Include="Assets/Scripts/Enemies/TankShellAI.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/GameState.cs" />
+    <Compile Include="Assets/Scripts/Dungeon/DungeonRoom.cs" />
     <Compile Include="Assets/Scripts/Enemies/SparkShotAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/CruiseMissileAI.cs" />
     <Compile Include="Assets/Scripts/Enemies/EnforcerAI.cs" />
@@ -83,7 +85,9 @@
     <Compile Include="Assets/Scripts/Entities/FriendlyEntity.cs" />
     <Compile Include="Assets/Scripts/Level/MeshNode.cs" />
     <Compile Include="Assets/Scripts/Player/CameraFollow.cs" />
+    <Compile Include="Assets/Scripts/Dungeon/DungeonManager.cs" />
     <Compile Include="Assets/Scripts/Level/SpriteColorCycle.cs" />
+    <Compile Include="Assets/Scripts/Dungeon/RoomBuilder.cs" />
     <Compile Include="Assets/Scripts/Enemies/SpheroidAI.cs" />
     <Compile Include="Assets/Scripts/Game/ClassicRobotron/PointValues.cs" />
     <Compile Include="Assets/Scripts/Player/PlayerMovement.cs" />

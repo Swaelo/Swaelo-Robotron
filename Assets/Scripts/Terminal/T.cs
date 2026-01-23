@@ -14,7 +14,30 @@ public class T : MonoBehaviour
 {
     //Singleton instance for easy global access
     public static T Instance { get; private set; }
-    public static void Log(string Message) { T.Instance.Print(Message); }
+    public static void Log(string Message)
+    {
+        if(!EnsureInstance())
+        {
+            Debug.LogWarning($"[Terminal] {Message}");
+            return;
+        }
+
+        T.Instance.Print(Message);
+    }
+
+    //Make sure the static of this class already exists
+    private static bool EnsureInstance()
+    {
+        if(Instance != null)
+            return true;
+
+        Instance = FindObjectOfType<T>();
+
+        if(Instance != null)
+            return true;
+
+        return false;
+    }
 
     //Groups of commands that need to be registered in
     private SpawningCommands Spawning;
